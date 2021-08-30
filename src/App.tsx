@@ -1,12 +1,12 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Counter } from './features/counter/Counter';
+import Sudoku from "./features/sudoku/Sudoku";
 
 function App() {
   return (
 
     <div className="container my-2">
-      <Counter />
+      <Sudoku />
     </div>
   );
 }

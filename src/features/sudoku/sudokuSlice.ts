@@ -66,7 +66,6 @@ export const handleDataSudoku = (data: any[][]) => {
 export const sudokuSlice = createSlice({
   name: "counter",
   initialState,
-
   reducers: {
     setUnSolve: (state, action) => {
       state.unSolve = action.payload;
