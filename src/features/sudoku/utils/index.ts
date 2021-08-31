@@ -28,7 +28,7 @@ export const isSameRegion = (posA: Pos, posB: Pos) => {
   );
 };
 
-export const countCellConflicts = (cells: Cells) => {
+export const countConflict = (cells: Cells) => {
   let cnt = 0;
   loopAllCell(cells, (cell) => {
     if (cell.status === "conflict") {

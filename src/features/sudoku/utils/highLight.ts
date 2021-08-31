@@ -12,11 +12,11 @@ interface MapNumberPos {
   [key: number]: string;
 }
 
-const handlerHighLightConflict = (
+const highLightConflict = (
   cells: Cells,
   pos: Pos,
-  hash: MapNumberPos,
-  needRemoveHighLight: boolean = false
+  posSelected: Pos,
+  hash: MapNumberPos
 ) => {
   const cellKey = getKeyCellFromPos(pos);
   const cell = cells[cellKey];
@@ -27,56 +27,13 @@ const handlerHighLightConflict = (
       cell.status = "conflict";
       cells[hash[cellValue]].status = "conflict";
     }
-    // Chỉ xóa highlight một lần (khi loop col hoặc rol hoặc region)
-    // Nếu không sẽ gây ra việc lần loop sau xóa lần loop trước
-    else if (needRemoveHighLight && cell.status === "conflict") {
-      cell.status = "";
-    }
     hash[cellValue] = cellKey;
-  } else if (cell.status === "conflict") {
-    // Nếu cell trống
-    cell.status = "";
-  }
-};
-
-export const highLightConflict = (cells: Cells) => {
-  // Find conflict in col
-  for (let row = 0; row < 9; row++) {
-    const hash: MapNumberPos = {};
-    for (let i = 0; i < 9; i++) {
-      handlerHighLightConflict(cells, { row, col: i }, hash, true);
-    }
-  }
-
-  // Find conflict in row
-  for (let col = 0; col < 9; col++) {
-    const hash: MapNumberPos = {};
-    for (let i = 0; i < 9; i++) {
-      handlerHighLightConflict(cells, { row: i, col }, hash);
-    }
-  }
-
-  // Find conflict in region 3x3
-  for (let row = 0; row < 9; row += 3) {
-    for (let col = 0; col < 9; col += 3) {
-      const hash: MapNumberPos = {};
-      for (let i = 0; i < 9; i++) {
-        handlerHighLightConflict(
-          cells,
-          {
-            row: row + Math.trunc(i / 3),
-            col: col + (i % 3),
-          },
-          hash
-        );
-      }
-    }
   }
 };
 
 const hightLightRelated = (cells: Cells, posSelected: Pos) => {
   const selectedValue = getCellFromPos(cells, posSelected).value;
-  console.log(selectedValue);
+  if (!selectedValue) return;
 
   loopAllCell(cells, (cellCur, posCur) => {
     // Hightliht related cell (same row, same col, same region)
@@ -85,33 +42,60 @@ const hightLightRelated = (cells: Cells, posSelected: Pos) => {
       (isSameRow(posCur, posSelected) ||
         isSameCol(posCur, posSelected) ||
         isSameRegion(posCur, posSelected));
-
     if (isRelated) {
       cellCur.status = "high-light";
       return;
     }
 
     // Highlight same number
-    if (
-      selectedValue &&
-      cellCur.value &&
-      cellCur.value === selectedValue
-    ) {
+    if (cellCur.value && cellCur.value === selectedValue) {
       cellCur.status = "high-light-number";
       return;
-    }
-
-    // Remove old highlight (if need)
-    if (
-      cellCur.status === "high-light" ||
-      cellCur.status === "high-light-number"
-    ) {
-      cellCur.status = "";
     }
   });
 };
 
-export const highLight = (cells: Cells, posSelected: Pos) => {
+const highLight = (cells: Cells, posSelected: Pos) => {
+  // Reset all status
+  loopAllCell(cells, (cellCur, posCur) => {
+    cellCur.status = "normal";
+  });
+
   hightLightRelated(cells, posSelected);
-  highLightConflict(cells);
+
+  // Find conflict in col
+  for (let row = 0; row < 9; row++) {
+    const hash: MapNumberPos = {};
+    for (let col = 0; col < 9; col++) {
+      highLightConflict(cells, { row, col }, posSelected, hash);
+    }
+  }
+
+  // Find conflict in row
+  for (let col = 0; col < 9; col++) {
+    const hash: MapNumberPos = {};
+    for (let row = 0; row < 9; row++) {
+      highLightConflict(cells, { row, col }, posSelected, hash);
+    }
+  }
+
+  // Find conflict in region 3x3
+  for (let row = 0; row < 9; row += 3) {
+    for (let col = 0; col < 9; col += 3) {
+      const hash: MapNumberPos = {};
+      for (let i = 0; i < 9; i++) {
+        highLightConflict(
+          cells,
+          {
+            row: row + Math.trunc(i / 3),
+            col: col + (i % 3),
+          },
+          posSelected,
+          hash
+        );
+      }
+    }
+  }
 };
+
+export default highLight;

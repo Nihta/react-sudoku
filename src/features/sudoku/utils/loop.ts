@@ -1,18 +1,19 @@
 import { getCellFromPos } from ".";
 import { Cell, Cells, Pos } from "../sudokuSlice";
 
-export const loopRow = (
+export const loopAllCellInRow = (
   cells: Cells,
   row: number,
-  callBack: (cell: Cell) => void
+  callBack: (cell: Cell, pos: Pos) => void
 ) => {
   for (let i = 0; i < 9; i++) {
-    const pos = `${row}${i}`;
-    callBack(cells[pos]);
+    const pos = { row, col: i };
+    const cell = getCellFromPos(cells, pos);
+    callBack(cell, pos);
   }
 };
 
-export const loopCol = (
+export const loopAllCellInCol = (
   cells: Cells,
   col: number,
   callBack: (cell: Cell) => void
@@ -23,7 +24,7 @@ export const loopCol = (
   }
 };
 
-export const loopArea3x3 = (
+export const loopAllCellInArea3x3 = (
   cells: Cells,
   row: number,
   col: number,
@@ -43,9 +44,9 @@ export const loopAllCell = (
   cells: Cells,
   callBack: (cell: Cell, pos: Pos) => void
 ) => {
-  for (let _row = 0; _row < 9; _row++) {
-    for (let _col = 0; _col < 9; _col++) {
-      const pos = { row: _row, col: _col };
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      const pos = { row, col };
       const cell = getCellFromPos(cells, pos);
       callBack(cell, pos);
     }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&display=swap");
 
 body {
   font-family: "Open Sans", sans-serif;
@@ -11,31 +11,31 @@ body {
   height: 500px;
   text-align: center;
   position: relative;
-}
 
-.board::before,
-.board::after {
-  content: "";
-  position: absolute;
-  pointer-events: none;
-}
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
 
-.board::before {
-  left: 0;
-  width: 100%;
-  top: 32.99333333%;
-  height: 33.7533333%;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-}
+  &::before {
+    left: 0;
+    width: 100%;
+    top: 32.99333333%;
+    height: 33.7533333%;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+  }
 
-.board::after {
-  top: 0;
-  height: 100%;
-  left: 32.9333333%;
-  width: 33.7833333%;
-  border-left: 2px solid #000;
-  border-right: 2px solid #000;
+  &::after {
+    top: 0;
+    height: 100%;
+    left: 32.9333333%;
+    width: 33.7833333%;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
+  }
 }
 
 .overlay {
@@ -70,38 +70,34 @@ body {
   flex-basis: 11.1111%;
   height: 100%;
   cursor: pointer;
-}
 
-.sudoku-col:last-child {
-  border-right: none;
-}
+  &:last-child {
+    border-right: none;
+  }
 
-.sudoku-col.highlight {
-  background: #efefef;
-}
+  &.highlight {
+    background: #efefef;
+  }
 
-.sudoku-col.highlight-number {
-  background: #e0ece7;
-}
-.sudoku-col.selected {
-  background: #c2d9cf !important;
-}
+  &.highlight-number {
+    background: #e0ece7;
+  }
+  &.selected {
+    background: #c2d9cf !important;
+  }
 
-.sudoku-col.incorrect {
-  color: #fe146d !important;
-  background: #ffd0e2;
-}
+  &.incorrect {
+    color: #fe146d !important;
+    background: #ffd0e2;
+  }
 
-.sudoku-col.error {
-  background: #ffd0e2;
-}
+  &.origin {
+    color: #000 !important;
+  }
 
-.sudoku-col.origin {
-  color: #000 !important;
-}
-
-.sudoku-col.user-type {
-  color: darkgreen;
+  &.user-type {
+    color: darkgreen;
+  }
 }
 
 .cell-value {
@@ -118,11 +114,11 @@ body {
   position: relative;
   line-height: 1;
   font-size: 20px;
-}
 
-.notes .notes-item {
-  height: 0;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 20px;
+  .notes-item {
+    height: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+  }
 }

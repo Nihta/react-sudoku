@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  countCellConflicts,
+  countConflict,
   getCellFromPos,
   getKeyCellFromPos,
   isSamePos,
 } from "./utils";
-import { highLight, highLightConflict } from "./utils/highLight";
+import highLight from "./utils/highLight";
 
 export type Pos = {
   row: number;
@@ -14,7 +14,7 @@ export type Pos = {
 
 export type Cell = {
   value: number | null;
-  status: string;
+  status: "" | "normal" | "conflict" | "high-light" | "high-light-number";
   selected: boolean;
   isOrigin: boolean;
 };
@@ -73,8 +73,8 @@ export const sudokuSlice = createSlice({
       state.cells = data.cells;
       state.cellEmpty = data.cellEmpty;
 
-      highLightConflict(state.cells);
-      state.cellConflict = countCellConflicts(state.cells);
+      // highLight(state.cells, state.selectedCell);
+      state.cellConflict = countConflict(state.cells);
     },
     clickCell: (state, action) => {
       const posSelectedCellOld = state.selectedCell;
@@ -126,7 +126,8 @@ export const sudokuSlice = createSlice({
 
         // HighLight lại
         highLight(state.cells, posSelectedCell);
-        state.cellConflict = countCellConflicts(state.cells);
+        // Số lượng conflict
+        state.cellConflict = countConflict(state.cells);
       }
     },
   },
