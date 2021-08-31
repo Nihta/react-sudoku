@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import useKeyDown from "../hooks/useKeyDown";
-import { inputCell, setUnSolve } from "../sudokuSlice";
+import { deleteCell, inputCell, setUnSolve } from "../sudokuSlice";
 import Row from "./Row";
 
 const UN_SOLVE = [
@@ -28,6 +28,12 @@ function Board() {
   const handlerKeyDown = useCallback(
     (e) => {
       const { key } = e;
+      // console.log(`Press ${key}`);
+
+      if (key === "Backspace" || key === "Delete") {
+        dispatch(deleteCell(null));
+      }
+
       if (1 <= +key && +key <= 9) {
         dispatch(inputCell({ number: parseInt(key, 10) }));
       }

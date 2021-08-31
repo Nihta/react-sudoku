@@ -109,30 +109,45 @@ export const sudokuSlice = createSlice({
 
         // Cập nhật giá trị của cell
         const oldNumber = cellSelected.value;
-        const posNew = getKeyCellFromPos(posSelectedCell);
         const { number: newNumber } = action.payload;
 
         // Nếu số mới trùng số cũ thì xóa cell đó
         if (oldNumber && newNumber && oldNumber === newNumber) {
-          state.cells[posNew].value = null;
+          cellSelected.value = null;
           state.cellEmpty++;
         } else {
-          state.cells[posNew].value = newNumber;
+          cellSelected.value = newNumber;
         }
 
+        // Nếu trước đó chưa nhập số thì số cell trống giảm đi 1
         if (!oldNumber) {
           state.cellEmpty--;
         }
 
         // HighLight lại
         highLight(state.cells, posSelectedCell);
-        // Số lượng conflict
+        // Tính lại số lượng conflict
         state.cellConflict = countConflict(state.cells);
+      }
+    },
+    deleteCell: (state, action) => {
+      const posSelected = action.payload ? action.payload : state.selectedCell;
+      // Nếu không truyền vào pos và cũng chưa chọn cell nào
+      if (!posSelected) return;
+
+      const cell = getCellFromPos(state.cells, posSelected);
+      // Không thể xóa cell gốc
+      if (cell.isOrigin) return;
+
+      if (cell.value) {
+        cell.value = null;
+        state.cellEmpty++;
       }
     },
   },
 });
 
-export const { setUnSolve, inputCell, clickCell } = sudokuSlice.actions;
+export const { setUnSolve, inputCell, clickCell, deleteCell } =
+  sudokuSlice.actions;
 
 export default sudokuSlice.reducer;
