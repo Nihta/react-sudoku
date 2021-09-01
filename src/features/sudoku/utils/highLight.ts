@@ -12,28 +12,14 @@ interface MapNumberPos {
   [key: number]: string;
 }
 
-const highLightConflict = (
-  cells: Cells,
-  pos: Pos,
-  posSelected: Pos,
-  hash: MapNumberPos
-) => {
-  const cellKey = getKeyCellFromPos(pos);
-  const cell = cells[cellKey];
-  const cellValue = cell.value;
-
-  if (cellValue) {
-    if (hash[cellValue]) {
-      cell.status = "conflict";
-      cells[hash[cellValue]].status = "conflict";
-    }
-    hash[cellValue] = cellKey;
-  }
+const clearHighLight = (cells: Cells) => {
+  loopAllCell(cells, (cellCur) => {
+    cellCur.status = "normal";
+  });
 };
 
 const hightLightRelated = (cells: Cells, posSelected: Pos) => {
   const selectedValue = getCellFromPos(cells, posSelected).value;
-  if (!selectedValue) return;
 
   loopAllCell(cells, (cellCur, posCur) => {
     // Hightliht related cell (same row, same col, same region)
@@ -48,26 +34,33 @@ const hightLightRelated = (cells: Cells, posSelected: Pos) => {
     }
 
     // Highlight same number
-    if (cellCur.value && cellCur.value === selectedValue) {
+    if (selectedValue && cellCur.value && cellCur.value === selectedValue) {
       cellCur.status = "high-light-number";
       return;
     }
   });
 };
 
-const highLight = (cells: Cells, posSelected: Pos) => {
-  // Reset all status
-  loopAllCell(cells, (cellCur, posCur) => {
-    cellCur.status = "normal";
-  });
+const highLightConflictUtil = (cells: Cells, pos: Pos, hash: MapNumberPos) => {
+  const cellKey = getKeyCellFromPos(pos);
+  const cell = cells[cellKey];
+  const cellValue = cell.value;
 
-  hightLightRelated(cells, posSelected);
+  if (cellValue) {
+    if (hash[cellValue]) {
+      cell.status = "conflict";
+      cells[hash[cellValue]].status = "conflict";
+    }
+    hash[cellValue] = cellKey;
+  }
+};
 
+const highLightConflict = (cells: Cells) => {
   // Find conflict in col
   for (let row = 0; row < 9; row++) {
     const hash: MapNumberPos = {};
     for (let col = 0; col < 9; col++) {
-      highLightConflict(cells, { row, col }, posSelected, hash);
+      highLightConflictUtil(cells, { row, col }, hash);
     }
   }
 
@@ -75,7 +68,7 @@ const highLight = (cells: Cells, posSelected: Pos) => {
   for (let col = 0; col < 9; col++) {
     const hash: MapNumberPos = {};
     for (let row = 0; row < 9; row++) {
-      highLightConflict(cells, { row, col }, posSelected, hash);
+      highLightConflictUtil(cells, { row, col }, hash);
     }
   }
 
@@ -84,18 +77,23 @@ const highLight = (cells: Cells, posSelected: Pos) => {
     for (let col = 0; col < 9; col += 3) {
       const hash: MapNumberPos = {};
       for (let i = 0; i < 9; i++) {
-        highLightConflict(
+        highLightConflictUtil(
           cells,
           {
             row: row + Math.trunc(i / 3),
             col: col + (i % 3),
           },
-          posSelected,
           hash
         );
       }
     }
   }
+};
+
+const highLight = (cells: Cells, posSelected: Pos) => {
+  clearHighLight(cells);
+  hightLightRelated(cells, posSelected);
+  highLightConflict(cells);
 };
 
 export default highLight;
