@@ -1,22 +1,41 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
-const useInterval = (callback: () => void, delay: number) => {
-  // Create a ref for the callback function.
-  const callbackRef = useRef<any>(null);
+export function useInterval(callback: (() => void) | undefined, delay: number) {
+  const savedCallback = useRef<() => void>();
+  const savedId = useRef<any>();
 
-  // Remember the latest callback.
   useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+    savedCallback.current = callback;
+  });
 
-  // Set up the timeout and clean up the interval when the component unmounts.
-  useEffect(() => {
-    const interval = setInterval(() => {
-      callbackRef.current && callbackRef.current();
-    }, delay);
+  function tick() {
+    if (savedCallback.current) {
+      savedCallback.current();
+    }
+  }
 
-    return () => clearInterval(interval);
+  const startInterval = useCallback(() => {
+    if (savedCallback.current) {
+      savedId.current = setInterval(tick, delay);
+    }
   }, [delay]);
-};
 
-export default useInterval;
+  const stopInterval = useCallback(() => {
+    clearInterval(savedId.current);
+  }, []);
+
+  useEffect(() => {
+    if (savedCallback.current) {
+      startInterval();
+    } else {
+      stopInterval();
+    }
+
+    return () => stopInterval();
+  }, [delay, callback, startInterval, stopInterval]);
+
+  return {
+    startInterval,
+    stopInterval,
+  };
+}
