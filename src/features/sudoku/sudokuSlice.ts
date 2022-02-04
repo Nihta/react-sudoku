@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AppDispatch, RootState } from "../../configs/store";
 import {
   countConflict,
   getCellFromPos,
@@ -181,5 +182,40 @@ export const sudokuSlice = createSlice({
 
 export const { setUnSolve, inputCell, clickCell, deleteCell } =
   sudokuSlice.actions;
+
+export const selectSelectedCell = (state: RootState) =>
+  state.sudoku.selectedCell;
+
+/**
+ * Sử dụng bàn phím để di chuyển sang cell khác
+ * @param directionMove Hướng di chuyển (up, down, left, right)
+ * @returns
+ */
+export const moveSelectedCell =
+  (directionMove: "up" | "down" | "left" | "right") =>
+  (dispatch: AppDispatch, getState: () => RootState) => {
+    const selectedCell = selectSelectedCell(getState());
+    let newPos: Pos = { col: 0, row: 0 };
+
+    if (selectedCell) {
+      const { row, col } = selectedCell;
+      switch (directionMove) {
+        case "up":
+          newPos = { col, row: row === 0 ? 8 : row - 1 };
+          break;
+        case "down":
+          newPos = { col, row: row === 8 ? 0 : row + 1 };
+          break;
+        case "left":
+          newPos = { col: col === 0 ? 8 : col - 1, row };
+          break;
+        case "right":
+          newPos = { col: col === 8 ? 0 : col + 1, row };
+          break;
+      }
+    }
+
+    dispatch(clickCell(newPos));
+  };
 
 export default sudokuSlice.reducer;
