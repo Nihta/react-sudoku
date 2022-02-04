@@ -29,7 +29,11 @@ export interface SudokuState {
   cells: Cells;
   cellEmpty: number;
   cellConflict: number;
-  isWinGame: boolean;
+  /**
+   * false: not solved
+   * true: solved
+   */
+  gameState: boolean;
 }
 
 const initialState: SudokuState = {
@@ -38,7 +42,7 @@ const initialState: SudokuState = {
   cells: {},
   cellEmpty: 81,
   cellConflict: 0,
-  isWinGame: false,
+  gameState: false,
 };
 
 export const handleDataSudoku = (data: any[][]) => {
@@ -64,7 +68,7 @@ export const handleDataSudoku = (data: any[][]) => {
 };
 
 export const sudokuSlice = createSlice({
-  name: "counter",
+  name: "sudoku",
   initialState,
   reducers: {
     setUnSolve: (state, action) => {
@@ -76,7 +80,15 @@ export const sudokuSlice = createSlice({
       // highLight(state.cells, state.selectedCell);
       state.cellConflict = countConflict(state.cells);
     },
+    /**
+     * Khi click hoặc di chuyển (bằng bản phím) vào cell
+     */
     clickCell: (state, action) => {
+      // If game state is win
+      if (state.gameState) {
+        return;
+      }
+
       const posSelectedCellOld = state.selectedCell;
       const posSelectedCellNew = action.payload;
       // Nếu đã chọn một cell trước đó
@@ -96,7 +108,15 @@ export const sudokuSlice = createSlice({
       // Highlight lại
       highLight(state.cells, posSelectedCellNew);
     },
+    /**
+     * Điền giá trị vào một cell
+     */
     inputCell: (state, action) => {
+      // If game state is win
+      if (state.gameState) {
+        return;
+      }
+
       // Vị trí của cell đang chọn
       const posSelectedCell = state.selectedCell;
 
@@ -128,9 +148,21 @@ export const sudokuSlice = createSlice({
         highLight(state.cells, posSelectedCell);
         // Tính lại số lượng conflict
         state.cellConflict = countConflict(state.cells);
+
+        // Nếu đã điền đủ 81 cell và không có conflict thì game win
+        if (state.cellEmpty === 0 && state.cellConflict === 0) {
+          state.gameState = true;
+        }
       }
     },
+    /**
+     * Xóa giá trị của cell đang chọn
+     */
     deleteCell: (state, action) => {
+      if (state.gameState) {
+        return;
+      }
+
       const posSelected = action.payload ? action.payload : state.selectedCell;
       // Nếu không truyền vào pos và cũng chưa chọn cell nào
       if (!posSelected) return;

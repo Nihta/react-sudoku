@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
-import { useCell } from "../hooks";
+
+import { useCell } from "../hooks/sudokuHooks";
 import { clickCell } from "../sudokuSlice";
 
 function Note() {
