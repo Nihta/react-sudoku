@@ -8,26 +8,26 @@ import {
 } from "./utils";
 import highLight from "./utils/highLight";
 
-export type Pos = {
+export type PosType = {
   row: number;
   col: number;
 };
 
-export type Cell = {
+export type CellType = {
   value: number | null;
   status: "" | "normal" | "conflict" | "high-light" | "high-light-number";
   selected: boolean;
   isOrigin: boolean;
 };
 
-export interface Cells {
-  [key: string]: Cell;
+export interface ICells {
+  [key: string]: CellType;
 }
 
-export interface SudokuState {
+export interface ISudokuState {
   unSolve: any[];
-  selectedCell: Pos | null;
-  cells: Cells;
+  selectedCell: PosType | null;
+  cells: ICells;
   cellEmpty: number;
   cellConflict: number;
   /**
@@ -37,7 +37,7 @@ export interface SudokuState {
   gameState: boolean;
 }
 
-const initialState: SudokuState = {
+const initialState: ISudokuState = {
   unSolve: [],
   selectedCell: null,
   cells: {},
@@ -48,7 +48,7 @@ const initialState: SudokuState = {
 
 export const handleDataSudoku = (data: any[][]) => {
   let cellEmpty = 81;
-  const cells: { [key: string]: Cell } = {};
+  const cells: { [key: string]: CellType } = {};
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
       const isOrigin = data[row][col] !== null;
@@ -183,8 +183,12 @@ export const sudokuSlice = createSlice({
 export const { setUnSolve, inputCell, clickCell, deleteCell } =
   sudokuSlice.actions;
 
+/********************************** Selector **********************************/
+
 export const selectSelectedCell = (state: RootState) =>
   state.sudoku.selectedCell;
+
+export const selectGameState = (state: RootState) => state.sudoku.gameState;
 
 /**
  * Sử dụng bàn phím để di chuyển sang cell khác
@@ -195,7 +199,7 @@ export const moveSelectedCell =
   (directionMove: "up" | "down" | "left" | "right") =>
   (dispatch: AppDispatch, getState: () => RootState) => {
     const selectedCell = selectSelectedCell(getState());
-    let newPos: Pos = { col: 0, row: 0 };
+    let newPos: PosType = { col: 0, row: 0 };
 
     if (selectedCell) {
       const { row, col } = selectedCell;

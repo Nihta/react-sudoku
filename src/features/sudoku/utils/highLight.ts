@@ -5,20 +5,20 @@ import {
   isSameRegion,
   isSameRow,
 } from ".";
-import { Cells, Pos } from "../sudokuSlice";
+import { ICells, PosType } from "../sudokuSlice";
 import { loopAllCell } from "./loop";
 
 interface MapNumberPos {
   [key: number]: string;
 }
 
-const clearHighLight = (cells: Cells) => {
+const clearHighLight = (cells: ICells) => {
   loopAllCell(cells, (cellCur) => {
     cellCur.status = "normal";
   });
 };
 
-const hightLightRelated = (cells: Cells, posSelected: Pos) => {
+const hightLightRelated = (cells: ICells, posSelected: PosType) => {
   const selectedValue = getCellFromPos(cells, posSelected).value;
 
   loopAllCell(cells, (cellCur, posCur) => {
@@ -41,7 +41,7 @@ const hightLightRelated = (cells: Cells, posSelected: Pos) => {
   });
 };
 
-const highLightConflictUtil = (cells: Cells, pos: Pos, hash: MapNumberPos) => {
+const highLightConflictUtil = (cells: ICells, pos: PosType, hash: MapNumberPos) => {
   const cellKey = getKeyCellFromPos(pos);
   const cell = cells[cellKey];
   const cellValue = cell.value;
@@ -55,7 +55,7 @@ const highLightConflictUtil = (cells: Cells, pos: Pos, hash: MapNumberPos) => {
   }
 };
 
-const highLightConflict = (cells: Cells) => {
+const highLightConflict = (cells: ICells) => {
   // Find conflict in col
   for (let row = 0; row < 9; row++) {
     const hash: MapNumberPos = {};
@@ -90,7 +90,7 @@ const highLightConflict = (cells: Cells) => {
   }
 };
 
-const highLight = (cells: Cells, posSelected: Pos) => {
+const highLight = (cells: ICells, posSelected: PosType) => {
   clearHighLight(cells);
   hightLightRelated(cells, posSelected);
   highLightConflict(cells);

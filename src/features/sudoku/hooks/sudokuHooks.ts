@@ -1,14 +1,8 @@
-import { useSelector } from "react-redux";
-
-import { Pos } from "../sudokuSlice";
+import { PosType } from "../sudokuSlice";
 import { getKeyCellFromPos } from "../utils";
-import { RootState } from "../../../configs/store";
+import { useTypedSelector } from "../../../common/hooks/reduxHooks";
 
-export const useCell = (pos: Pos) => {
+export const useCell = (pos: PosType) => {
   const cellKey = getKeyCellFromPos(pos);
-  return useSelector((state: RootState) => state.sudoku.cells[cellKey]);
-};
-
-export const useGameState = () => {
-  return useSelector((state: RootState) => state.sudoku.gameState);
+  return useTypedSelector((state) => state.sudoku.cells[cellKey]);
 };

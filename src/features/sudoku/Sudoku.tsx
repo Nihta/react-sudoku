@@ -1,11 +1,13 @@
 import React from "react";
-import Alert from "./components/Alert";
-import Board from "./components/Board";
-import { useGameState } from "./hooks/sudokuHooks";
 import "./Sudoku.scss";
 
+import Alert from "./components/Alert";
+import Board from "./components/Board";
+import { selectGameState } from "./sudokuSlice";
+import { useTypedSelector } from "../../common/hooks/reduxHooks";
+
 function Sudoku() {
-  const gameState = useGameState();
+  const gameState = useTypedSelector(selectGameState);
 
   return (
     <>

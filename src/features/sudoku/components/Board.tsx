@@ -1,14 +1,14 @@
 import { useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import Row from "./Row";
-import useKeyDown from "../hooks/useKeyDown";
+import useKeyDown from "../../../common/hooks/useKeyDown";
 import {
   deleteCell,
   inputCell,
   moveSelectedCell,
   setUnSolve,
 } from "../sudokuSlice";
+import { useTypedDispatch } from "../../../common/hooks/reduxHooks";
 
 const UN_SOLVE = [
   ["5", "4", "1", "6", "8", "2", "7", "3", "9"],
@@ -25,7 +25,7 @@ const UN_SOLVE = [
 ];
 
 function Board() {
-  const dispatch = useDispatch();
+  const dispatch = useTypedDispatch();
 
   useEffect(() => {
     dispatch(setUnSolve(UN_SOLVE));
