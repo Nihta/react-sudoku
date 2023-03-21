@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
 import produce from "immer";
 import {
   countConflict,
@@ -8,6 +7,8 @@ import {
   isSamePos,
 } from "../utils";
 import highLight from "../utils/highLight";
+import { convertPuzzle } from "../utils/sudokuUtils";
+import { PuzzleData } from "../types/sudokuTypes";
 
 export type CellState = {
   value: number | null;
@@ -21,30 +22,10 @@ export type Position = {
   col: number;
 };
 
-export const handleDataSudoku = (data: any[][]) => {
-  let cellEmpty = 81;
-  const cells: { [key: string]: CellState } = {};
-  for (let row = 0; row < 9; row++) {
-    for (let col = 0; col < 9; col++) {
-      const isOrigin = data[row][col] !== null;
-
-      if (isOrigin) {
-        cellEmpty--;
-      }
-
-      cells[`${row}${col}`] = {
-        value: parseInt(data[row][col], 10),
-        status: "",
-        selected: false,
-        isOrigin,
-      };
-    }
-  }
-  return { cells, cellEmpty };
-};
+// export type Puzzle = (string | null)[][];
 
 interface SudokuState {
-  unSolve: any[];
+  puzzle?: PuzzleData;
   selectedCell: Position | null;
   cells: Record<string, CellState>;
   cellEmpty: number;
@@ -54,26 +35,28 @@ interface SudokuState {
    * true: solved
    */
   gameState: boolean;
-  setUnSolve: (puzzle: any[]) => void;
+  setPuzzle: (puzzle: PuzzleData) => void;
   clickCell: (pos: Position) => void;
   inputCell: (newNumber: number) => void;
   deleteCell: (pos?: Position) => void;
+  actionDelete: () => void;
+  actionHint: () => void;
 }
 
 const useSudokuStore = create<SudokuState>()((set, get) => ({
-  unSolve: [],
+  puzzle: undefined,
   selectedCell: null,
   cells: {},
   cellEmpty: 81,
   cellConflict: 0,
   gameState: false,
-  setUnSolve: (puzzle) => {
-    const data = handleDataSudoku(puzzle);
+  setPuzzle: (puzzle) => {
+    const { cells, cellEmpty } = convertPuzzle(puzzle);
     set({
-      unSolve: puzzle,
-      cells: data.cells,
-      cellEmpty: data.cellEmpty,
-      cellConflict: countConflict(get().cells),
+      puzzle,
+      cells,
+      cellEmpty,
+      cellConflict: countConflict(cells),
     });
   },
   clickCell: (pos: Position) => {
@@ -178,6 +161,21 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
       })
     );
   },
+  actionDelete() {
+    const { selectedCell, deleteCell } = useSudokuStore.getState();
+    if (selectedCell) {
+      deleteCell(selectedCell);
+    }
+  },
+  actionHint() {
+    const { selectedCell, cells } = useSudokuStore.getState();
+    if (!selectedCell) return;
+
+    const cell = getCellFromPos(cells, selectedCell);
+    if (cell.isOrigin) return;
+
+    // todo
+  },
 }));
 
 /**
@@ -188,7 +186,7 @@ export const moveSelectedCell = (
   directionMove: "up" | "down" | "left" | "right"
 ) => {
   const selectedCell = useSudokuStore.getState().selectedCell;
-  
+
   let newPos: Position = { col: 0, row: 0 };
   if (selectedCell) {
     const { row, col } = selectedCell;

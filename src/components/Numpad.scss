@@ -1,0 +1,22 @@
+.sudoku-numpad {
+  border: 1px dotted red;
+  display: flex;
+  margin-top: 10px;
+
+  .numpad-button {
+    border: 0;
+    background: 0;
+    padding: 0;
+    user-select: none;
+    width: calc(100% / 3);
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.numpad {
+  font-size: 36px;
+}

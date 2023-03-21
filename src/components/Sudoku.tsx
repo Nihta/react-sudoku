@@ -4,6 +4,8 @@ import useSudokuStore from "../zustand/useSudokuStore";
 import Alert from "./Alert";
 import Board from "./Board";
 import { useEffect } from "react";
+import Control from "./Control";
+import Numpad from "./Numpad";
 
 function Sudoku() {
   const gameState = useSudokuStore((state) => state.gameState);
@@ -28,6 +30,8 @@ function Sudoku() {
             </div>
           </div>
           <Board />
+          <Control />
+          <Numpad />
         </div>
       </div>
     </>
