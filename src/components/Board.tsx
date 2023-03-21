@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import useKeyDown from "../hooks/useKeyDown";
-import { deleteCell, inputCell, setUnSolve } from "../sudokuSlice";
+import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
+
 import Row from "./Row";
 
 const UN_SOLVE = [
@@ -19,27 +19,43 @@ const UN_SOLVE = [
 ];
 
 function Board() {
-  const dispatch = useDispatch();
+  const { deleteCell, inputCell, setUnSolve } = useSudokuStore(
+    (state) => state
+  );
 
   useEffect(() => {
-    dispatch(setUnSolve(UN_SOLVE));
-  }, [dispatch]);
+    setUnSolve(UN_SOLVE);
+  }, [setUnSolve]);
 
-  const handlerKeyDown = useCallback(
-    (e) => {
-      const { key } = e;
-      // console.log(`Press ${key}`);
+  const handlerKeyDown = useCallback((e: any) => {
+    const { key } = e;
 
-      if (key === "Backspace" || key === "Delete") {
-        dispatch(deleteCell(null));
-      }
+    // console.log(`Press ${key}`);
 
-      if (1 <= +key && +key <= 9) {
-        dispatch(inputCell({ number: parseInt(key, 10) }));
-      }
-    },
-    [dispatch]
-  );
+    switch (key) {
+      case "ArrowLeft":
+        moveSelectedCell("left");
+        break;
+      case "ArrowRight":
+        moveSelectedCell("right");
+        break;
+      case "ArrowUp":
+        moveSelectedCell("up");
+        break;
+      case "ArrowDown":
+        moveSelectedCell("down");
+        break;
+      case "Backspace":
+      case "Delete":
+        deleteCell(undefined);
+        break;
+      default:
+        if (1 <= +key && +key <= 9) {
+          inputCell(parseInt(key, 10));
+          break;
+        }
+    }
+  }, []);
 
   useKeyDown(handlerKeyDown);
 

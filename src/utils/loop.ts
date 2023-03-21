@@ -1,10 +1,10 @@
 import { getCellFromPos } from ".";
-import { Cell, Cells, Pos } from "../sudokuSlice";
+import { CellState, Position } from "../zustand/useSudokuStore";
 
 export const loopAllCellInRow = (
-  cells: Cells,
+  cells: Record<string, CellState>,
   row: number,
-  callBack: (cell: Cell, pos: Pos) => void
+  callBack: (cell: CellState, pos: Position) => void
 ) => {
   for (let i = 0; i < 9; i++) {
     const pos = { row, col: i };
@@ -14,9 +14,9 @@ export const loopAllCellInRow = (
 };
 
 export const loopAllCellInCol = (
-  cells: Cells,
+  cells: Record<string, CellState>,
   col: number,
-  callBack: (cell: Cell) => void
+  callBack: (cell: CellState) => void
 ) => {
   for (let i = 0; i < 9; i++) {
     const pos = `${i}${col}`;
@@ -25,10 +25,10 @@ export const loopAllCellInCol = (
 };
 
 export const loopAllCellInArea3x3 = (
-  cells: Cells,
+  cells: Record<string, CellState>,
   row: number,
   col: number,
-  callBack: (cell: Cell, row: number, col: number) => void
+  callBack: (cell: CellState, row: number, col: number) => void
 ) => {
   const y = Math.floor(row / 3) * 3;
   const x = Math.floor(col / 3) * 3;
@@ -41,8 +41,8 @@ export const loopAllCellInArea3x3 = (
 };
 
 export const loopAllCell = (
-  cells: Cells,
-  callBack: (cell: Cell, pos: Pos) => void
+  cells: Record<string, CellState>,
+  callBack: (cell: CellState, pos: Position) => void
 ) => {
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {

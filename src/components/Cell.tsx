@@ -1,7 +1,6 @@
 import classNames from "classnames";
-import { useDispatch } from "react-redux";
-import { useCell } from "../hooks";
-import { clickCell } from "../sudokuSlice";
+import { useCell } from "../hooks/sudokuHooks";
+import useSudokuStore from "../zustand/useSudokuStore";
 
 function Note() {
   return (
@@ -27,7 +26,8 @@ type CellProps = {
 function Cell(prop: CellProps) {
   const { row, col } = prop;
 
-  const dispatch = useDispatch();
+  const clickCell = useSudokuStore((state) => state.clickCell);
+
   const cell = useCell({ row, col });
 
   if (!cell) {
@@ -37,7 +37,7 @@ function Cell(prop: CellProps) {
   const isNote = false;
 
   const cellOnClick = () => {
-    dispatch(clickCell({ row, col }));
+    clickCell({ row, col });
   };
 
   const className = classNames("sudoku-col", {

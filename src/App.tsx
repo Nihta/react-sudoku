@@ -1,10 +1,9 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import Sudoku from "./features/sudoku/Sudoku";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+import Sudoku from "./components/Sudoku";
 
 function App() {
   return (
-
     <div className="container my-2">
       <Sudoku />
     </div>
