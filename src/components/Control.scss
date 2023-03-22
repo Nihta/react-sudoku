@@ -1,32 +1,42 @@
-.sudoku-control {
-  border: 1px dotted red;
-  margin-top: 1.5rem;
+.game-controls {
+  padding: 0 2.5%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5%;
+  margin-bottom: 14px;
+  color: #0072e3;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  .game-action-button {
-    width: 100%;
-    padding: 14px;
-    cursor: pointer;
-    height: 92px;
+  &-item-wrap {
+    position: relative;
+    max-width: 60px;
+    flex-basis: 25%;
+    flex-grow: 1;
     user-select: none;
-    background: 0 0;
-    outline: 0;
-    border: 0;
-    transition: all 0.2s ease-out;
+  }
 
+  &-item {
+    cursor: pointer;
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    border-radius: 50%;
+
+    background-color: #eaeef4;
     &:hover {
-      background: rgba(0, 0, 0, 0.1);
+      background-color: #dce3ed;
+    }
+    &:active {
+      background-color: #d2dae7;
     }
   }
 
-  svg {
-    font-size: 32px;
-  }
-
-  p {
-    margin: 0;
+  &-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 5px;
   }
 }

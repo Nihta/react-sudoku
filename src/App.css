@@ -1,0 +1,109 @@
+.container {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 801px) {
+  .container {
+    max-width: 801px;
+  }
+}
+
+@media (min-width: 980px) {
+  .container {
+    max-width: 980px;
+  }
+}
+
+@media (min-width: 1070px) {
+  .container {
+    max-width: 1070px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+@media (max-height: 800px) and (min-width: 1070px) {
+  .container {
+    max-width: 1070px;
+  }
+}
+
+.site-content-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 0 auto;
+  padding-top: 10px;
+}
+
+.site-content {
+  position: relative;
+  width: 100%;
+}
+
+.main-page .site-content {
+  margin-bottom: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .site-content {
+    max-width: calc(100% - 180px);
+    margin-right: 20px;
+  }
+}
+
+@media screen and (min-width: 1070px) {
+  .site-content {
+    max-width: calc(100% - 320px);
+  }
+}
+
+@media screen and (min-width: 1070px) {
+  .site-content {
+    margin-right: 20px;
+  }
+}
+
+@media screen and (min-width: 1070px) {
+  .aside {
+    display: block;
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
+.game-flex-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+.game-controls-wrapper {
+  /* width: 80%; */
+  min-width: 100px;
+  max-width: none;
+  flex-basis: 40%;
+  margin-left: 20px;
+  /* transition: opacity 0.3s ease-in-out; */
+  user-select: none;
+}
+
+.aside {
+  background: #eee;
+}

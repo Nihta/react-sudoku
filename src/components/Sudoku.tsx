@@ -13,28 +13,17 @@ function Sudoku() {
   let a = 0;
 
   return (
-    <>
+    <div className="game-flex-wrapper">
       {gameState && <Alert title="Win!" content="You win." />}
-      <div className="d-flex justify-content-center">
-        <div className="position-relative">
-          <div className="overlay p-5 d-none">
-            <h2 className="mt-4 text-center">You Win</h2>
-            <div className="d-flex justify-content-between">
-              <span>Độ khó</span>
-              <span>Dễ</span>
-            </div>
-            <hr />
-            <div className="d-flex justify-content-between">
-              <span>Thời gian</span>
-              <span>01:59</span>
-            </div>
-          </div>
-          <Board />
-          <Control />
-          <Numpad />
-        </div>
+      <div className="game-wrapper">
+        <Board />
       </div>
-    </>
+      <div className="game-controls-wrapper">
+        <Control />
+        <Numpad />
+        <div className="btn-new-game">Trò chơi mới</div>
+      </div>
+    </div>
   );
 }
 

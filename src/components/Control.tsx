@@ -18,50 +18,31 @@ function Control(props: ControlProps) {
 
   return (
     <>
-      <div className="sudoku-control">
-        <button
-          type={"button"}
-          className="game-action-button"
-          aria-label="Undo"
-        >
-          <FontAwesomeIcon icon={faUndo} />
-          <p>Hoàn tác</p>
-        </button>
-        <button
-          type={"button"}
-          className="game-action-button"
-          aria-label="Erase"
-          onClick={actionDelete}
-        >
-          <i className="fa fa-eraser" aria-hidden="true"></i>
-          <FontAwesomeIcon icon={faEraser} />
-          <p>Xoá</p>
-        </button>
-        <button
-          type={"button"}
-          className="game-action-button"
-          aria-label="Note"
-        >
-          <FontAwesomeIcon icon={faEdit} />
-          <p>Ghi chú</p>
-        </button>
-        <button
-          type={"button"}
-          className="game-action-button"
-          aria-label="Hint"
-          onClick={actionHint}
-        >
-          <FontAwesomeIcon icon={faLightbulb} />
-          <p>Gợi ý</p>
-        </button>
-        <button
-          type={"button"}
-          className="game-action-button"
-          aria-label="Pro mode"
-        >
-          <FontAwesomeIcon icon={faTh} />
-          <p>Pro</p>
-        </button>
+      <div className="game-controls">
+        <div className=" game-controls-item-wrap">
+          <div className="game-controls-item">
+            <FontAwesomeIcon icon={faUndo} />
+          </div>
+          <p className="game-controls-label">Hoàn tác</p>
+        </div>
+        <div className="game-controls-item-wrap" onClick={actionDelete}>
+          <div className="game-controls-item">
+            <FontAwesomeIcon icon={faEraser} />
+          </div>
+          <p className="game-controls-label">Xoá</p>
+        </div>
+        <div className="game-controls-item-wrap">
+          <div className="game-controls-item">
+            <FontAwesomeIcon icon={faEdit} />
+          </div>
+          <p className="game-controls-label">Ghi chú</p>
+        </div>
+        <div className="game-controls-item-wrap" onClick={actionHint}>
+          <div className="game-controls-item">
+            <FontAwesomeIcon icon={faLightbulb} />
+          </div>
+          <p className="game-controls-label">Gợi ý</p>
+        </div>
       </div>
     </>
   );

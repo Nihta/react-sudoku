@@ -1,11 +1,13 @@
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.css";
 import Sudoku from "./components/Sudoku";
 
 function App() {
   return (
-    <div className="container my-2">
-      <Sudoku />
+    <div className="container site-content-wrapper">
+      <div className="site-content">
+        <Sudoku />
+      </div>
+      <aside className="aside" />
     </div>
   );
 }
