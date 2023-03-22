@@ -14,15 +14,21 @@ type ControlProps = {};
 
 function Control(props: ControlProps) {
   const actionDelete = useSudokuStore((st) => st.actionDelete);
+  const actionHint = useSudokuStore((st) => st.actionHint);
 
   return (
     <>
       <div className="sudoku-control">
-        <button className="game-action-button" aria-label="Undo">
+        <button
+          type={"button"}
+          className="game-action-button"
+          aria-label="Undo"
+        >
           <FontAwesomeIcon icon={faUndo} />
           <p>Hoàn tác</p>
         </button>
         <button
+          type={"button"}
           className="game-action-button"
           aria-label="Erase"
           onClick={actionDelete}
@@ -31,15 +37,28 @@ function Control(props: ControlProps) {
           <FontAwesomeIcon icon={faEraser} />
           <p>Xoá</p>
         </button>
-        <button className="game-action-button" aria-label="Note">
+        <button
+          type={"button"}
+          className="game-action-button"
+          aria-label="Note"
+        >
           <FontAwesomeIcon icon={faEdit} />
           <p>Ghi chú</p>
         </button>
-        <button className="game-action-button" aria-label="Hint">
+        <button
+          type={"button"}
+          className="game-action-button"
+          aria-label="Hint"
+          onClick={actionHint}
+        >
           <FontAwesomeIcon icon={faLightbulb} />
           <p>Gợi ý</p>
         </button>
-        <button className="game-action-button" aria-label="Pro mode">
+        <button
+          type={"button"}
+          className="game-action-button"
+          aria-label="Pro mode"
+        >
           <FontAwesomeIcon icon={faTh} />
           <p>Pro</p>
         </button>

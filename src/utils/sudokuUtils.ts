@@ -1,5 +1,5 @@
 import { PuzzleData } from "../types/sudokuTypes";
-import { CellState } from "../zustand/useSudokuStore";
+import { CellState, Position } from "../zustand/useSudokuStore";
 
 /**
  * Sudoku: convert puzzle from string to array
@@ -29,4 +29,14 @@ export const convertPuzzle = (puzzleData: PuzzleData) => {
   }
 
   return { cells, cellEmpty };
+};
+
+/**
+ * Sudoku: get correct number from solution
+ * @param puzzle
+ * @param pos
+ */
+export const getCorrectNumber = (puzzle: PuzzleData, pos: Position) => {
+  const [, solution] = puzzle;
+  return parseInt(solution[pos.row * 9 + pos.col], 10);
 };

@@ -7,7 +7,7 @@ import {
   isSamePos,
 } from "../utils";
 import highLight from "../utils/highLight";
-import { convertPuzzle } from "../utils/sudokuUtils";
+import { convertPuzzle, getCorrectNumber } from "../utils/sudokuUtils";
 import { PuzzleData } from "../types/sudokuTypes";
 
 export type CellState = {
@@ -168,13 +168,21 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     }
   },
   actionHint() {
-    const { selectedCell, cells } = useSudokuStore.getState();
-    if (!selectedCell) return;
+    set(
+      produce((state: SudokuState) => {
+        const { selectedCell, puzzle, cells } = state;
 
-    const cell = getCellFromPos(cells, selectedCell);
-    if (cell.isOrigin) return;
+        if (!selectedCell || !puzzle) return;
 
-    // todo
+        const cell = getCellFromPos(cells, selectedCell);
+        if (cell.isOrigin) return;
+
+        const correctNumber = getCorrectNumber(puzzle, selectedCell);
+        cell.value = correctNumber;
+        cell.isOrigin = true;
+        state.cellEmpty--;
+      })
+    );
   },
 }));
 
