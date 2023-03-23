@@ -182,19 +182,19 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     }
   },
   actionHint() {
+    const { selectedCell, puzzle, cells, inputCell } = get();
+
+    if (!selectedCell || !puzzle) return;
+
+    const cell = getCellFromPos(cells, selectedCell);
+    if (cell.isOrigin) return;
+
+    const correctNumber = getCorrectNumber(puzzle, selectedCell);
+    inputCell(correctNumber, true);
+
     set(
       produce((state: SudokuState) => {
-        const { selectedCell, puzzle, cells } = state;
-
-        if (!selectedCell || !puzzle) return;
-
-        const cell = getCellFromPos(cells, selectedCell);
-        if (cell.isOrigin) return;
-
-        const correctNumber = getCorrectNumber(puzzle, selectedCell);
-        cell.value = correctNumber;
-        cell.isOrigin = true;
-        state.cellEmpty--;
+        getCellFromPos(state.cells, selectedCell).isOrigin = true;
       })
     );
   },

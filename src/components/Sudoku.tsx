@@ -10,10 +10,10 @@ function Sudoku() {
   const gameState = useSudokuStore((state) => state.gameState);
 
   let isPause = false;
+  const isWin = gameState;
 
   return (
     <div className="game-flex-wrapper">
-      {gameState && <Alert title="Win!" content="You win." />}
       <div className={`game-wrapper ${isPause ? "game-pause" : ""}`}>
         <Board />
         {isPause && (
@@ -32,6 +32,20 @@ function Sudoku() {
                   />
                 </g>
               </svg>
+            </div>
+          </div>
+        )}
+
+        {isWin && (
+          <div className="sudoku-win-wrapper">
+            <span className="title">Thành công!</span>
+            <div className="win__list-item">
+              <span>Độ khó</span>
+              <span>Dễ</span>
+            </div>
+            <div className="win__list-item">
+              <span>Thời gian</span>
+              <span>12:34</span>
             </div>
           </div>
         )}

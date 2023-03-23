@@ -102,3 +102,34 @@ $border-color-2: #c0c7d5;
     line-height: 20px;
   }
 }
+
+.sudoku-win-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 99;
+  background-color: #0072e3;
+
+  span {
+    color: white;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .win__list-item {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+}
