@@ -7,12 +7,13 @@ type ControlProps = {};
 function Control(props: ControlProps) {
   const actionDelete = useSudokuStore((st) => st.actionDelete);
   const actionHint = useSudokuStore((st) => st.actionHint);
+  const actionUndo = useSudokuStore((st) => st.actionUndo);
 
   return (
     <>
       <div className="game-controls">
         <div className=" game-controls-item-wrap">
-          <div className="game-controls-item">
+          <div className="game-controls-item" onClick={actionUndo}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="ionicon"

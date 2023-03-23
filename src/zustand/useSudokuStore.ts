@@ -30,6 +30,7 @@ interface SudokuState {
   cells: Record<string, CellState>;
   cellEmpty: number;
   cellConflict: number;
+  history: [Position, CellState["value"]][];
   /**
    * false: not solved
    * true: solved
@@ -37,15 +38,21 @@ interface SudokuState {
   gameState: boolean;
   setPuzzle: (puzzle: PuzzleData) => void;
   clickCell: (pos: Position) => void;
-  inputCell: (newNumber: number) => void;
+  inputCell: (newNumber: CellState["value"], ignoreUndo?: boolean) => void;
   deleteCell: (pos?: Position) => void;
   actionDelete: () => void;
   actionHint: () => void;
+  actionUndo: () => void;
+  /**
+   * Keep length of history is less than 100
+   */
+  setHistory: (pos: Position, val: CellState["value"]) => void;
 }
 
 const useSudokuStore = create<SudokuState>()((set, get) => ({
   puzzle: undefined,
   selectedCell: null,
+  history: [],
   cells: {},
   cellEmpty: 81,
   cellConflict: 0,
@@ -60,6 +67,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     });
   },
   clickCell: (pos: Position) => {
+    console.log("clickCell", pos);
     set(
       produce((state) => {
         // If game state is win
@@ -92,7 +100,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   /**
    * Điền giá trị vào một cell
    */
-  inputCell: (newNumber: number) => {
+  inputCell: (newVal, ignoreUndo) => {
     set(
       produce((state: SudokuState) => {
         // If game state is win
@@ -113,11 +121,18 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
         const oldCellVal = cellSelected.value;
 
         // If new number is same old number, delete cell
-        if (oldCellVal && newNumber && oldCellVal === newNumber) {
+        if (oldCellVal && newVal && oldCellVal === newVal) {
           cellSelected.value = null;
           state.cellEmpty++;
+          if (!ignoreUndo) {
+            state.setHistory(selectedCell, null);
+          }
         } else {
-          cellSelected.value = newNumber;
+          cellSelected.value = newVal;
+          if (!ignoreUndo) {
+            state.history.push([selectedCell, newVal]);
+            state.setHistory(selectedCell, newVal);
+          }
         }
 
         // If old number is null, cell empty decrease 1
@@ -181,6 +196,29 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
         cell.value = correctNumber;
         cell.isOrigin = true;
         state.cellEmpty--;
+      })
+    );
+  },
+  actionUndo() {
+    const { selectedCell, history, clickCell, inputCell } = get();
+    if (history.length === 0) return;
+
+    const [pos, value] = history[history.length - 1];
+    set({
+      history: history.slice(0, history.length - 1),
+    });
+
+    clickCell(pos);
+    // ignore save history (undo)
+    inputCell(value, true);
+  },
+  setHistory(pos, val) {
+    set(
+      produce((state: SudokuState) => {
+        state.history.push([pos, val]);
+        if (state.history.length > 100) {
+          state.history.shift();
+        }
       })
     );
   },
