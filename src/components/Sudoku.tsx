@@ -8,6 +8,7 @@ import Board from "./Board";
 
 function Sudoku() {
   const gameState = useSudokuStore((state) => state.gameState);
+  const actionNewGame = useSudokuStore((state) => state.actionNewGame);
 
   let isPause = false;
   const isWin = gameState;
@@ -53,7 +54,9 @@ function Sudoku() {
       <div className="game-controls-wrapper">
         <Control />
         <Numpad />
-        <div className="btn-new-game">Trò chơi mới</div>
+        <div className="btn-new-game" onClick={actionNewGame}>
+          Trò chơi mới
+        </div>
       </div>
     </div>
   );

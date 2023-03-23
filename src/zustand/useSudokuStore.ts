@@ -9,6 +9,7 @@ import {
 import highLight from "../utils/highLight";
 import { convertPuzzle, getCorrectNumber } from "../utils/sudokuUtils";
 import { PuzzleData } from "../types/sudokuTypes";
+import { easyPuzzles } from "../data/sudokuPuzzles";
 
 export type CellState = {
   value: number | null;
@@ -43,6 +44,7 @@ interface SudokuState {
   actionDelete: () => void;
   actionHint: () => void;
   actionUndo: () => void;
+  actionNewGame: () => void;
   /**
    * Keep length of history is less than 100
    */
@@ -64,6 +66,9 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
       cells,
       cellEmpty,
       cellConflict: countConflict(cells),
+      gameState: false,
+      history: [],
+      selectedCell: null,
     });
   },
   clickCell: (pos: Position) => {
@@ -220,6 +225,11 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
         }
       })
     );
+  },
+  actionNewGame() {
+    const { setPuzzle } = get();
+    const puzzle = easyPuzzles[Math.floor(Math.random() * easyPuzzles.length)];
+    setPuzzle(puzzle);
   },
 }));
 
