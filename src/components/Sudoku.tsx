@@ -3,9 +3,9 @@ import "./Sudoku.scss";
 import useSudokuStore from "../zustand/useSudokuStore";
 import Alert from "./Alert";
 import Board from "./Board";
-import { useEffect } from "react";
 import Control from "./Control";
 import Numpad from "./Numpad";
+import Board2 from "./Board";
 
 function Sudoku() {
   const gameState = useSudokuStore((state) => state.gameState);
@@ -16,7 +16,8 @@ function Sudoku() {
     <div className="game-flex-wrapper">
       {gameState && <Alert title="Win!" content="You win." />}
       <div className="game-wrapper">
-        <Board />
+        {/* <Board /> */}
+        <Board2 />
       </div>
       <div className="game-controls-wrapper">
         <Control />

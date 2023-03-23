@@ -40,7 +40,7 @@ function Cell(prop: CellProps) {
     clickCell({ row, col });
   };
 
-  const className = classNames("sudoku-col", {
+  const className = classNames("sudoku-cell", {
     incorrect: cell.status === "conflict",
     selected: cell.selected,
     highlight: cell.status === "high-light",
@@ -55,7 +55,7 @@ function Cell(prop: CellProps) {
         {isNote ? (
           <Note />
         ) : (
-          <span className="cell-value">{cell.value ? cell.value : ""}</span>
+          <div className="sudoku-cell__value">{cell.value ? cell.value : ""}</div>
         )}
       </div>
     </>

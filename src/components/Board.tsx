@@ -1,12 +1,16 @@
-import { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { easyPuzzles } from "../data/sudokuPuzzles";
 import useKeyDown from "../hooks/useKeyDown";
+import { getCellFromPos } from "../utils";
 import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
 
-import Row from "./Row";
+import "./Board.scss";
+import Cell from "./Cell";
 
-function Board() {
-  const { deleteCell, inputCell, setPuzzle } = useSudokuStore((state) => state);
+function Board2() {
+  const { deleteCell, inputCell, setPuzzle, cells } = useSudokuStore(
+    (state) => state
+  );
 
   useEffect(() => {
     setPuzzle(easyPuzzles[0]);
@@ -44,15 +48,18 @@ function Board() {
   });
 
   return (
-    <div className="board">
-      <div className="tbody">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((val) => (
-          <Row key={val} row={val} />
+    <div className="sudoku-board">
+      <div className="sudoku-grid">
+        {Array.from({ length: 9 }, (_, i) => (
+          <React.Fragment key={i}>
+            {Array.from({ length: 9 }, (_, j) => (
+              <Cell row={i} col={j} key={`${i}${j}`} />
+            ))}
+          </React.Fragment>
         ))}
       </div>
     </div>
   );
 }
 
-export default Board;
-
+export default Board2;
