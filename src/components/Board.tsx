@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { easyPuzzles } from "../data/sudokuPuzzles";
 import useKeyDown from "../hooks/useKeyDown";
-import { getCellFromPos } from "../utils";
 import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
 
 import "./Board.scss";
 import Cell from "./Cell";
 
-function Board2() {
+function Board() {
   const { deleteCell, inputCell, setPuzzle, cells } = useSudokuStore(
     (state) => state
   );
@@ -62,4 +61,4 @@ function Board2() {
   );
 }
 
-export default Board2;
+export default Board;

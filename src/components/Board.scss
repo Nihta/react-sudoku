@@ -3,7 +3,6 @@ $border-color-2: #c0c7d5;
 
 .sudoku {
   &-grid {
-    // grid 9 x 9
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-template-rows: repeat(9, 1fr);
@@ -68,4 +67,9 @@ $border-color-2: #c0c7d5;
       color: #006fde;
     }
   }
+}
+
+// hidden value in pause mode
+.game-pause .sudoku-cell__value {
+  display: none;
 }

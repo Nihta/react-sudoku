@@ -34,6 +34,22 @@ $border-color-2: #c0c7d5;
 }
 
 .sudoku {
+  &-pause-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-pause {
+    width: 60px;
+    height: 60px;
+  }
+
   &-board {
     width: 100%;
     aspect-ratio: 1/1;
