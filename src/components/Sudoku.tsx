@@ -1,7 +1,6 @@
 import "./Sudoku.scss";
 
 import useSudokuStore from "../zustand/useSudokuStore";
-import Alert from "./Alert";
 import Control from "./Control";
 import Numpad from "./Numpad";
 import Board from "./Board";

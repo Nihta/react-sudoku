@@ -4,10 +4,8 @@
   grid-template-columns: repeat(3, 32%);
   grid-template-rows: repeat(3, 32%);
   grid-gap: 2%;
-
   width: 100%;
   height: auto;
-  // height: 100%;
 
   &-item {
     color: #0072e3;

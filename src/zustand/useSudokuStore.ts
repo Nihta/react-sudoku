@@ -33,6 +33,11 @@ interface SudokuState {
   cellConflict: number;
   history: [Position, CellState["value"]][];
   /**
+   * Count time use for solve puzzle
+   */
+  time: number;
+  incTime: () => void;
+  /**
    * false: not solved
    * true: solved
    */
@@ -58,6 +63,11 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   cells: {},
   cellEmpty: 81,
   cellConflict: 0,
+  time: 0,
+  incTime() {
+    const { time } = get();
+    set({ time: time + 1 });
+  },
   gameState: false,
   setPuzzle: (puzzle) => {
     const { cells, cellEmpty } = convertPuzzle(puzzle);
@@ -69,6 +79,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
       gameState: false,
       history: [],
       selectedCell: null,
+      time: 0,
     });
   },
   clickCell: (pos: Position) => {

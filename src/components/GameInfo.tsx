@@ -1,15 +1,13 @@
 import React from "react";
+import { useInterval } from "usehooks-ts";
+import useSudokuStore from "../zustand/useSudokuStore";
 import "./GameInfo.scss";
 
 const Time = () => {
-  const [time, setTime] = React.useState(0);
+  const time = useSudokuStore((st) => st.time);
+  const incTime = useSudokuStore((st) => st.incTime);
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((time) => time + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  useInterval(incTime, 1000);
 
   const timeStr =
     `${Math.floor(time / 60)}`.padStart(2, "0") +
