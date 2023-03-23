@@ -8,7 +8,7 @@ import { CellState, Position } from "../zustand/useSudokuStore";
 export const convertPuzzle = (puzzleData: PuzzleData) => {
   const [puzzle] = puzzleData;
   const cells: Record<string, CellState> = {};
-  let cellEmpty = 0;
+  let cellEmpty = 81;
 
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
@@ -16,7 +16,7 @@ export const convertPuzzle = (puzzleData: PuzzleData) => {
       const isOrigin = value !== 0;
 
       if (isOrigin) {
-        cellEmpty++;
+        cellEmpty--;
       }
 
       cells[`${row}${col}`] = {

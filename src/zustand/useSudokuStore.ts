@@ -67,7 +67,6 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     });
   },
   clickCell: (pos: Position) => {
-    console.log("clickCell", pos);
     set(
       produce((state) => {
         // If game state is win
