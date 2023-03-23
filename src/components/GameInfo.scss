@@ -1,0 +1,56 @@
+// <div className="game-info-level__wrapper">
+// <span className="game-info-level__title">Độ khó</span>
+// <div className="game-info-level__items">
+//   <span className="game-info-level__item">Dễ</span>
+// </div>
+// </div>
+
+.game-info-level {
+  &__wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+  }
+  &__title {
+    margin-right: 7px;
+    color: #94a3b7;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+  }
+  &__items {
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    padding: 8px;
+    margin-right: 4px;
+
+    &.active {
+      color: #0072e3;
+    }
+  }
+}
+.game-info-time {
+  display: flex;
+  align-items: center;
+
+}
+
+.game-info {
+  &-wrapper {
+    margin-bottom: 12px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      color: #94a3b7;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 0.8;
+    }
+  }
+}

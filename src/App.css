@@ -1,3 +1,9 @@
+.site-header {
+  background-color: #eee;
+  height: 70px;
+  margin-bottom: 20px;
+}
+
 .container {
   position: relative;
   display: block;

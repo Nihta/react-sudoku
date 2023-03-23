@@ -3,12 +3,15 @@ import Sudoku from "./components/Sudoku";
 
 function App() {
   return (
-    <div className="container site-content-wrapper">
-      <div className="site-content">
-        <Sudoku />
+    <>
+      <header className="site-header" />
+      <div className="container site-content-wrapper">
+        <div className="site-content">
+          <Sudoku />
+        </div>
+        <aside className="aside" />
       </div>
-      <aside className="aside" />
-    </div>
+    </>
   );
 }
 
