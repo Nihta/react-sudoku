@@ -1,15 +1,15 @@
-import { create } from "zustand";
 import produce from "immer";
+import { create } from "zustand";
+import { easyPuzzles } from "../data/sudokuPuzzles";
+import { PuzzleData } from "../types/sudokuTypes";
 import {
   countConflict,
   getCellFromPos,
   getKeyCellFromPos,
-  isSamePos,
+  isSamePos
 } from "../utils";
 import highLight from "../utils/highLight";
 import { convertPuzzle, getCorrectNumber } from "../utils/sudokuUtils";
-import { PuzzleData } from "../types/sudokuTypes";
-import { easyPuzzles } from "../data/sudokuPuzzles";
 
 export type CellState = {
   value: number | null;
@@ -215,7 +215,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     );
   },
   actionUndo() {
-    const { selectedCell, history, clickCell, inputCell } = get();
+    const { history, clickCell, inputCell } = get();
     if (history.length === 0) return;
 
     const [pos, value] = history[history.length - 1];

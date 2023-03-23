@@ -7,13 +7,11 @@ import "./Board.scss";
 import Cell from "./Cell";
 
 function Board() {
-  const { deleteCell, inputCell, setPuzzle, cells } = useSudokuStore(
-    (state) => state
-  );
+  const { deleteCell, inputCell, setPuzzle } = useSudokuStore((state) => state);
 
   useEffect(() => {
     setPuzzle(easyPuzzles[0]);
-  }, [setPuzzle, easyPuzzles]);
+  }, [setPuzzle]);
 
   useKeyDown((e) => {
     const { key } = e;
