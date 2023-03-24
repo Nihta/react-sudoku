@@ -20,13 +20,13 @@ $action-active-background-color: #d2dae7;
   }
 
   &-item {
-    cursor: pointer;
     width: 100%;
     aspect-ratio: 1/1;
     font-size: 30px;
     border-radius: 50%;
     position: relative;
 
+    cursor: pointer;
     background-color: $action-background-color;
     &:hover {
       background-color: $action-hover-background-color;
