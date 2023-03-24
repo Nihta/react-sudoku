@@ -3,7 +3,6 @@ import styled from "styled-components";
 type StyledButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<StyledButtonProps>`
-  background-color: #0072e3;
   border: 0;
   border-radius: 5px;
   cursor: pointer;
@@ -16,6 +15,9 @@ const StyledButton = styled.button<StyledButtonProps>`
   color: #fff;
   line-height: 60px;
   outline: none;
+
+  background-color: var(--color-primary);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
   background-color: #0072e3;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;

@@ -1,3 +1,6 @@
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyles = createGlobalStyle`
 /* Box sizing rules */
 *,
 *::before,
@@ -73,8 +76,18 @@ select {
   }
 }
 
+/* My custom */
 body {
   font-family: "Source Sans Pro", sans-serif;
   font-size: 16px;
   user-select: none;
-}
+
+  --color-primary: #0072e3;
+  --color-sudoku-border: #58697d;
+  --color-sudoku-border-2: #c0c7d5;
+  --color-action-background: #eaeef4;
+  --color-action-hover-background: #dce3ed;
+  --color-action-active-background: #d2dae7;
+}`;
+
+export default GlobalStyles;

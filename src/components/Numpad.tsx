@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
 const Item = styled(Pressable)`
   font-size: 36px;
-  color: #0072e3;
+  color: var(--color-primary);
   text-align: center;
   padding: 18% 0;
 `;
