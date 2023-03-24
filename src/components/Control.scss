@@ -1,10 +1,15 @@
+$primary-color: #0072e3;
+$action-background-color: #eaeef4;
+$action-hover-background-color: #dce3ed;
+$action-active-background-color: #d2dae7;
+
 .game-controls {
   padding: 0 2.5%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 5%;
   margin-bottom: 14px;
-  color: #0072e3;
+  color: $primary-color;
 
   &-item-wrap {
     position: relative;
@@ -22,12 +27,17 @@
     border-radius: 50%;
     position: relative;
 
-    background-color: #eaeef4;
+    background-color: $action-background-color;
     &:hover {
-      background-color: #dce3ed;
+      background-color: $action-hover-background-color;
     }
     &:active {
-      background-color: #d2dae7;
+      background-color: $action-background-color;
+    }
+
+    border: 2px solid $action-background-color;
+    &.active {
+      border: 2px solid $primary-color;
     }
   }
 
@@ -42,7 +52,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 55%;
     height: 100%;
     color: #344861;

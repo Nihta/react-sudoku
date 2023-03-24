@@ -1,7 +1,7 @@
 import produce from "immer";
 import { create } from "zustand";
 import { easyPuzzles } from "../data/sudokuPuzzles";
-import { CellState, Position, PuzzleData } from "../types/sudokuTypes";
+import { CellState, Notes, Position, PuzzleData } from "../types/sudokuTypes";
 import {
   convertPuzzle,
   countConflict,
@@ -10,8 +10,6 @@ import {
   isSamePos,
 } from "../utils/sudokuUtils";
 
-// export type Puzzle = (string | null)[][];
-
 interface SudokuState {
   puzzle?: PuzzleData;
   selectedCell: Position | null;
@@ -19,6 +17,8 @@ interface SudokuState {
   cellEmpty: number;
   cellConflict: number;
   history: [Position, CellState["value"]][];
+  notes: Notes;
+  noteMode: boolean;
   /**
    * Count time use for solve puzzle
    */
@@ -41,16 +41,19 @@ interface SudokuState {
    * Keep length of history is less than 100
    */
   setHistory: (pos: Position, val: CellState["value"]) => void;
+  actionNote: () => void;
 }
 
 const useSudokuStore = create<SudokuState>()((set, get) => ({
   puzzle: undefined,
+  noteMode: false,
   selectedCell: null,
   history: [],
   cells: [],
   cellEmpty: 81,
   cellConflict: 0,
   time: 0,
+  notes: Array.from({ length: 81 }, () => []),
   incTime() {
     const { time } = get();
     set({ time: time + 1 });
@@ -67,7 +70,13 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
       history: [],
       selectedCell: null,
       time: 0,
+      notes: Array.from({ length: 81 }, () => []),
+      noteMode: false,
     });
+  },
+  actionNote() {
+    const { noteMode } = get();
+    set({ noteMode: !noteMode });
   },
   clickCell: (pos: Position) => {
     set(
@@ -115,6 +124,25 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
 
         // Nếu đó là cell gốc - không thể sửa
         if (cellSelected.isOrigin) return;
+
+        // Note mode
+        // todo newVal tại sao lại có thể là null
+        if (state.noteMode && newVal) {
+          const note = state.notes[selectedPos.row * 9 + selectedPos.col];
+          if (note.includes(newVal)) {
+            state.notes[selectedPos.row * 9 + selectedPos.col] = note.filter(
+              (n) => n !== newVal
+            );
+          } else {
+            state.notes[selectedPos.row * 9 + selectedPos.col] = [
+              ...note,
+              newVal,
+            ];
+          }
+          return;
+        } else {
+          state.notes[selectedPos.row * 9 + selectedPos.col] = [];
+        }
 
         // Cập nhật giá trị của cell
         const oldCellVal = cellSelected.value;

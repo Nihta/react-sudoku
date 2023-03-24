@@ -7,6 +7,11 @@ export const useCell = (pos: Position) => {
   return cells[pos.row * 9 + pos.col];
 };
 
+export const useCellNote = (pos: Position) => {
+  const notes = useSudokuStore((state) => state.notes);
+  return notes[pos.row * 9 + pos.col];
+};
+
 /**
  * Handle keybroad event (move, delete, input)
  */

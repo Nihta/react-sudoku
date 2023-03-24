@@ -8,6 +8,8 @@ function Control(props: ControlProps) {
   const actionDelete = useSudokuStore((st) => st.actionDelete);
   const actionHint = useSudokuStore((st) => st.actionHint);
   const actionUndo = useSudokuStore((st) => st.actionUndo);
+  const noteMode = useSudokuStore((st) => st.noteMode);
+  const actionNote = useSudokuStore((st) => st.actionNote);
 
   return (
     <>
@@ -48,7 +50,10 @@ function Control(props: ControlProps) {
           <p className="game-controls-label">Xoá</p>
         </div>
         <div className="game-controls-item-wrap">
-          <div className="game-controls-item">
+          <div
+            onClick={actionNote}
+            className={`${"game-controls-item"} ${noteMode ? "active" : ""}`}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={24}

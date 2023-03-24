@@ -1,19 +1,13 @@
 import classNames from "classnames";
-import { useCell } from "../hooks/sudokuHooks";
+import { useCell, useCellNote } from "../hooks/sudokuHooks";
 import useSudokuStore from "../zustand/useSudokuStore";
 
-function Note() {
+function Note({ values }: { values: number[] }) {
   return (
     <div className="notes">
-      <div className="notes-item">1</div>
-      <div className="notes-item">2</div>
-      <div className="notes-item">3</div>
-      <div className="notes-item">4</div>
-      <div className="notes-item">5</div>
-      <div className="notes-item">6</div>
-      <div className="notes-item">7</div>
-      <div className="notes-item">8</div>
-      <div className="notes-item">9</div>
+      {Array.from({ length: 9 }, (_, i) => i + 1).map((i) => {
+        return <div className="notes-item">{values.includes(i) ? i : ""}</div>;
+      })}
     </div>
   );
 }
@@ -29,12 +23,13 @@ function Cell(prop: CellProps) {
   const clickCell = useSudokuStore((state) => state.clickCell);
 
   const cell = useCell({ row, col });
+  const note = useCellNote({ row, col });
 
   if (!cell) {
     return null;
   }
 
-  const isNote = false;
+  const isHasNote = note.length > 0;
 
   const cellOnClick = () => {
     clickCell({ row, col });
@@ -52,10 +47,12 @@ function Cell(prop: CellProps) {
   return (
     <>
       <div className={className} onClick={cellOnClick}>
-        {isNote ? (
-          <Note />
+        {isHasNote ? (
+          <Note values={note} />
         ) : (
-          <div className="sudoku-cell__value">{cell.value ? cell.value : ""}</div>
+          <div className="sudoku-cell__value">
+            {cell.value ? cell.value : ""}
+          </div>
         )}
       </div>
     </>
