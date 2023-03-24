@@ -23,6 +23,9 @@ interface SudokuState {
    * Count time use for solve puzzle
    */
   time: number;
+  /**
+   * Only count when game state is true
+   */
   incTime: () => void;
   /**
    * false: not solved
@@ -55,8 +58,10 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   time: 0,
   notes: Array.from({ length: 81 }, () => []),
   incTime() {
-    const { time } = get();
-    set({ time: time + 1 });
+    const { time, gameState } = get();
+    if (!gameState) {
+      set({ time: time + 1 });
+    }
   },
   gameState: false,
   setPuzzle: (puzzle) => {

@@ -1,5 +1,6 @@
 import React from "react";
 import { useInterval } from "usehooks-ts";
+import { convertTime } from "../utils/sudokuUtils";
 import useSudokuStore from "../zustand/useSudokuStore";
 import "./GameInfo.scss";
 
@@ -9,14 +10,9 @@ const Time = () => {
 
   useInterval(incTime, 1000);
 
-  const timeStr =
-    `${Math.floor(time / 60)}`.padStart(2, "0") +
-    ":" +
-    `${time % 60}`.padStart(2, "0");
-
   return (
     <div className="game-info-time">
-      <span>{timeStr}</span>
+      <span>{convertTime(time)}</span>
     </div>
   );
 };

@@ -1,6 +1,17 @@
 import { Cells, CellState, Position, PuzzleData } from "../types/sudokuTypes";
 
 /**
+ * Convert time to string
+ */
+export const convertTime = (time: number) => {
+  return (
+    `${Math.floor(time / 60)}`.padStart(2, "0") +
+    ":" +
+    `${time % 60}`.padStart(2, "0")
+  );
+};
+
+/**
  * Sudoku: convert puzzle from string to array
  * @param puzzleData 0006000801020005...
  */
@@ -153,15 +164,36 @@ const highLightConflict = (cells: Cells) => {
   }
 };
 
+/**
+ * Very helpful function to highlight related cell
+ */
+const supperHighLightRelated = (cells: Cells, pos: Position) => {
+  const val = cells[pos.row * 9 + pos.col].value;
+  if (!val) return;
+  cells.forEach((cell, idx) => {
+    if (cell.value === val) {
+      const row = Math.trunc(idx / 9);
+      const col = idx % 9;
+      hightLightRelated(cells, { row, col });
+      cell.status = "high-light-number";
+    }
+  });
+};
+
+const SUPPER_HIGH_LIGHT = true;
 export const highLight = (cells: Cells, posSelected: Position) => {
-  console.log("highLight");
 
   // Clear all highlight
   cells.forEach((cell) => {
     cell.status = "normal";
   });
 
-  hightLightRelated(cells, posSelected);
+  if (SUPPER_HIGH_LIGHT) {
+    supperHighLightRelated(cells, posSelected);
+  } else {
+    hightLightRelated(cells, posSelected);
+  }
+
   highLightConflict(cells);
 
   return cells;

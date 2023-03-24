@@ -5,10 +5,12 @@ import Control from "./Control";
 import Numpad from "./Numpad";
 import Board from "./Board";
 import GameInfo from "./GameInfo";
+import { convertTime } from "../utils/sudokuUtils";
 
 function Sudoku() {
   const gameState = useSudokuStore((state) => state.gameState);
   const actionNewGame = useSudokuStore((state) => state.actionNewGame);
+  const time = useSudokuStore((state) => state.time);
 
   let isPause = false;
   const isWin = gameState;
@@ -48,7 +50,7 @@ function Sudoku() {
               </div>
               <div className="win__list-item">
                 <span>Thời gian</span>
-                <span>12:34</span>
+                <span>{convertTime(time)}</span>
               </div>
             </div>
           )}
