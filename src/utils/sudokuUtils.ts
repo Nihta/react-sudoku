@@ -170,6 +170,12 @@ const highLightConflict = (cells: Cells) => {
 const supperHighLightRelated = (cells: Cells, pos: Position) => {
   const val = cells[pos.row * 9 + pos.col].value;
   if (!val) return;
+  // high light all origin cell
+  cells.forEach((cell) => {
+    if (cell.isOrigin) {
+      cell.status = "high-light";
+    }
+  });
   cells.forEach((cell, idx) => {
     if (cell.value === val) {
       const row = Math.trunc(idx / 9);
@@ -182,7 +188,6 @@ const supperHighLightRelated = (cells: Cells, pos: Position) => {
 
 const SUPPER_HIGH_LIGHT = true;
 export const highLight = (cells: Cells, posSelected: Position) => {
-
   // Clear all highlight
   cells.forEach((cell) => {
     cell.status = "normal";
