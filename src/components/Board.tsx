@@ -1,48 +1,19 @@
 import React, { useEffect } from "react";
 import { easyPuzzles } from "../data/sudokuPuzzles";
-import useKeyDown from "../hooks/useKeyDown";
-import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
+import { useMoveKeybroad } from "../hooks/sudokuHooks";
+import useSudokuStore from "../zustand/useSudokuStore";
 
 import "./Board.scss";
 import Cell from "./Cell";
 
 function Board() {
-  const { deleteCell, inputCell, setPuzzle } = useSudokuStore((state) => state);
+  const { setPuzzle } = useSudokuStore((state) => state);
 
   useEffect(() => {
     setPuzzle(easyPuzzles[0]);
   }, [setPuzzle]);
 
-  useKeyDown((e) => {
-    const { key } = e;
-    switch (key) {
-      case "ArrowLeft":
-        e.preventDefault();
-        moveSelectedCell("left");
-        break;
-      case "ArrowRight":
-        e.preventDefault();
-        moveSelectedCell("right");
-        break;
-      case "ArrowUp":
-        e.preventDefault();
-        moveSelectedCell("up");
-        break;
-      case "ArrowDown":
-        e.preventDefault();
-        moveSelectedCell("down");
-        break;
-      case "Backspace":
-      case "Delete":
-        deleteCell(undefined);
-        break;
-      default:
-        if (1 <= +key && +key <= 9) {
-          inputCell(parseInt(key, 10));
-          break;
-        }
-    }
-  });
+  useMoveKeybroad();
 
   return (
     <div className="sudoku-board">

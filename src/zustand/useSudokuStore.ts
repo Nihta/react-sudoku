@@ -1,34 +1,21 @@
 import produce from "immer";
 import { create } from "zustand";
 import { easyPuzzles } from "../data/sudokuPuzzles";
-import { PuzzleData } from "../types/sudokuTypes";
+import { CellState, Position, PuzzleData } from "../types/sudokuTypes";
 import {
+  convertPuzzle,
   countConflict,
-  getCellFromPos,
-  getKeyCellFromPos,
-  isSamePos
-} from "../utils";
-import highLight from "../utils/highLight";
-import { convertPuzzle, getCorrectNumber } from "../utils/sudokuUtils";
-
-export type CellState = {
-  value: number | null;
-  status: "" | "normal" | "conflict" | "high-light" | "high-light-number";
-  selected: boolean;
-  isOrigin: boolean;
-};
-
-export type Position = {
-  row: number;
-  col: number;
-};
+  getCorrectNumber,
+  highLight,
+  isSamePos,
+} from "../utils/sudokuUtils";
 
 // export type Puzzle = (string | null)[][];
 
 interface SudokuState {
   puzzle?: PuzzleData;
   selectedCell: Position | null;
-  cells: Record<string, CellState>;
+  cells: Array<CellState>;
   cellEmpty: number;
   cellConflict: number;
   history: [Position, CellState["value"]][];
@@ -60,7 +47,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   puzzle: undefined,
   selectedCell: null,
   history: [],
-  cells: {},
+  cells: [],
   cellEmpty: 81,
   cellConflict: 0,
   time: 0,
@@ -84,30 +71,29 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   },
   clickCell: (pos: Position) => {
     set(
-      produce((state) => {
+      produce((state: SudokuState) => {
         // If game state is win
         if (state.gameState) {
           return;
         }
 
-        const posSelectedCellOld = state.selectedCell;
-        const posSelectedCellNew = pos;
+        const posOld = state.selectedCell;
         // Nếu đã chọn một cell trước đó
-        if (posSelectedCellOld) {
+        if (posOld) {
           // Nếu cell đang chọn là cell đã chọn trước đó thì bỏ qua
-          if (isSamePos(posSelectedCellOld, posSelectedCellNew)) {
+          if (isSamePos(posOld, pos)) {
             return;
           }
           // Bỏ chọn cell cũ
-          state.cells[getKeyCellFromPos(posSelectedCellOld)].selected = false;
+          state.cells[posOld.row * 9 + posOld.col].selected = false;
         }
 
         // Chọn cell mới
-        state.selectedCell = posSelectedCellNew;
-        state.cells[getKeyCellFromPos(posSelectedCellNew)].selected = true;
+        state.selectedCell = pos;
+        state.cells[pos.row * 9 + pos.col].selected = true;
 
         // Highlight lại
-        const newCells = highLight(state.cells, posSelectedCellNew);
+        const newCells = highLight(state.cells, pos);
         state.cells = newCells;
       })
     );
@@ -119,15 +105,13 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     set(
       produce((state: SudokuState) => {
         // If game state is win
-        if (state.gameState) {
-          return;
-        }
+        if (state.gameState) return;
 
         // If not selected cell
-        const selectedCell = state.selectedCell;
-        if (!selectedCell) return;
+        const selectedPos = state.selectedCell;
+        if (!selectedPos) return;
 
-        const cellSelected = getCellFromPos(state.cells, selectedCell);
+        const cellSelected = state.cells[selectedPos.row * 9 + selectedPos.col];
 
         // Nếu đó là cell gốc - không thể sửa
         if (cellSelected.isOrigin) return;
@@ -140,13 +124,13 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
           cellSelected.value = null;
           state.cellEmpty++;
           if (!ignoreUndo) {
-            state.setHistory(selectedCell, null);
+            state.setHistory(selectedPos, null);
           }
         } else {
           cellSelected.value = newVal;
           if (!ignoreUndo) {
-            state.history.push([selectedCell, newVal]);
-            state.setHistory(selectedCell, newVal);
+            state.history.push([selectedPos, newVal]);
+            state.setHistory(selectedPos, newVal);
           }
         }
 
@@ -156,7 +140,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
         }
 
         // HighLight lại
-        highLight(state.cells, selectedCell);
+        highLight(state.cells, selectedPos);
         // Tính lại số lượng conflict
         state.cellConflict = countConflict(state.cells);
 
@@ -181,7 +165,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
         if (!posSelected) return;
 
         // Can't delete cell origin
-        const cell = getCellFromPos(state.cells, posSelected);
+        const cell = state.cells[posSelected.row * 9 + posSelected.col];
         if (cell.isOrigin) return;
 
         if (cell.value) {
@@ -202,7 +186,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
 
     if (!selectedCell || !puzzle) return;
 
-    const cell = getCellFromPos(cells, selectedCell);
+    const cell = cells[selectedCell.row * 9 + selectedCell.col];
     if (cell.isOrigin) return;
 
     const correctNumber = getCorrectNumber(puzzle, selectedCell);
@@ -210,7 +194,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
 
     set(
       produce((state: SudokuState) => {
-        getCellFromPos(state.cells, selectedCell).isOrigin = true;
+        cells[selectedCell.row * 9 + selectedCell.col].isOrigin = true;
       })
     );
   },
