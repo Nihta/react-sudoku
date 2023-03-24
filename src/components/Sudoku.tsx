@@ -6,6 +6,7 @@ import Numpad from "./Numpad";
 import Board from "./Board";
 import GameInfo from "./GameInfo";
 import { convertTime } from "../utils/sudokuUtils";
+import Button from "./base/Button";
 
 function Sudoku() {
   const gameState = useSudokuStore((state) => state.gameState);
@@ -58,9 +59,15 @@ function Sudoku() {
         <div className="game-controls-wrapper">
           <Control />
           <Numpad />
-          <div className="btn-new-game" onClick={actionNewGame}>
-            Trò chơi mới
-          </div>
+          <Button
+            style={{
+              marginTop: "12px",
+            }}
+            type="button"
+            label="Trò chơi mới"
+            onClick={actionNewGame}
+            title="Trò chơi mới"
+          />
         </div>
       </div>
     </>
