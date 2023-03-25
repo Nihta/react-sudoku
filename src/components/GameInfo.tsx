@@ -58,10 +58,12 @@ const GameInfo = () => {
       </LevelWrapper>
       <Flex>
         <Time />
-        <Toggle onClick={toggle}>
-          {gameState === "playing" && <TimerPause />}
-          {gameState === "paused" && <TimerPlay className="timer-play" />}
-        </Toggle>
+        {["playing", "paused"].includes(gameState) && (
+          <Toggle onClick={toggle}>
+            {gameState === "playing" && <TimerPause />}
+            {gameState === "paused" && <TimerPlay className="timer-play" />}
+          </Toggle>
+        )}
       </Flex>
     </Wrapper>
   );
