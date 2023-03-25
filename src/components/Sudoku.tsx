@@ -10,6 +10,7 @@ import GamePause from "./GamePause";
 
 import useSudokuStore from "../zustand/useSudokuStore";
 import { useGameStore } from "../zustand/useGameStore";
+import { BREAKPOINTS } from "../constants.ts";
 
 function Sudoku() {
   const gameState = useGameStore((state) => state.gameState);
@@ -49,24 +50,33 @@ function Sudoku() {
 }
 
 const GameAndControlWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  /* width: 100%; */
   position: relative;
+  display: flex;
+  flex-direction: column;
 
-  @media screen and (max-width: 767px) {
+  @media ${BREAKPOINTS.smAndLarger} {
+    flex-direction: row;
+  }
+
+  /* @media screen and (max-width: 767px) {
     flex-direction: column;
     max-width: 500px;
     margin: 0 auto;
-  }
+  } */
 `;
 
 const GameWrapper = styled.div`
   position: relative;
-  /* width: 100%; */
-  flex-basis: 60%;
   min-width: 250px;
   max-width: 500px;
+
+  @media ${BREAKPOINTS.mobile} {
+    flex-basis: 55%;
+  }
+
+  @media ${BREAKPOINTS.desktop} {
+    flex-basis: 60%;
+  }
 `;
 
 const GameControlWrapper = styled.div`
@@ -74,12 +84,20 @@ const GameControlWrapper = styled.div`
   min-width: 100px;
   /* max-width: none; */
   flex-basis: 40%;
-  margin-left: 20px;
   transition: opacity 0.3s ease-in-out;
 
+  margin: 0;
 
-  @media screen and (max-width: 767px) {
-    margin: 0;
+  @media ${BREAKPOINTS.smAndLarger} {
+    margin-left: 20px;
+  }
+
+  @media ${BREAKPOINTS.md} {
+    flex-basis: 45%;
+  }
+
+  @media ${BREAKPOINTS.desktop} {
+    flex-basis: 40%;
   }
 `;
 

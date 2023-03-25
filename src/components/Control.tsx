@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import Pressable from "./base/Pressable";
 import useSudokuStore from "../zustand/useSudokuStore";
+import { BREAKPOINTS } from "../constants.ts";
 
 function Control() {
   const actionDelete = useSudokuStore((st) => st.actionDelete);
@@ -100,37 +101,46 @@ function Control() {
 }
 
 const Wrapper = styled.div`
-  padding: 0 2.5%;
+  /* padding: 0 2.5%; */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 5%;
-  margin-bottom: 14px;
+  grid-gap: 8px;
   color: var(--color-primary);
-  @media screen and (max-width: 767px) {
-    margin-top: 8px;
+  margin-top: 10px;
+
+  @media ${BREAKPOINTS.smAndLarger} {
+    grid-gap: 5%;
+    margin-bottom: 14px;
+  }
+
+  /* @media screen and (max-width: 767px) {
     padding: 0;
     grid-gap: 8px;
     margin-bottom: 0;
-  }
+  } */
 `;
 
 const ItemWrapper = styled.div`
   position: relative;
-  max-width: 60px;
   @media screen and (max-width: 767px) {
     max-width: 100%;
+  }
+
+  @media ${BREAKPOINTS.smAndLarger} {
+    max-width: 60px;
   }
 `;
 
 const ItemIcon = styled(Pressable)`
   position: relative;
-  border-radius: 50%;
   width: 100%;
-  aspect-ratio: 1/1;
+  height: 30px;
 
-  @media screen and (max-width: 767px) {
-    height: 34px;
-    border-radius: 5px;
+  @media ${BREAKPOINTS.smAndLarger} {
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    display: block;
+    height: auto;
   }
 
   &.active {
@@ -142,11 +152,8 @@ const ItemIcon = styled(Pressable)`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 55%;
     color: #344861;
-    @media screen and (max-width: 767px) {
-      height: 28px;
-    }
+    height: 28px;
   }
 `;
 
@@ -156,11 +163,16 @@ const Label = styled.span`
   text-align: center;
   margin-top: 5px;
   text-align: center;
-  display: block;
   color: var(--color-primary);
 
-  @media screen and (max-width: 767px) {
-    display: none;
+  display: none;
+
+  @media ${BREAKPOINTS.smAndLarger} {
+    display: block;
+  }
+
+  @media ${BREAKPOINTS.md} {
+    flex-basis: 45%;
   }
 `;
 

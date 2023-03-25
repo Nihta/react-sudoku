@@ -197,7 +197,7 @@ const supperHighLightRelated = (cells: Cells, pos: number) => {
   });
 };
 
-const SUPPER_HIGH_LIGHT = false;
+const SUPPER_HIGH_LIGHT = true;
 export const highLight = (cells: Cells, posSelected: number) => {
   // Clear all highlight
   cells.forEach((cell) => {
