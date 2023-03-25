@@ -1,10 +1,18 @@
 import styled from "styled-components";
+import { useGameStore } from "../zustand/useGameStore";
 
 export default function GamePause() {
+  const setGamestate = useGameStore((state) => state.setGamestate);
+
+  const play = () => {
+    setGamestate("playing");
+  };
+
   return (
     <Wrapper>
       <Content>
         <svg
+          onClick={play}
           xmlns="http://www.w3.org/2000/svg"
           className="icon-play-big"
           viewBox="0 0 60 60"

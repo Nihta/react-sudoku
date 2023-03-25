@@ -2,6 +2,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 
 import { useCell, useCellNote } from "../hooks/sudokuHooks";
+import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -44,6 +45,7 @@ function Cell(prop: CellProps) {
   const { row, col } = prop;
 
   const clickCell = useSudokuStore((state) => state.clickCell);
+  const gameState = useGameStore((state) => state.gameState);
 
   const cell = useCell({ row, col });
   const note = useCellNote({ row, col });
@@ -53,12 +55,14 @@ function Cell(prop: CellProps) {
   }
 
   const isHasNote = note.length > 0;
+  const isHide = gameState === "paused";
 
   const cellOnClick = () => {
     clickCell({ row, col });
   };
 
   const className = classNames({
+    hide: isHide,
     incorrect: cell.status === "conflict",
     selected: cell.selected,
     highlight: cell.status === "high-light",
@@ -80,7 +84,6 @@ function Cell(prop: CellProps) {
 
 const CellWrapper = styled.div`
   position: relative;
-
   border-left: 1px solid var(--color-sudoku-border-2);
   border-bottom: 1px solid var(--color-sudoku-border-2);
   &:nth-child(9n + 1),
@@ -119,6 +122,11 @@ const CellWrapper = styled.div`
   }
   &.user-type {
     color: #006fde;
+  }
+
+  &.hide {
+    color: transparent !important;
+    background: transparent !important;
   }
 `;
 

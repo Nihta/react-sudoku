@@ -9,6 +9,7 @@ import {
   highLight,
   isSamePos,
 } from "../utils/sudokuUtils";
+import { useGameStore } from "./useGameStore";
 
 interface SudokuState {
   puzzle?: PuzzleData;
@@ -31,7 +32,6 @@ interface SudokuState {
    * false: not solved
    * true: solved
    */
-  gameState: boolean;
   setPuzzle: (puzzle: PuzzleData) => void;
   clickCell: (pos: Position) => void;
   inputCell: (newNumber: CellState["value"], ignoreUndo?: boolean) => void;
@@ -58,36 +58,37 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   time: 0,
   notes: Array.from({ length: 81 }, () => []),
   incTime() {
-    const { time, gameState } = get();
-    if (!gameState) {
-      set({ time: time + 1 });
-    }
+    const { time } = get();
+    set({ time: time + 1 });
   },
   gameState: false,
   setPuzzle: (puzzle) => {
     const { cells, cellEmpty } = convertPuzzle(puzzle);
+    const setGamestate = useGameStore.getState().setGamestate;
     set({
       puzzle,
       cells,
       cellEmpty,
       cellConflict: countConflict(cells),
-      gameState: false,
       history: [],
       selectedCell: null,
       time: 0,
       notes: Array.from({ length: 81 }, () => []),
       noteMode: false,
     });
+    setGamestate("playing");
   },
   actionNote() {
     const { noteMode } = get();
     set({ noteMode: !noteMode });
   },
   clickCell: (pos: Position) => {
+    const gameState = useGameStore.getState().gameState;
+
     set(
       produce((state: SudokuState) => {
         // If game state is win
-        if (state.gameState) {
+        if (gameState === "won") {
           return;
         }
 
@@ -116,10 +117,12 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
    * Điền giá trị vào một cell
    */
   inputCell: (newVal, ignoreUndo) => {
+    const gameState = useGameStore.getState().gameState;
+    const setGamestate = useGameStore.getState().setGamestate;
     set(
       produce((state: SudokuState) => {
         // If game state is win
-        if (state.gameState) return;
+        if (gameState === "won") return;
 
         // If not selected cell
         const selectedPos = state.selectedCell;
@@ -179,7 +182,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
 
         // If all cells are filled and there are no conflicts, the game is won
         if (state.cellEmpty === 0 && state.cellConflict === 0) {
-          state.gameState = true;
+          setGamestate("won");
         }
       })
     );
@@ -188,10 +191,12 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
    * Delete value of selected cell
    */
   deleteCell: (pos?: Position) => {
+    const gameState = useGameStore.getState().gameState;
+
     set(
       produce((state: SudokuState) => {
         // Can't delete cell when game win
-        if (state.gameState) return;
+        if (gameState === "won") return;
 
         // Can't delete cell when not selected cell
         const posSelected = pos ? pos : state.selectedCell;

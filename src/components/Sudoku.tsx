@@ -9,15 +9,16 @@ import VictoryAlert from "./VictoryAlert";
 import GamePause from "./GamePause";
 
 import useSudokuStore from "../zustand/useSudokuStore";
+import { useGameStore } from "../zustand/useGameStore";
 
 function Sudoku() {
-  const gameState = useSudokuStore((state) => state.gameState);
+  const gameState = useGameStore((state) => state.gameState);
   const actionNewGame = useSudokuStore((state) => state.actionNewGame);
   const time = useSudokuStore((state) => state.time);
 
   // todo pause: hide all cell value
-  let isPause = true;
-  const isWin = gameState;
+  const isPause = gameState === "paused";
+  const isWin = gameState === "won";
 
   return (
     <>

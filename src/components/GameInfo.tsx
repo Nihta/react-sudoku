@@ -3,13 +3,21 @@ import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
 
 import { convertTime } from "../utils/sudokuUtils";
+import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
+import Pressable from "./base/Pressable";
+import { TimerPause, TimerPlay } from "./svgs";
 
 const Time = () => {
   const time = useSudokuStore((st) => st.time);
   const incTime = useSudokuStore((st) => st.incTime);
+  const gameState = useGameStore((state) => state.gameState);
 
-  useInterval(incTime, 1000);
+  useInterval(() => {
+    if (gameState === "playing") {
+      incTime();
+    }
+  }, 1000);
 
   return (
     <TimeLabel>
@@ -27,6 +35,17 @@ const TimeLabel = styled.div`
 `;
 
 const GameInfo = () => {
+  const gameState = useGameStore((state) => state.gameState);
+  const setGamestate = useGameStore((state) => state.setGamestate);
+
+  const toggle = () => {
+    if (gameState === "paused") {
+      setGamestate("playing");
+    } else if (gameState === "playing") {
+      setGamestate("paused");
+    }
+  };
+
   return (
     <Wrapper>
       <LevelWrapper>
@@ -37,15 +56,50 @@ const GameInfo = () => {
           <LevelItem>Khó</LevelItem>
         </LevelItems>
       </LevelWrapper>
-      <Time />
+      <Flex>
+        <Time />
+        <Toggle onClick={toggle}>
+          {gameState === "playing" && <TimerPause />}
+          {gameState === "paused" && <TimerPlay className="timer-play" />}
+        </Toggle>
+      </Flex>
     </Wrapper>
   );
 };
+
+const Flex = styled.div`
+  display: flex;
+`;
+
+const Toggle = styled(Pressable)`
+  margin-left: 10px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  svg {
+    fill: #94a3b7;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .timer-play {
+    margin-left: 1px;
+  }
+`;
+
 const Wrapper = styled.div`
   margin-bottom: 12px;
   position: relative;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const LevelWrapper = styled.div`
