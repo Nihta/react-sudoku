@@ -51,7 +51,12 @@ interface SudokuState {
   cells: Array<CellState>;
   cellEmpty: number;
   cellConflict: number;
-  history: [number, CellState["value"]][];
+  history: {
+    cells: SudokuState["cells"];
+    notes: SudokuState["notes"];
+    // * need same name (selectedCell)
+    selectedCell: SudokuState["selectedCell"];
+  }[];
   notes: Notes;
   noteMode: boolean;
   /**
@@ -75,9 +80,9 @@ interface SudokuState {
   actionUndo: () => void;
   actionNewGame: () => void;
   /**
-   * Keep length of history is less than 1000
+   * Keep length of history is less than 100
    */
-  addHistory: (pos: number, val: CellState["value"]) => void;
+  addHistory: () => void;
   actionNote: () => void;
   setCellVal: (
     pos: number,
@@ -193,7 +198,15 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   inputCell: (newVal, ignoreUndo) => {
     if (!canDoAction()) return;
 
-    const { setCellVal, selectedCell: currPos, cells, noteMode } = get();
+    const {
+      setCellVal,
+      selectedCell: currPos,
+      cells,
+      noteMode,
+      addHistory,
+    } = get();
+
+    addHistory();
 
     // If not selected cell
     if (currPos === undefined) return;
@@ -220,10 +233,6 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
       setCellVal(currPos, null, ignoreUndo);
     } else {
       setCellVal(currPos, newVal, ignoreUndo);
-      // Không thêm vào history khi đang ở chế độ note
-      if (!ignoreUndo) {
-        get().addHistory(currPos, newVal);
-      }
     }
   },
   /**
@@ -235,10 +244,14 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   },
   actionDelete() {
     if (!canDoAction()) return;
-    const { selectedCell, deleteCell, noteMode, cells } = get();
+    const { selectedCell, deleteCell, noteMode, cells, addHistory } = get();
+
+    if (selectedCell === undefined) return;
 
     const cell = isEditable(cells, selectedCell);
     if (!cell) return;
+
+    addHistory();
 
     // If has note, delete note
     if (noteMode) {
@@ -273,39 +286,26 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   },
   actionUndo() {
     if (!canDoAction()) return;
-
-    const { history, clickCell, setCellVal } = get();
+    const { history } = get();
     if (history.length === 0) return;
-
-    const [pos, value] = history[history.length - 1];
-
-    // if cell has note, restore value
-    const note = get().notes[pos];
-    if (note.length > 0) {
-      clickCell(pos);
-      setCellVal(pos, value);
-      return;
-    }
-
     set({
+      ...history[history.length - 1],
       history: history.slice(0, history.length - 1),
     });
-
-    clickCell(pos);
-    setCellVal(pos, value);
   },
-  addHistory(pos, val) {
-    console.log("addHistory", val);
+  addHistory() {
     set(
       produce((state: SudokuState) => {
-        state.history.push([pos, val]);
-        if (state.history.length > 1000) {
+        state.history.push({
+          cells: state.cells,
+          notes: state.notes,
+          selectedCell: state.selectedCell,
+        });
+        if (state.history.length > 100) {
           state.history.shift();
         }
       })
     );
-    console.log(JSON.stringify(get().history));
-    console.log(get().history.length);
   },
   actionNewGame() {
     const { setPuzzle } = get();
