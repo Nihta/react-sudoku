@@ -10,7 +10,7 @@ function Note({ values }: { values: number[] }) {
   return (
     <NoteWrapper>
       {arr.map((i) => (
-        <NoteItem>{values.includes(i) ? i : ""}</NoteItem>
+        <NoteItem key={i}>{values.includes(i) ? i : ""}</NoteItem>
       ))}
     </NoteWrapper>
   );

@@ -5,6 +5,7 @@ import { CellState, Notes, Position, PuzzleData } from "../types/sudokuTypes";
 import {
   convertPuzzle,
   countConflict,
+  countEmpty,
   getCorrectNumber,
   highLight,
   isSamePos,
@@ -59,10 +60,15 @@ interface SudokuState {
   actionUndo: () => void;
   actionNewGame: () => void;
   /**
-   * Keep length of history is less than 100
+   * Keep length of history is less than 1000
    */
-  setHistory: (pos: Position, val: CellState["value"]) => void;
+  addHistory: (pos: Position, val: CellState["value"]) => void;
   actionNote: () => void;
+  setCellVal: (
+    pos: Position,
+    val: CellState["value"],
+    ignoreUndo?: boolean
+  ) => void;
 }
 
 const useSudokuStore = create<SudokuState>()((set, get) => ({
@@ -129,68 +135,35 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   },
   /**
    * Điền giá trị vào một cell
+   *
+   * KHông thêm vào history, tự động xóa note nếu giá trị nhập vào khác null
    */
-  inputCell: (newVal, ignoreUndo) => {
-    if (!canDoAction()) return;
-
+  setCellVal(pos, newVal) {
     const setGamestate = useGameStore.getState().setGamestate;
+
     set(
       produce((state: SudokuState) => {
-        // If not selected cell
-        const selectedPos = state.selectedCell;
-        if (!selectedPos) return;
+        const cell = state.cells[pos.row * 9 + pos.col];
 
-        const cellSelected = state.cells[selectedPos.row * 9 + selectedPos.col];
-
-        // Nếu đó là cell gốc - không thể sửa
-        if (cellSelected.isOrigin) return;
-
-        // Note mode
-        // todo newVal tại sao lại có thể là null
-        if (state.noteMode && newVal) {
-          const note = state.notes[selectedPos.row * 9 + selectedPos.col];
-          if (note.includes(newVal)) {
-            state.notes[selectedPos.row * 9 + selectedPos.col] = note.filter(
-              (n) => n !== newVal
-            );
-          } else {
-            state.notes[selectedPos.row * 9 + selectedPos.col] = [
-              ...note,
-              newVal,
-            ];
-          }
-          return;
+        if (cell.value === newVal) {
+          cell.value = null;
         } else {
-          state.notes[selectedPos.row * 9 + selectedPos.col] = [];
+          cell.value = newVal;
         }
 
-        // Cập nhật giá trị của cell
-        const oldCellVal = cellSelected.value;
-
-        // If new number is same old number, delete cell
-        if (oldCellVal && newVal && oldCellVal === newVal) {
-          cellSelected.value = null;
-          state.cellEmpty++;
-          if (!ignoreUndo) {
-            state.setHistory(selectedPos, null);
-          }
-        } else {
-          cellSelected.value = newVal;
-          if (!ignoreUndo) {
-            state.history.push([selectedPos, newVal]);
-            state.setHistory(selectedPos, newVal);
-          }
+        // Remove note if value is not null
+        if (newVal !== null) {
+          state.notes[pos.row * 9 + pos.col] = [];
         }
 
-        // If old number is null, cell empty decrease 1
-        if (!oldCellVal) {
-          state.cellEmpty--;
-        }
+        // Re highlight
+        highLight(state.cells, pos);
 
-        // HighLight lại
-        highLight(state.cells, selectedPos);
-        // Tính lại số lượng conflict
+        // Re-calculate conflict
         state.cellConflict = countConflict(state.cells);
+
+        // Re-calculate empty cell
+        state.cellEmpty = countEmpty(state.cells);
 
         // If all cells are filled and there are no conflicts, the game is won
         if (state.cellEmpty === 0 && state.cellConflict === 0) {
@@ -200,34 +173,81 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
     );
   },
   /**
+   * Điền giá trị vào một cell
+   */
+  inputCell: (newVal, ignoreUndo) => {
+    if (!canDoAction()) return;
+
+    const { setCellVal, selectedCell: selectedPos, cells, noteMode } = get();
+
+    // If not selected cell
+    if (!selectedPos) return;
+
+    // If selected cell is origin, can't change
+    const cell = cells[selectedPos.row * 9 + selectedPos.col];
+    if (cell.isOrigin) return;
+
+    // Note mode ---------------------------------------------------------------
+    set(
+      produce((state: SudokuState) => {
+        const noteIdx = selectedPos.row * 9 + selectedPos.col;
+        const note = state.notes[noteIdx];
+        if (state.noteMode && newVal) {
+          if (note.includes(newVal)) {
+            state.notes[noteIdx] = note.filter((n) => n !== newVal);
+          } else {
+            state.notes[noteIdx] = [...note, newVal];
+          }
+        }
+      })
+    );
+
+    if (noteMode) {
+      setCellVal(selectedPos, null, ignoreUndo);
+    } else {
+      setCellVal(selectedPos, newVal, ignoreUndo);
+      // Không thêm vào history khi đang ở chế độ note
+      if (!ignoreUndo) {
+        get().addHistory(selectedPos, newVal);
+      }
+    }
+  },
+  /**
    * Delete value of selected cell
    */
   deleteCell: (pos?: Position) => {
     if (!canDoAction()) return;
 
-    set(
-      produce((state: SudokuState) => {
-        // Can't delete cell when not selected cell
-        const posSelected = pos ? pos : state.selectedCell;
-        if (!posSelected) return;
+    // Can't delete cell when not selected cell
+    if (!pos) return;
 
-        // Can't delete cell origin
-        const cell = state.cells[posSelected.row * 9 + posSelected.col];
-        if (cell.isOrigin) return;
+    const { cells, setCellVal } = get();
+    const cell = cells[pos.row * 9 + pos.col];
 
-        if (cell.value) {
-          cell.value = null;
-          state.cellEmpty++;
-        }
-      })
-    );
+    // Can't delete cell origin
+    if (cell.isOrigin) return;
+
+    if (cell.value) {
+      setCellVal(pos, null);
+    }
   },
   actionDelete() {
     if (!canDoAction()) return;
 
     const { selectedCell, deleteCell } = get();
     if (selectedCell) {
-      deleteCell(selectedCell);
+      // delete all note if selected cell has note
+      const noteIdx = selectedCell.row * 9 + selectedCell.col;
+      const note = get().notes[noteIdx];
+      if (note.length > 0) {
+        set(
+          produce((state: SudokuState) => {
+            state.notes[noteIdx] = [];
+          })
+        );
+      } else {
+        deleteCell(selectedCell);
+      }
     }
   },
   actionHint() {
@@ -252,27 +272,39 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   actionUndo() {
     if (!canDoAction()) return;
 
-    const { history, clickCell, inputCell } = get();
+    const { history, clickCell, setCellVal } = get();
     if (history.length === 0) return;
 
     const [pos, value] = history[history.length - 1];
+
+    // if cell has note, restore value
+    const noteIdx = pos.row * 9 + pos.col;
+    const note = get().notes[noteIdx];
+    if (note.length > 0) {
+      clickCell(pos);
+      setCellVal(pos, value);
+      return;
+    }
+
     set({
       history: history.slice(0, history.length - 1),
     });
 
     clickCell(pos);
-    // ignore save history (undo)
-    inputCell(value, true);
+    setCellVal(pos, value);
   },
-  setHistory(pos, val) {
+  addHistory(pos, val) {
+    console.log("addHistory", val);
     set(
       produce((state: SudokuState) => {
         state.history.push([pos, val]);
-        if (state.history.length > 100) {
+        if (state.history.length > 1000) {
           state.history.shift();
         }
       })
     );
+    console.log(JSON.stringify(get().history));
+    console.log(get().history.length);
   },
   actionNewGame() {
     const { setPuzzle } = get();

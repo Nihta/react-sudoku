@@ -63,6 +63,15 @@ export const countConflict = (cells: Cells): number => {
   }, 0);
 };
 
+export const countEmpty = (cells: Cells): number => {
+  return cells.reduce((acc, cell) => {
+    if (!cell.value) {
+      acc++;
+    }
+    return acc;
+  }, 0);
+};
+
 export const isSamePos = (posA: Position, posB: Position) => {
   return posA.row === posB.row && posA.col === posB.col;
 };
