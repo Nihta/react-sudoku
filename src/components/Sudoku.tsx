@@ -53,6 +53,12 @@ const GameAndControlWrapper = styled.div`
   flex-direction: row;
   /* width: 100%; */
   position: relative;
+
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+  }
 `;
 
 const GameWrapper = styled.div`
@@ -70,6 +76,11 @@ const GameControlWrapper = styled.div`
   flex-basis: 40%;
   margin-left: 20px;
   transition: opacity 0.3s ease-in-out;
+
+
+  @media screen and (max-width: 767px) {
+    margin: 0;
+  }
 `;
 
 export default Sudoku;

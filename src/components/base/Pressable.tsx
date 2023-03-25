@@ -12,6 +12,7 @@ const Pressable = styled.div`
   &:active {
     background-color: #d2dae7;
   }
+  -webkit-tap-highlight-color: transparent;
 `;
 
 export default Pressable;

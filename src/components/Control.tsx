@@ -106,13 +106,20 @@ const Wrapper = styled.div`
   grid-gap: 5%;
   margin-bottom: 14px;
   color: var(--color-primary);
+  @media screen and (max-width: 767px) {
+    margin-top: 8px;
+    padding: 0;
+    grid-gap: 8px;
+    margin-bottom: 0;
+  }
 `;
 
 const ItemWrapper = styled.div`
   position: relative;
   max-width: 60px;
-  flex-basis: 25%;
-  flex-grow: 1;
+  @media screen and (max-width: 767px) {
+    max-width: 100%;
+  }
 `;
 
 const ItemIcon = styled(Pressable)`
@@ -120,6 +127,11 @@ const ItemIcon = styled(Pressable)`
   border-radius: 50%;
   width: 100%;
   aspect-ratio: 1/1;
+
+  @media screen and (max-width: 767px) {
+    height: 34px;
+    border-radius: 5px;
+  }
 
   &.active {
     border: 2px solid var(--color-primary);
@@ -132,6 +144,9 @@ const ItemIcon = styled(Pressable)`
     transform: translate(-50%, -50%);
     width: 55%;
     color: #344861;
+    @media screen and (max-width: 767px) {
+      height: 28px;
+    }
   }
 `;
 
@@ -143,6 +158,10 @@ const Label = styled.span`
   text-align: center;
   display: block;
   color: var(--color-primary);
+
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
 `;
 
 export default Control;

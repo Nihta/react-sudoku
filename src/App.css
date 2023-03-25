@@ -50,14 +50,6 @@
   }
 }
 
-.site-content-wrapper {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: 1 0 auto;
-  padding-top: 10px;
-}
-
 .site-content {
   position: relative;
   width: 100%;
@@ -87,15 +79,22 @@
 }
 
 @media screen and (min-width: 1070px) {
-  .aside {
-    display: block;
-    width: 300px;
-    min-width: 300px;
-  }
 }
 
+.site-content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding-top: 10px;
+  display: flex;
 
+  justify-content: center;
+}
 
-.aside {
-  border: 2px dashed #ccc;
+@media screen and (max-width: 767px) {
+  .site-content-wrapper {
+    flex-direction: column;
+  }
+  .site-header {
+    display: none;
+  }
 }

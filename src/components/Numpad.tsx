@@ -24,6 +24,13 @@ const Wrapper = styled.div`
   grid-template-columns: repeat(3, 32%);
   grid-template-rows: repeat(3, 32%);
   grid-gap: 2%;
+
+  @media screen and (max-width: 767px) {
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: 100%;
+    grid-gap: 0;
+    margin: 5px 0;
+  }
 `;
 
 const Item = styled(Pressable)`
@@ -31,6 +38,17 @@ const Item = styled(Pressable)`
   color: var(--color-primary);
   text-align: center;
   padding: 18% 0;
+
+  @media screen and (max-width: 767px) {
+    padding: 0;
+    background: transparent;
+    &:hover {
+      background: transparent;
+    }
+    &:active {
+      background: #d2dae7;
+    };
+  }
 `;
 
 export default Numpad;

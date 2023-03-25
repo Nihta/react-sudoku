@@ -34,6 +34,11 @@ const NoteItem = styled.div`
   justify-content: center;
   align-items: center;
   color: #79899b;
+
+  @media screen and (max-width: 767px) {
+  font-size: 10px;
+
+  }
 `;
 
 type CellProps = {
@@ -82,6 +87,7 @@ function Cell(prop: CellProps) {
 }
 
 const CellWrapper = styled.div`
+  -webkit-tap-highlight-color: transparent;
   position: relative;
   border-left: 1px solid var(--color-sudoku-border-2);
   border-bottom: 1px solid var(--color-sudoku-border-2);
@@ -135,8 +141,7 @@ const CellValue = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   cursor: pointer;
-  font-size: 36px;
-  user-select: none;
+  font-size: 32px;
 `;
 
 export default Cell;

@@ -102,6 +102,11 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: 767px) {
+    max-width: 500px;
+    margin: 0 auto;
+    margin-bottom: 5px;
+  }
 `;
 
 const LevelWrapper = styled.div`
@@ -143,6 +148,17 @@ const LevelItem = styled.span<{
   }
 
   ${(p) => p.active && ` color: #0072e3;`}
+
+  @media screen and (max-width: 767px) {
+    background: transparent;
+    padding: 5px;
+    &:hover {
+      background: transparent;
+    }
+    &:active {
+      background: #d2dae7;
+    }
+  }
 `;
 
 export default GameInfo;
