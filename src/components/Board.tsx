@@ -22,7 +22,7 @@ function Board() {
         {Array.from({ length: 9 }, (_, i) => (
           <React.Fragment key={i}>
             {Array.from({ length: 9 }, (_, j) => (
-              <Cell row={i} col={j} key={`${i}${j}`} />
+              <Cell idx={i * 9 + j} key={`${i}${j}`} />
             ))}
           </React.Fragment>
         ))}

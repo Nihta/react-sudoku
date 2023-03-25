@@ -1,4 +1,3 @@
-
 /**
  * First element is the puzzle, second element is the solution
  */

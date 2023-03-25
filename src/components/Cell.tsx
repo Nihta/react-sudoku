@@ -37,18 +37,17 @@ const NoteItem = styled.div`
 `;
 
 type CellProps = {
-  row: number;
-  col: number;
+  idx: number;
 };
 
 function Cell(prop: CellProps) {
-  const { row, col } = prop;
+  const { idx } = prop;
 
   const clickCell = useSudokuStore((state) => state.clickCell);
   const gameState = useGameStore((state) => state.gameState);
 
-  const cell = useCell({ row, col });
-  const note = useCellNote({ row, col });
+  const cell = useCell(idx);
+  const note = useCellNote(idx);
 
   if (!cell) {
     return null;
@@ -58,7 +57,7 @@ function Cell(prop: CellProps) {
   const isHide = gameState === "paused";
 
   const cellOnClick = () => {
-    clickCell({ row, col });
+    clickCell(idx);
   };
 
   const className = classNames({

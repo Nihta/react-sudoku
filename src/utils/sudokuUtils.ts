@@ -46,9 +46,9 @@ export const convertPuzzle = (puzzleData: PuzzleData) => {
  * @param puzzle
  * @param pos
  */
-export const getCorrectNumber = (puzzle: PuzzleData, pos: Position) => {
+export const getCorrectNumber = (puzzle: PuzzleData, pos: number) => {
   const [, solution] = puzzle;
-  return parseInt(solution[pos.row * 9 + pos.col], 10);
+  return parseInt(solution[pos], 10);
 };
 
 /**
@@ -72,22 +72,30 @@ export const countEmpty = (cells: Cells): number => {
   }, 0);
 };
 
-export const isSamePos = (posA: Position, posB: Position) => {
-  return posA.row === posB.row && posA.col === posB.col;
+export const isSamePos = (posA: number, posB: number) => {
+  return posA === posB;
 };
 
-export const isSameRow = (posA: Position, posB: Position) => {
-  return posA.row === posB.row;
+export const isSameRow = (posA: number, posB: number) => {
+  const rowA = Math.trunc(posA / 9);
+  const rowB = Math.trunc(posB / 9);
+  return rowA === rowB;
 };
 
-export const isSameCol = (posA: Position, posB: Position) => {
-  return posA.col === posB.col;
+export const isSameCol = (posA: number, posB: number) => {
+  const colA = posA % 9;
+  const colB = posB % 9;
+  return colA === colB;
 };
 
-export const isSameRegion = (posA: Position, posB: Position) => {
+export const isSameRegion = (posA: number, posB: number) => {
+  const rowA = Math.trunc(posA / 9);
+  const rowB = Math.trunc(posB / 9);
+  const colA = posA % 9;
+  const colB = posB % 9;
   return (
-    Math.trunc(posA.row / 3) === Math.trunc(posB.row / 3) &&
-    Math.trunc(posA.col / 3) === Math.trunc(posB.col / 3)
+    Math.trunc(rowA / 3) === Math.trunc(rowB / 3) &&
+    Math.trunc(colA / 3) === Math.trunc(colB / 3)
   );
 };
 
@@ -95,18 +103,14 @@ export const isSameRegion = (posA: Position, posB: Position) => {
 
 type MapNumberCellIdx = Record<number, number>;
 
-const hightLightRelated = (cells: Cells, posSelected: Position) => {
-  const { row, col } = posSelected;
-  const selectedVal = cells[row * 9 + col].value;
+const hightLightRelated = (cells: Cells, pos: number) => {
+  const selectedVal = cells[pos].value;
 
-  cells.forEach((cell, idx) => {
+  cells.forEach((cell, _pos) => {
     // Hightliht related cell (same row, same col, same region)
-    const currPos = { row: Math.trunc(idx / 9), col: idx % 9 };
     const isRelated =
       cell.status !== "conflict" &&
-      (isSameRow(currPos, posSelected) ||
-        isSameCol(currPos, posSelected) ||
-        isSameRegion(currPos, posSelected));
+      (isSameRow(_pos, pos) || isSameCol(_pos, pos) || isSameRegion(_pos, pos));
     if (isRelated) {
       cell.status = "high-light";
       return;
@@ -176,8 +180,8 @@ const highLightConflict = (cells: Cells) => {
 /**
  * Very helpful function to highlight related cell
  */
-const supperHighLightRelated = (cells: Cells, pos: Position) => {
-  const val = cells[pos.row * 9 + pos.col].value;
+const supperHighLightRelated = (cells: Cells, pos: number) => {
+  const val = cells[pos].value;
   if (!val) return;
   // high light all origin cell
   cells.forEach((cell) => {
@@ -185,18 +189,16 @@ const supperHighLightRelated = (cells: Cells, pos: Position) => {
       cell.status = "high-light";
     }
   });
-  cells.forEach((cell, idx) => {
+  cells.forEach((cell, _pos) => {
     if (cell.value === val) {
-      const row = Math.trunc(idx / 9);
-      const col = idx % 9;
-      hightLightRelated(cells, { row, col });
+      hightLightRelated(cells, _pos);
       cell.status = "high-light-number";
     }
   });
 };
 
-const SUPPER_HIGH_LIGHT = true;
-export const highLight = (cells: Cells, posSelected: Position) => {
+const SUPPER_HIGH_LIGHT = false;
+export const highLight = (cells: Cells, posSelected: number) => {
   // Clear all highlight
   cells.forEach((cell) => {
     cell.status = "normal";

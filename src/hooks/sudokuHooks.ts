@@ -1,22 +1,21 @@
-import { Position } from "../types/sudokuTypes";
 import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
 import useKeyDown from "./useKeyDown";
 
-export const useCell = (pos: Position) => {
+export const useCell = (pos: number) => {
   const cells = useSudokuStore((state) => state.cells);
-  return cells[pos.row * 9 + pos.col];
+  return cells[pos];
 };
 
-export const useCellNote = (pos: Position) => {
+export const useCellNote = (pos: number) => {
   const notes = useSudokuStore((state) => state.notes);
-  return notes[pos.row * 9 + pos.col];
+  return notes[pos];
 };
 
 /**
  * Handle keybroad event (move, delete, input)
  */
 export const useMoveKeybroad = () => {
-  const deleteCell = useSudokuStore((state) => state.deleteCell);
+  const actionDelete = useSudokuStore((state) => state.actionDelete);
   const inputCell = useSudokuStore((state) => state.inputCell);
 
   useKeyDown((e) => {
@@ -40,7 +39,7 @@ export const useMoveKeybroad = () => {
         break;
       case "Backspace":
       case "Delete":
-        deleteCell(undefined);
+        actionDelete();
         break;
       default:
         if (1 <= +key && +key <= 9) {
