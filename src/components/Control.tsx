@@ -147,7 +147,7 @@ const ItemIcon = styled(Pressable)`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #344861;
+    color: var(--color-primary);
     height: 28px;
   }
 `;

@@ -25,6 +25,10 @@ const NoteWrapper = styled.div`
   line-height: 1;
   user-select: none;
   cursor: pointer;
+
+  &.hide {
+    color: transparent !important;
+  }
 `;
 
 const NoteItem = styled.div`
@@ -36,8 +40,7 @@ const NoteItem = styled.div`
   color: #79899b;
 
   @media screen and (max-width: 767px) {
-  font-size: 10px;
-
+    font-size: 10px;
   }
 `;
 
@@ -77,7 +80,7 @@ function Cell(prop: CellProps) {
 
   return (
     <CellWrapper className={className} onClick={cellOnClick}>
-      {isHasNote ? (
+      {isHide ? null : isHasNote ? (
         <Note values={note} />
       ) : (
         <CellValue>{cell.value ? cell.value : ""}</CellValue>
@@ -108,6 +111,7 @@ const CellWrapper = styled.div`
     border-right: none;
   }
 
+  background: white;
   &.highlight {
     background: #e2ebf3;
   }
@@ -126,12 +130,12 @@ const CellWrapper = styled.div`
     color: #344861 !important;
   }
   &.user-type {
-    color: #006fde;
+    color: #0072e3;
   }
 
   &.hide {
     color: transparent !important;
-    background: transparent !important;
+    background: white !important;
   }
 `;
 
