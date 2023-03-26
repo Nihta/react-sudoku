@@ -38,6 +38,9 @@ const GameInfo = () => {
   const gameState = useGameStore((state) => state.gameState);
   const setGamestate = useGameStore((state) => state.setGamestate);
 
+  const setDifficulty = useGameStore((state) => state.setDifficulty);
+  const difficulty = useGameStore((state) => state.difficulty);
+
   const toggle = () => {
     if (gameState === "paused") {
       setGamestate("playing");
@@ -51,9 +54,24 @@ const GameInfo = () => {
       <LevelWrapper>
         <LevelTitle>Difficulty:</LevelTitle>
         <LevelItems>
-          <LevelItem active>Easy</LevelItem>
-          <LevelItem>Medium</LevelItem>
-          <LevelItem>Hard</LevelItem>
+          <LevelItem
+            active={difficulty === "easy"}
+            onClick={() => setDifficulty("easy")}
+          >
+            Easy
+          </LevelItem>
+          <LevelItem
+            active={difficulty === "medium"}
+            onClick={() => setDifficulty("medium")}
+          >
+            Medium
+          </LevelItem>
+          <LevelItem
+            active={difficulty === "hard"}
+            onClick={() => setDifficulty("hard")}
+          >
+            Hard
+          </LevelItem>
           {/* <LevelItem>Expert</LevelItem>
           <LevelItem>Evil</LevelItem> */}
         </LevelItems>

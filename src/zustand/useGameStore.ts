@@ -4,6 +4,8 @@ import { create } from "zustand";
 interface GameState {
   gameState: "playing" | "won" | "lost" | "paused";
   setGamestate: (state: GameState["gameState"]) => void;
+  difficulty: "easy" | "medium" | "hard";
+  setDifficulty: (difficulty: GameState["difficulty"]) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -11,6 +13,8 @@ export const useGameStore = create<GameState>()(
   (set, get) => ({
     gameState: "playing",
     setGamestate: (state) => set({ gameState: state }),
+    difficulty: "easy",
+    setDifficulty: (difficulty) => set({ difficulty }),
   })
   //   {
   //     name: "game-storage",

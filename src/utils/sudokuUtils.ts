@@ -1,4 +1,6 @@
+import { easyPuzzles, hardPuzzles, mediumPuzzles } from "../data/sudokuPuzzles";
 import { Cells, CellState, Position, PuzzleData } from "../types/sudokuTypes";
+import { useGameStore } from "../zustand/useGameStore";
 
 /**
  * Convert time to string
@@ -213,4 +215,22 @@ export const highLight = (cells: Cells, posSelected: number) => {
   highLightConflict(cells);
 
   return cells;
+};
+
+const getRandomeELm = (arr: any[]) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+export const getPuzzle = (): PuzzleData => {
+  const difficulty = useGameStore.getState().difficulty;
+  switch (difficulty) {
+    case "easy":
+      return getRandomeELm(easyPuzzles);
+    case "medium":
+      return getRandomeELm(mediumPuzzles);
+    case "hard":
+      return getRandomeELm(hardPuzzles);
+    default:
+      return getRandomeELm(easyPuzzles);
+  }
 };
