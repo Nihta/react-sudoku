@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Pressable from "./base/Pressable";
 import useSudokuStore from "../zustand/useSudokuStore";
-import { BREAKPOINTS } from "../constants.ts";
+import { BREAKPOINTS } from "../constants";
 
 function Control() {
   const actionDelete = useSudokuStore((st) => st.actionDelete);
@@ -109,25 +109,23 @@ const Wrapper = styled.div`
   margin-top: 10px;
 
   @media ${BREAKPOINTS.smAndLarger} {
-    grid-gap: 5%;
-    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
   }
 
-  /* @media screen and (max-width: 767px) {
-    padding: 0;
-    grid-gap: 8px;
-    margin-bottom: 0;
-  } */
+  @media ${BREAKPOINTS.smAndLarger} {
+    margin-top: 0;
+  }
+
+
 `;
 
 const ItemWrapper = styled.div`
   position: relative;
-  @media screen and (max-width: 767px) {
-    max-width: 100%;
-  }
-
+  max-width: 100%;
   @media ${BREAKPOINTS.smAndLarger} {
-    max-width: 60px;
+    width: 60px;
   }
 `;
 
@@ -166,13 +164,8 @@ const Label = styled.span`
   color: var(--color-primary);
 
   display: none;
-
   @media ${BREAKPOINTS.smAndLarger} {
     display: block;
-  }
-
-  @media ${BREAKPOINTS.md} {
-    flex-basis: 45%;
   }
 `;
 

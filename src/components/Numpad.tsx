@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BREAKPOINTS } from "../constants.ts";
+import { BREAKPOINTS } from "../constants";
 
 import useSudokuStore from "../zustand/useSudokuStore";
 import Pressable from "./base/Pressable";
@@ -28,19 +28,20 @@ const Wrapper = styled.div`
   grid-template-rows: 100%;
   grid-gap: 0;
 
-  @media ${BREAKPOINTS.smAndLarger} {
+  @media ${BREAKPOINTS.mdAndLarger} {
     grid-template-columns: repeat(3, 32%);
     grid-template-rows: repeat(3, 32%);
     grid-gap: 2%;
+    margin: 0;
   }
 `;
 
 const Item = styled(Pressable)`
-  font-size: 32px;
+  font-size: 40px;
   color: var(--color-primary);
   text-align: center;
 
-  @media ${BREAKPOINTS.smAndSmaller} {
+  @media ${BREAKPOINTS.mdAndSmaller} {
     background: transparent;
     &:hover {
       background: transparent;
@@ -51,7 +52,11 @@ const Item = styled(Pressable)`
   }
 
   @media ${BREAKPOINTS.smAndLarger} {
-    padding: 18% 0;
+    padding: 12% 0;
+  }
+
+  @media ${BREAKPOINTS.lgAndLarger} {
+    padding: 7% 0;
   }
 `;
 

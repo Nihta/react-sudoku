@@ -1,7 +1,7 @@
 export const BREAKPOINT_SIZES = {
   xs: 320,
-  sm: 563,
-  md: 768,
+  sm: 563, // <-
+  md: 768, // <-
   lg: 1024,
   xl: 1440,
 };

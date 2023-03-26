@@ -102,11 +102,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  @media screen and (max-width: 767px) {
-    max-width: 500px;
-    margin: 0 auto;
-    margin-bottom: 5px;
-  }
 `;
 
 const LevelWrapper = styled.div`

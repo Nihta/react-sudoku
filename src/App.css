@@ -49,7 +49,4 @@
   .site-content-wrapper {
     flex-direction: column;
   }
-  .site-header {
-    display: none;
-  }
 }

@@ -10,7 +10,7 @@ import GamePause from "./GamePause";
 
 import useSudokuStore from "../zustand/useSudokuStore";
 import { useGameStore } from "../zustand/useGameStore";
-import { BREAKPOINTS } from "../constants.ts";
+import { BREAKPOINTS } from "../constants";
 
 function Sudoku() {
   const gameState = useGameStore((state) => state.gameState);
@@ -22,7 +22,7 @@ function Sudoku() {
   const isWin = gameState === "won";
 
   return (
-    <>
+    <SudokuWrapper>
       <GameInfo />
       <GameAndControlWrapper>
         <GameWrapper className={isPause ? "game-pause" : ""}>
@@ -34,10 +34,7 @@ function Sudoku() {
         <GameControlWrapper>
           <Control />
           <Numpad />
-          <Button
-            style={{
-              marginTop: "12px",
-            }}
+          <ButtonNewGame
             type="button"
             label="Trò chơi mới"
             onClick={actionNewGame}
@@ -45,24 +42,32 @@ function Sudoku() {
           />
         </GameControlWrapper>
       </GameAndControlWrapper>
-    </>
+    </SudokuWrapper>
   );
 }
+
+const SudokuWrapper = styled.div`
+  position: relative;
+  @media ${BREAKPOINTS.mobile} {
+    max-width: 500px;
+    margin: 0 auto 20px;
+  }
+`;
+
+const ButtonNewGame = styled(Button)`
+  @media ${BREAKPOINTS.mdAndSmaller} {
+    display: none;
+  }
+`;
 
 const GameAndControlWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
 
-  @media ${BREAKPOINTS.smAndLarger} {
+  @media ${BREAKPOINTS.mdAndLarger} {
     flex-direction: row;
   }
-
-  /* @media screen and (max-width: 767px) {
-    flex-direction: column;
-    max-width: 500px;
-    margin: 0 auto;
-  } */
 `;
 
 const GameWrapper = styled.div`
@@ -70,8 +75,8 @@ const GameWrapper = styled.div`
   min-width: 250px;
   max-width: 500px;
 
-  @media ${BREAKPOINTS.mobile} {
-    flex-basis: 55%;
+  @media ${BREAKPOINTS.md} {
+    flex-basis: 52%;
   }
 
   @media ${BREAKPOINTS.desktop} {
@@ -88,8 +93,11 @@ const GameControlWrapper = styled.div`
 
   margin: 0;
 
-  @media ${BREAKPOINTS.smAndLarger} {
+  @media ${BREAKPOINTS.mdAndLarger} {
     margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   @media ${BREAKPOINTS.md} {
@@ -97,7 +105,7 @@ const GameControlWrapper = styled.div`
   }
 
   @media ${BREAKPOINTS.desktop} {
-    flex-basis: 40%;
+    flex-basis: 46%;
   }
 `;
 
