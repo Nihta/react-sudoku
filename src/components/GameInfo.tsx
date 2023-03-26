@@ -49,11 +49,13 @@ const GameInfo = () => {
   return (
     <Wrapper>
       <LevelWrapper>
-        <LevelTitle>Độ khó:</LevelTitle>
+        <LevelTitle>Difficulty:</LevelTitle>
         <LevelItems>
-          <LevelItem active>Dễ</LevelItem>
-          <LevelItem>Trung bình</LevelItem>
-          <LevelItem>Khó</LevelItem>
+          <LevelItem active>Easy</LevelItem>
+          <LevelItem>Medium</LevelItem>
+          <LevelItem>Hard</LevelItem>
+          {/* <LevelItem>Expert</LevelItem>
+          <LevelItem>Evil</LevelItem> */}
         </LevelItems>
       </LevelWrapper>
       <Flex>
@@ -97,8 +99,11 @@ const Toggle = styled(Pressable)`
 `;
 
 const Wrapper = styled.div`
-  margin-bottom: 12px;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

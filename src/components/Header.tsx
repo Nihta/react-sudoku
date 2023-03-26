@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { BREAKPOINTS } from "../constants";
 import useSudokuStore from "../zustand/useSudokuStore";
 
 export default function Header() {
@@ -21,6 +20,10 @@ const Wrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (min-width: 980px) {
+    height: 70px;
+  }
 `;
 
 const NewGameButton = styled.div`
@@ -34,7 +37,7 @@ const NewGameButton = styled.div`
     color: #3a90e5;
   }
 
-  @media ${BREAKPOINTS.mdAndLarger} {
+  @media (min-width: 980px) {
     display: none;
   }
 `;

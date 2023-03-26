@@ -101,32 +101,29 @@ function Control() {
 }
 
 const Wrapper = styled.div`
-  /* padding: 0 2.5%; */
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 8px;
+  /* @media (min-width: 801px) { */
+  /* width: 100%; */
+  /* padding: 0 6%; */
   color: var(--color-primary);
-  margin-top: 10px;
 
-  @media ${BREAKPOINTS.smAndLarger} {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 15px;
-  }
-
-  @media ${BREAKPOINTS.smAndLarger} {
-    margin-top: 0;
-  }
-
-
+  display: flex;
+  justify-content: space-between;
+  /* } */
 `;
 
 const ItemWrapper = styled.div`
-  position: relative;
-  max-width: 100%;
-  @media ${BREAKPOINTS.smAndLarger} {
-    width: 60px;
+  flex-basis: 25%;
+  flex-grow: 1;
+  margin-left: 5%;
+
+  &:first-child {
+    margin-left: 0;
   }
+
+  @media (min-width: 768px) {
+    max-width: 60px;
+  }
+
 `;
 
 const ItemIcon = styled(Pressable)`

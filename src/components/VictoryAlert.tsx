@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import { convertTime } from "../utils/sudokuUtils";
+import useSudokuStore from "../zustand/useSudokuStore";
 
-type VictoryAlertProps = {
-  time: number;
-};
+export default function VictoryAlert() {
+  const time = useSudokuStore((state) => state.time);
 
-export default function VictoryAlert(props: VictoryAlertProps) {
   return (
     <Wrapper>
       <Title>Thành công!</Title>
@@ -15,7 +14,7 @@ export default function VictoryAlert(props: VictoryAlertProps) {
       </ListItem>
       <ListItem>
         <span>Thời gian</span>
-        <span>{convertTime(props.time)}</span>
+        <span>{convertTime(time)}</span>
       </ListItem>
     </Wrapper>
   );
