@@ -1,12 +1,12 @@
 import produce from "immer";
 import { create } from "zustand";
-import { easyPuzzles } from "../data/sudokuPuzzles";
 import { CellState, Notes, Position, PuzzleData } from "../types/sudokuTypes";
 import {
   convertPuzzle,
   countConflict,
   countEmpty,
   getCorrectNumber,
+  getPuzzle,
   highLight,
 } from "../utils/sudokuUtils";
 import { useGameStore } from "./useGameStore";
@@ -309,7 +309,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   },
   actionNewGame() {
     const { setPuzzle } = get();
-    const puzzle = easyPuzzles[Math.floor(Math.random() * easyPuzzles.length)];
+    const puzzle = getPuzzle();
     setPuzzle(puzzle);
   },
 }));
