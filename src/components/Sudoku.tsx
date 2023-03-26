@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useAutoPauseGame } from "../hooks/sudokuHooks";
 import { useGameStore } from "../zustand/useGameStore";
 import Board from "./Board";
 import BtnNewGame from "./BtnNewGame";
@@ -31,6 +32,9 @@ const GameInfoWrapper = styled.div`
 
 export default function Sudoku() {
   const gameState = useGameStore((state) => state.gameState);
+
+  // Auto pause game when window is not active
+  useAutoPauseGame();
 
   // todo pause: hide all cell value
   const isPause = gameState === "paused";

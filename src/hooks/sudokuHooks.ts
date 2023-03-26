@@ -1,3 +1,5 @@
+import { useEventListener } from "usehooks-ts";
+import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
 import useKeyDown from "./useKeyDown";
 
@@ -46,6 +48,17 @@ export const useMoveKeybroad = () => {
           inputCell(parseInt(key, 10));
           break;
         }
+    }
+  });
+};
+
+export const useAutoPauseGame = () => {
+  // todo: improve this: tự động tiếp tục game khi focus lại (trước đó người dùng chưa pasue)
+  const gameState = useGameStore((state) => state.gameState);
+  const setGamestate = useGameStore((state) => state.setGamestate);
+  useEventListener("blur", () => {
+    if (gameState === "playing") {
+      setGamestate("paused");
     }
   });
 };
