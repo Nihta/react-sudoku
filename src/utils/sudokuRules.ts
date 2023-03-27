@@ -1,9 +1,5 @@
 import useSudokuStore from "../zustand/useSudokuStore";
 
-const getBlockIdx = (row: number, col: number) => {
-  return Math.floor(row / 3) * 3 + Math.floor(col / 3);
-};
-
 /**
  * Lấy dữ liệu cell (origin) only
  */
@@ -12,6 +8,10 @@ const getOriginCells = () => {
   return cells.map((cell) => {
     return cell.isOrigin ? cell.value : 0;
   });
+};
+
+const getBlockIdx = (row: number, col: number) => {
+  return Math.floor(row / 3) * 3 + Math.floor(col / 3);
 };
 
 const preHandle = () => {
@@ -41,51 +41,6 @@ const preHandle = () => {
   };
 };
 
-function findMissingValue(map: Map<number, number>) {
-  const set = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-  for (const key of map.keys()) {
-    set.delete(key);
-  }
-  return set.values().next().value;
-}
-/**
- *
- * @param cells
- * @param row
- * @returns - 1 if not found
- */
-const findEmptyCellInRow = (cells: (number | null)[], row: number) => {
-  for (let i = 0; i < 9; i++) {
-    const idx = row * 9 + i;
-    if (!cells[idx]) {
-      return idx;
-    }
-  }
-  return -1;
-};
-
-const findEmptyCellInCol = (cells: (number | null)[], col: number) => {
-  for (let i = 0; i < 9; i++) {
-    const idx = i * 9 + col;
-    if (!cells[idx]) {
-      return idx;
-    }
-  }
-  return -1;
-};
-
-const findEmptyCellInBlock = (cells: (number | null)[], block: number) => {
-  const row = Math.floor(block / 3) * 3;
-  const col = (block % 3) * 3;
-  for (let i = 0; i < 9; i++) {
-    const idx = (row + Math.floor(i / 3)) * 9 + col + (i % 3);
-    if (!cells[idx]) {
-      return idx;
-    }
-  }
-  return -1;
-};
-
 type FnRule = (
   cells: (number | null)[],
   rows: Map<number, number>[],
@@ -96,46 +51,6 @@ type FnRule = (
   val: number;
   name: string;
 } | null;
-
-/**
- * Last free cell
- */
-export const getLastFreeCell: FnRule = (cells, rows, cols, blocks) => {
-  // check row
-  for (let i = 0; i < 9; i++) {
-    if (rows[i].size === 8) {
-      return {
-        idx: findEmptyCellInRow(cells, i),
-        val: findMissingValue(rows[i]),
-        name: "Last free cell",
-      };
-    }
-  }
-
-  // check col
-  for (let i = 0; i < 9; i++) {
-    if (cols[i].size === 8) {
-      return {
-        idx: findEmptyCellInCol(cells, i),
-        val: findMissingValue(cols[i]),
-        name: "Last free cell",
-      };
-    }
-  }
-
-  // check block 3x3
-  for (let i = 0; i < 9; i++) {
-    if (blocks[i].size === 8) {
-      return {
-        idx: findEmptyCellInBlock(cells, i),
-        val: findMissingValue(blocks[i]),
-        name: "Last free cell",
-      };
-    }
-  }
-
-  return null;
-};
 
 /**
  * Kỹ thuật "Ô còn lại cuối cùng".
@@ -153,15 +68,15 @@ const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
         const val = cells[row * 9 + col];
-        if (!val) {
-          const blIdx = getBlockIdx(row, col);
-          if (!rows[row].has(n) && !cols[col].has(n) && !blocks[blIdx].has(n)) {
-            possibleIdxs.push({
-              rowIdx: row,
-              colIdx: col,
-              blockIdx: blIdx,
-            });
-          }
+        if (val) continue;
+
+        const blIdx = getBlockIdx(row, col);
+        if (!rows[row].has(n) && !cols[col].has(n) && !blocks[blIdx].has(n)) {
+          possibleIdxs.push({
+            rowIdx: row,
+            colIdx: col,
+            blockIdx: blIdx,
+          });
         }
       }
     }
@@ -175,7 +90,6 @@ const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
       mapC.set(colIdx, (mapC.get(colIdx) || 0) + 1);
       mapB.set(blockIdx, (mapB.get(blockIdx) || 0) + 1);
     }
-
     for (const { rowIdx, colIdx, blockIdx } of possibleIdxs) {
       if (
         mapR.get(rowIdx) === 1 ||
@@ -197,11 +111,11 @@ const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
 /**
  * Kiểm tra xem trong set còn thiếu số nào không (1-9)
  */
-const getNumberNotInSet = (set: Set<number>): Set<number> => {
-  const possibleNums = new Set<number>();
+const getNumberNotInSet = (set: Set<number>): number[] => {
+  const possibleNums: number[] = [];
   for (let n = 1; n <= 9; n++) {
     if (!set.has(n)) {
-      possibleNums.add(n);
+      possibleNums.push(n);
     }
   }
   return possibleNums;
@@ -209,7 +123,7 @@ const getNumberNotInSet = (set: Set<number>): Set<number> => {
 
 /**
  * Kỹ thuật "Số khả thi còn lại".
- * last-possible-number
+ * Last possible number
  */
 const lastPossibleCell: FnRule = (cells, rows, cols, blocks) => {
   for (let row = 0; row < 9; row++) {
@@ -228,7 +142,7 @@ const lastPossibleCell: FnRule = (cells, rows, cols, blocks) => {
       const possibleNums = getNumberNotInSet(usedNums);
 
       // nếu chỉ còn 1 số khả thi thì đặt số đó vào ô này
-      if (possibleNums.size === 1) {
+      if (possibleNums.length === 1) {
         return {
           idx: row * 9 + col,
           val: possibleNums.values().next().value,
@@ -247,7 +161,6 @@ export const trySolve = () => {
   const { rows, cols, cells, blocks } = preHandle();
 
   const res =
-    getLastFreeCell(cells, rows, cols, blocks) ||
     lastRemainingCell(cells, rows, cols, blocks) ||
     lastPossibleCell(cells, rows, cols, blocks);
 
