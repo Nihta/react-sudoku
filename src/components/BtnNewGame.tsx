@@ -7,9 +7,9 @@ export default function BtnNewGame() {
   return (
     <Button
       type="button"
-      label="Trò chơi mới"
+      label="New game"
       onClick={actionNewGame}
-      title="Trò chơi mới"
+      title="New game"
     />
   );
 }

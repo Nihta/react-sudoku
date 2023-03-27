@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
 
 import { convertTime } from "../utils/sudokuUtils";
-import { useGameStore } from "../zustand/useGameStore";
+import { GameState, useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
 import Pressable from "./base/Pressable";
 import { TimerPause, TimerPlay } from "./svgs";
@@ -34,12 +34,21 @@ const TimeLabel = styled.div`
   font-weight: 600;
 `;
 
+const LEVELS: GameState["difficulty"][] = ["easy", "medium", "hard"];
+
 const GameInfo = () => {
   const gameState = useGameStore((state) => state.gameState);
   const setGameState = useGameStore((state) => state.setGameState);
 
   const setDifficulty = useGameStore((state) => state.setDifficulty);
   const difficulty = useGameStore((state) => state.difficulty);
+
+  const actionNewGame = useSudokuStore((state) => state.actionNewGame);
+
+  const changeDifficulty = (lvl: GameState["difficulty"]) => {
+    setDifficulty(lvl);
+    actionNewGame();
+  };
 
   const toggle = () => {
     if (gameState === "paused") {
@@ -54,24 +63,18 @@ const GameInfo = () => {
       <LevelWrapper>
         <LevelTitle>Difficulty:</LevelTitle>
         <LevelItems>
-          <LevelItem
-            active={difficulty === "easy"}
-            onClick={() => setDifficulty("easy")}
-          >
-            Easy
-          </LevelItem>
-          <LevelItem
-            active={difficulty === "medium"}
-            onClick={() => setDifficulty("medium")}
-          >
-            Medium
-          </LevelItem>
-          <LevelItem
-            active={difficulty === "hard"}
-            onClick={() => setDifficulty("hard")}
-          >
-            Hard
-          </LevelItem>
+          {LEVELS.map((lvl) => {
+            return (
+              <LevelItem
+                active={difficulty === lvl}
+                onClick={() => {
+                  changeDifficulty(lvl);
+                }}
+              >
+                {lvl}
+              </LevelItem>
+            );
+          })}
           {/* <LevelItem>Expert</LevelItem>
           <LevelItem>Evil</LevelItem> */}
         </LevelItems>
@@ -157,10 +160,12 @@ const LevelItem = styled.span<{
   font-weight: 600;
   border-radius: 4px;
   color: #6e7c8c;
+  text-transform: capitalize;
 
   &:hover {
     background-color: #f1f4f8;
   }
+
   &:active {
     background-color: #eaeef4;
   }
@@ -173,6 +178,7 @@ const LevelItem = styled.span<{
     &:hover {
       background: transparent;
     }
+
     &:active {
       background: #d2dae7;
     }

@@ -11,11 +11,11 @@ export default function VictoryAlert() {
     <Wrapper>
       <Title>Congratulations</Title>
       <ListItem>
-        <span>Difficulty</span>
+        <span>Difficulty:</span>
         <span>{difficulty}</span>
       </ListItem>
       <ListItem>
-        <span>Time</span>
+        <span>Time:</span>
         <span>{convertTime(time)}</span>
       </ListItem>
     </Wrapper>
