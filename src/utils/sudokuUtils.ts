@@ -74,10 +74,6 @@ export const countEmpty = (cells: Cells): number => {
   }, 0);
 };
 
-export const isSamePos = (posA: number, posB: number) => {
-  return posA === posB;
-};
-
 export const isSameRow = (posA: number, posB: number) => {
   const rowA = Math.trunc(posA / 9);
   const rowB = Math.trunc(posB / 9);
@@ -105,11 +101,11 @@ export const isSameRegion = (posA: number, posB: number) => {
 
 type MapNumberCellIdx = Record<number, number>;
 
-const hightLightRelated = (cells: Cells, pos: number) => {
+const highLightRelated = (cells: Cells, pos: number) => {
   const selectedVal = cells[pos].value;
 
   cells.forEach((cell, _pos) => {
-    // Hightliht related cell (same row, same col, same region)
+    // Highlight related cell (same row, same col, same region)
     const isRelated =
       cell.status !== "conflict" &&
       (isSameRow(_pos, pos) || isSameCol(_pos, pos) || isSameRegion(_pos, pos));
@@ -193,7 +189,7 @@ const supperHighLightRelated = (cells: Cells, pos: number) => {
   });
   cells.forEach((cell, _pos) => {
     if (cell.value === val) {
-      hightLightRelated(cells, _pos);
+      highLightRelated(cells, _pos);
       cell.status = "high-light-number";
     }
   });
@@ -209,7 +205,7 @@ export const highLight = (cells: Cells, posSelected: number) => {
   if (SUPPER_HIGH_LIGHT) {
     supperHighLightRelated(cells, posSelected);
   } else {
-    hightLightRelated(cells, posSelected);
+    highLightRelated(cells, posSelected);
   }
 
   highLightConflict(cells);
@@ -217,7 +213,7 @@ export const highLight = (cells: Cells, posSelected: number) => {
   return cells;
 };
 
-const getRandomeELm = (arr: any[]) => {
+const getRandomElm = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
@@ -225,12 +221,12 @@ export const getPuzzle = (): PuzzleData => {
   const difficulty = useGameStore.getState().difficulty;
   switch (difficulty) {
     case "easy":
-      return getRandomeELm(easyPuzzles);
+      return getRandomElm(easyPuzzles);
     case "medium":
-      return getRandomeELm(mediumPuzzles);
+      return getRandomElm(mediumPuzzles);
     case "hard":
-      return getRandomeELm(hardPuzzles);
+      return getRandomElm(hardPuzzles);
     default:
-      return getRandomeELm(easyPuzzles);
+      return getRandomElm(easyPuzzles);
   }
 };

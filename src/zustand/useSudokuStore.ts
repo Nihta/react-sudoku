@@ -18,11 +18,11 @@ import { useGameStore } from "./useGameStore";
  */
 const canDoAction = () => {
   const gameState = useGameStore.getState().gameState;
-  const setGamestate = useGameStore.getState().setGameState;
+  const setGameState = useGameStore.getState().setGameState;
   if (gameState === "won" || gameState === "paused") {
     // console.log("Can't do action");
     if (gameState === "paused") {
-      setGamestate("playing");
+      setGameState("playing");
     }
     return false;
   }
@@ -148,18 +148,17 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
         state.cells[pos].selected = true;
 
         // Highlight lại
-        const newCells = highLight(state.cells, pos);
-        state.cells = newCells;
+        state.cells = highLight(state.cells, pos);
       })
     );
   },
   /**
    * Điền giá trị vào một cell
    *
-   * KHông thêm vào history, tự động xóa note nếu giá trị nhập vào khác null
+   * Không thêm vào history, tự động xóa note nếu giá trị nhập vào khác null
    */
   setCellVal(pos, newVal) {
-    const setGamestate = useGameStore.getState().setGameState;
+    const setGameState = useGameStore.getState().setGameState;
 
     set(
       produce((state: SudokuState) => {
@@ -187,7 +186,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
 
         // If all cells are filled and there are no conflicts, the game is won
         if (state.cellEmpty === 0 && state.cellConflict === 0) {
-          setGamestate("won");
+          setGameState("won");
         }
       })
     );
@@ -253,7 +252,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
 
     addHistory();
 
-    // If has note, delete note
+    // If it has note, delete note
     if (noteMode) {
       set(
         produce((state: SudokuState) => {
