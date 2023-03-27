@@ -123,7 +123,6 @@ const ItemWrapper = styled.div`
   @media (min-width: 768px) {
     max-width: 60px;
   }
-
 `;
 
 const ItemIcon = styled(Pressable)`
@@ -157,7 +156,6 @@ const Label = styled.span`
   font-weight: 600;
   text-align: center;
   margin-top: 5px;
-  text-align: center;
   color: var(--color-primary);
 
   display: none;
