@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import GlobalStyles from "./components/base/GlobalStyles";
+import Dev from "./components/Dev";
 import Header from "./components/Header";
 import Sudoku from "./components/Sudoku";
 
@@ -12,7 +13,9 @@ function App() {
         <SiteContent>
           <Sudoku />
         </SiteContent>
-        <Aside />
+        <Aside>
+          <Dev />
+        </Aside>
       </Container>
     </>
   );

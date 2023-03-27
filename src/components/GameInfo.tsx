@@ -66,6 +66,7 @@ const GameInfo = () => {
           {LEVELS.map((lvl) => {
             return (
               <LevelItem
+                key={lvl}
                 active={difficulty === lvl}
                 onClick={() => {
                   changeDifficulty(lvl);

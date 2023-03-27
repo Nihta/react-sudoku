@@ -87,7 +87,8 @@ interface SudokuState {
   setCellVal: (
     pos: number,
     val: CellState["value"],
-    ignoreUndo?: boolean
+    ignoreUndo?: boolean,
+    setOrigin?: boolean
   ) => void;
 }
 
@@ -157,7 +158,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
    *
    * Không thêm vào history, tự động xóa note nếu giá trị nhập vào khác null
    */
-  setCellVal(pos, newVal) {
+  setCellVal(pos, newVal, ignoreUndo, setOrigin) {
     const setGameState = useGameStore.getState().setGameState;
 
     set(
@@ -168,6 +169,9 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
           cell.value = null;
         } else {
           cell.value = newVal;
+          if (setOrigin) {
+            cell.isOrigin = true;
+          }
         }
 
         // Remove note if value is not null
