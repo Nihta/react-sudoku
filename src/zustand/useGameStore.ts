@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export interface GameState {
-  gameState: "playing" | "won" | "lost" | "paused";
+  gameState: "playing" | "won" | "lost" | "paused" | "idle";
   setGameState: (state: GameState["gameState"]) => void;
   difficulty: "easy" | "medium" | "hard";
   setDifficulty: (difficulty: GameState["difficulty"]) => void;

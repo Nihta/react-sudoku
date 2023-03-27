@@ -53,12 +53,17 @@ export const useMoveKeybroad = () => {
 };
 
 export const useAutoPauseGame = () => {
-  // todo: improve this: tự động tiếp tục game khi focus lại (trước đó người dùng chưa pasue)
   const gameState = useGameStore((state) => state.gameState);
   const setGameState = useGameStore((state) => state.setGameState);
   useEventListener("blur", () => {
     if (gameState === "playing") {
-      setGameState("paused");
+      setGameState("idle");
+    }
+  });
+
+  useEventListener("focus", () => {
+    if (gameState === "idle") {
+      setGameState("playing");
     }
   });
 };
