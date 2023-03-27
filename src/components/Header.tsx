@@ -1,9 +1,7 @@
 import styled from "styled-components";
-import useSudokuStore from "../zustand/useSudokuStore";
+import {actionNewGame} from "../zustand/Sudoku";
 
 export default function Header() {
-  const actionNewGame = useSudokuStore((state) => state.actionNewGame);
-
   return (
     <Wrapper>
       <div />

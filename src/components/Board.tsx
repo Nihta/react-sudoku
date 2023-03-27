@@ -4,17 +4,16 @@ import styled from "styled-components";
 import Cell from "./Cell";
 
 import { easyPuzzles } from "../data/sudokuPuzzles";
-import { useMoveKeybroad } from "../hooks/sudokuHooks";
-import useSudokuStore from "../zustand/useSudokuStore";
+import { useMoveKeyboard } from "../hooks/sudokuHooks";
+import {setPuzzle} from "../zustand/Sudoku";
 
 function Board() {
-  const { setPuzzle } = useSudokuStore((state) => state);
 
   useEffect(() => {
     setPuzzle(easyPuzzles[0]);
   }, [setPuzzle]);
 
-  useMoveKeybroad();
+  useMoveKeyboard();
 
   return (
     <BoardWrapper>

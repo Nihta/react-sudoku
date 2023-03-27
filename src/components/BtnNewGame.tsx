@@ -1,8 +1,8 @@
 import useSudokuStore from "../zustand/useSudokuStore";
 import Button from "./base/Button";
+import {actionNewGame} from "../zustand/Sudoku";
 
 export default function BtnNewGame() {
-  const actionNewGame = useSudokuStore((state) => state.actionNewGame);
 
   return (
     <Button

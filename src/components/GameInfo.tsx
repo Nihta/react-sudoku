@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
 
 import { convertTime } from "../utils/sudokuUtils";
+import {actionNewGame, incTime} from "../zustand/Sudoku";
 import { GameState, useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
 import Pressable from "./base/Pressable";
@@ -10,7 +11,6 @@ import { TimerPause, TimerPlay } from "./svgs";
 
 const Time = () => {
   const time = useSudokuStore((st) => st.time);
-  const incTime = useSudokuStore((st) => st.incTime);
   const gameState = useGameStore((state) => state.gameState);
 
   useInterval(() => {
@@ -43,7 +43,6 @@ const GameInfo = () => {
   const setDifficulty = useGameStore((state) => state.setDifficulty);
   const difficulty = useGameStore((state) => state.difficulty);
 
-  const actionNewGame = useSudokuStore((state) => state.actionNewGame);
 
   const changeDifficulty = (lvl: GameState["difficulty"]) => {
     setDifficulty(lvl);

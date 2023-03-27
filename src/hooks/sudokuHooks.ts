@@ -1,7 +1,8 @@
 import { useEventListener } from "usehooks-ts";
 import { useGameStore } from "../zustand/useGameStore";
-import useSudokuStore, { moveSelectedCell } from "../zustand/useSudokuStore";
+import useSudokuStore from "../zustand/useSudokuStore";
 import useKeyDown from "./useKeyDown";
+import {actionDelete, inputCell, moveSelectedCell} from "../zustand/Sudoku";
 
 export const useCell = (pos: number) => {
   const cells = useSudokuStore((state) => state.cells);
@@ -14,12 +15,9 @@ export const useCellNote = (pos: number) => {
 };
 
 /**
- * Handle keybroad event (move, delete, input)
+ * Handle keyboard event (move, delete, input)
  */
-export const useMoveKeybroad = () => {
-  const actionDelete = useSudokuStore((state) => state.actionDelete);
-  const inputCell = useSudokuStore((state) => state.inputCell);
-
+export const useMoveKeyboard = () => {
   useKeyDown((e) => {
     const { key } = e;
     switch (key) {

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useCell, useCellNote } from "../hooks/sudokuHooks";
 import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
+import {clickCell} from "../zustand/Sudoku";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 function Note({ values }: { values: number[] }) {
@@ -51,7 +52,6 @@ type CellProps = {
 function Cell(prop: CellProps) {
   const { idx } = prop;
 
-  const clickCell = useSudokuStore((state) => state.clickCell);
   const gameState = useGameStore((state) => state.gameState);
 
   const cell = useCell(idx);

@@ -1,4 +1,5 @@
 import useSudokuStore from "../zustand/useSudokuStore";
+import {clickCell, setCellVal} from "../zustand/Sudoku";
 
 /**
  * Lấy dữ liệu cell (origin) only
@@ -156,8 +157,6 @@ const lastPossibleCell: FnRule = (cells, rows, cols, blocks) => {
 };
 
 export const trySolve = () => {
-  const { clickCell, setCellVal } = useSudokuStore.getState();
-
   const { rows, cols, cells, blocks } = preHandle();
 
   const res =
