@@ -36,16 +36,16 @@ const TimeLabel = styled.div`
 
 const GameInfo = () => {
   const gameState = useGameStore((state) => state.gameState);
-  const setGamestate = useGameStore((state) => state.setGamestate);
+  const setGameState = useGameStore((state) => state.setGameState);
 
   const setDifficulty = useGameStore((state) => state.setDifficulty);
   const difficulty = useGameStore((state) => state.difficulty);
 
   const toggle = () => {
     if (gameState === "paused") {
-      setGamestate("playing");
+      setGameState("playing");
     } else if (gameState === "playing") {
-      setGamestate("paused");
+      setGameState("paused");
     }
   };
 
@@ -165,7 +165,7 @@ const LevelItem = styled.span<{
     background-color: #eaeef4;
   }
 
-  ${(p) => p.active && ` color: #0072e3;`}
+  ${(p) => p.active && ` color: #0072e3;`};
 
   @media screen and (max-width: 767px) {
     background: transparent;

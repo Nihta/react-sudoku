@@ -18,7 +18,7 @@ import { useGameStore } from "./useGameStore";
  */
 const canDoAction = () => {
   const gameState = useGameStore.getState().gameState;
-  const setGamestate = useGameStore.getState().setGamestate;
+  const setGamestate = useGameStore.getState().setGameState;
   if (gameState === "won" || gameState === "paused") {
     // console.log("Can't do action");
     if (gameState === "paused") {
@@ -107,7 +107,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
   },
   setPuzzle: (puzzle) => {
     const { cells, cellEmpty } = convertPuzzle(puzzle);
-    const setGamestate = useGameStore.getState().setGamestate;
+    const setGamestate = useGameStore.getState().setGameState;
     set({
       puzzle,
       cells,
@@ -159,7 +159,7 @@ const useSudokuStore = create<SudokuState>()((set, get) => ({
    * KHông thêm vào history, tự động xóa note nếu giá trị nhập vào khác null
    */
   setCellVal(pos, newVal) {
-    const setGamestate = useGameStore.getState().setGamestate;
+    const setGamestate = useGameStore.getState().setGameState;
 
     set(
       produce((state: SudokuState) => {

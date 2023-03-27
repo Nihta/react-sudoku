@@ -1,19 +1,21 @@
 import styled from "styled-components";
 import { convertTime } from "../utils/sudokuUtils";
 import useSudokuStore from "../zustand/useSudokuStore";
+import { useGameStore } from "../zustand/useGameStore";
 
 export default function VictoryAlert() {
   const time = useSudokuStore((state) => state.time);
+  const difficulty = useGameStore((state) => state.difficulty);
 
   return (
     <Wrapper>
-      <Title>Thành công!</Title>
+      <Title>Congratulations</Title>
       <ListItem>
-        <span>Độ khó</span>
-        <span>Dễ</span>
+        <span>Difficulty</span>
+        <span>{difficulty}</span>
       </ListItem>
       <ListItem>
-        <span>Thời gian</span>
+        <span>Time</span>
         <span>{convertTime(time)}</span>
       </ListItem>
     </Wrapper>

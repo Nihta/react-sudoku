@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React from "react";
 
 type StyledButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -6,7 +7,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   border: 0;
   border-radius: 5px;
   cursor: pointer;
-  padding: 0px 24px;
+  padding: 0 24px;
   height: 60px;
   width: 100%;
   font-size: 20px;
@@ -17,9 +18,6 @@ const StyledButton = styled.button<StyledButtonProps>`
   outline: none;
 
   background-color: var(--color-primary);
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-
-  background-color: #0072e3;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
   &:hover {
