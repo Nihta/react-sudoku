@@ -3,9 +3,17 @@ import { trySolve } from "../utils/sudokuRules";
 import Pressable from "./base/Pressable";
 
 export default function Dev() {
+  const onClick = async () => {
+    let flag = false;
+    do {
+      flag = trySolve();
+      await new Promise((r) => setTimeout(r, 100));
+    } while (flag);
+  };
+
   return (
     <div>
-      <Item onClick={trySolve}>Try to solve</Item>
+      <Item onClick={onClick}>Try to solve</Item>
     </div>
   );
 }

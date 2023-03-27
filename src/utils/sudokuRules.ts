@@ -1,32 +1,16 @@
 import useSudokuStore from "../zustand/useSudokuStore";
 
+const getBlockIdx = (row: number, col: number) => {
+  return Math.floor(row / 3) * 3 + Math.floor(col / 3);
+};
+
 /**
  * Lấy dữ liệu cell (origin) only
  */
 const getOriginCells = () => {
   const cells = useSudokuStore.getState().cells;
-  const newCells = cells.map((cell) => {
+  return cells.map((cell) => {
     return cell.isOrigin ? cell.value : 0;
-  });
-  return newCells;
-};
-
-const ARR_1_9 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-/**
- * Kỹ thuật "Ô còn lại cuối cùng".
- * last-remaining-cell
- */
-const lastRemainingCell = () => {
-  const cells = getOriginCells();
-
-  // tai moi cell = 0 (empty) ta tao mot set 1->9
-  const notes = cells.map((val) => {
-    if (val) {
-      return null;
-    } else {
-      return new Set(ARR_1_9);
-    }
   });
 };
 
@@ -110,6 +94,7 @@ type FnRule = (
 ) => {
   idx: number;
   val: number;
+  name: string;
 } | null;
 
 /**
@@ -122,6 +107,7 @@ export const getLastFreeCell: FnRule = (cells, rows, cols, blocks) => {
       return {
         idx: findEmptyCellInRow(cells, i),
         val: findMissingValue(rows[i]),
+        name: "Last free cell",
       };
     }
   }
@@ -132,6 +118,7 @@ export const getLastFreeCell: FnRule = (cells, rows, cols, blocks) => {
       return {
         idx: findEmptyCellInCol(cells, i),
         val: findMissingValue(cols[i]),
+        name: "Last free cell",
       };
     }
   }
@@ -142,6 +129,7 @@ export const getLastFreeCell: FnRule = (cells, rows, cols, blocks) => {
       return {
         idx: findEmptyCellInBlock(cells, i),
         val: findMissingValue(blocks[i]),
+        name: "Last free cell",
       };
     }
   }
@@ -149,39 +137,11 @@ export const getLastFreeCell: FnRule = (cells, rows, cols, blocks) => {
   return null;
 };
 
-export const trySolve = () => {
-  const { clickCell, setCellVal } = useSudokuStore.getState();
-
-  // const res = getLastFreeCell();
-  // console.log(res);
-
-  // if (res?.idx) {
-  //   clickCell(res.idx);
-  //   setCellVal(res.idx, res.value, false, true);
-  // }
-
-  //  ----
-
-  const { rows, cols, cells, blocks } = preHandle();
-
-  /**
-   * Last free cell ------------------------------------------------------------
-   */
-
-  const res = getLastFreeCell(cells, rows, cols, blocks);
-  if (res?.idx) {
-    console.log("Last free cell: ", res);
-    clickCell(res.idx);
-    setCellVal(res.idx, res.val, false, true);
-    return;
-  }
-
-  /**
-   * Kỹ thuật "Ô còn lại cuối cùng".
-   * last remaining cell -------------------------------------------------------
-   */
-  // tìm những vị trí phù hợp cho số 1
-
+/**
+ * Kỹ thuật "Ô còn lại cuối cùng".
+ * Last remaining cell
+ */
+const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
   for (let n = 1; n <= 9; n++) {
     const possibleIdxs: {
       rowIdx: number;
@@ -194,7 +154,7 @@ export const trySolve = () => {
       for (let col = 0; col < 9; col++) {
         const val = cells[row * 9 + col];
         if (!val) {
-          const blIdx = Math.floor(row / 3) * 3 + Math.floor(col / 3);
+          const blIdx = getBlockIdx(row, col);
           if (!rows[row].has(n) && !cols[col].has(n) && !blocks[blIdx].has(n)) {
             possibleIdxs.push({
               rowIdx: row,
@@ -206,7 +166,7 @@ export const trySolve = () => {
       }
     }
 
-    // tìm vị trí chắc chắn đặt số n (nếu có)
+    // tìm vị trí "Ô còn lại cuối cùng" (nếu có thể khẳng định)
     const mapR = new Map<number, number>();
     const mapC = new Map<number, number>();
     const mapB = new Map<number, number>();
@@ -222,46 +182,81 @@ export const trySolve = () => {
         mapC.get(colIdx) === 1 ||
         mapB.get(blockIdx) === 1
       ) {
-        console.log("Last remaining cell: ", rowIdx, colIdx, n);
-        clickCell(rowIdx * 9 + colIdx);
-        setCellVal(rowIdx * 9 + colIdx, n, false, true);
-        return;
+        return {
+          idx: rowIdx * 9 + colIdx,
+          val: n,
+          name: "Last remaining cell",
+        };
       }
     }
   }
+
+  return null;
 };
 
-// ! sai logic
-// for (let n = 1; n <= 9; n++) {
-//   // lặp qua từng hàng
-//   for (let i = 0; i < 9; i++) {
-//     // lặp qua từng cột
-//     for (let j = 0; j < 9; j++) {
-//       // lấy vị trí của cell
-//       const idx = i * 9 + j;
-//       // nếu cell đó là empty
-//       if (!cells[idx]) {
-//         // lấy vị trí của block
-//         const block = Math.floor(i / 3) * 3 + Math.floor(j / 3);
-//         // lấy vị trí của hàng
-//         const row = i;
-//         // lấy vị trí của cột
-//         const col = j;
-//         // nếu số 1 chưa có trong hàng, cột, block
-//         if (!rows[row].has(n) && !cols[col].has(n) && !blocks[block].has(n)) {
-//           console.log(
-//             "Last remaining cell: ",
-//             {
-//               row: Math.floor(idx / 9),
-//               col: idx % 9,
-//             },
-//             n
-//           );
-//           clickCell(idx);
-//           setCellVal(idx, n, false, true);
-//           return;
-//         }
-//       }
-//     }
-//   }
-// }
+/**
+ * Kiểm tra xem trong set còn thiếu số nào không (1-9)
+ */
+const getNumberNotInSet = (set: Set<number>): Set<number> => {
+  const possibleNums = new Set<number>();
+  for (let n = 1; n <= 9; n++) {
+    if (!set.has(n)) {
+      possibleNums.add(n);
+    }
+  }
+  return possibleNums;
+};
+
+/**
+ * Kỹ thuật "Số khả thi còn lại".
+ * last-possible-number
+ */
+const lastPossibleCell: FnRule = (cells, rows, cols, blocks) => {
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      const val = cells[row * 9 + col];
+      if (val) continue;
+      const blockIdx = getBlockIdx(row, col);
+      // các số đã được sử dụng trong: row, col, block
+      const usedNums = new Set<number>([
+        ...rows[row].keys(),
+        ...cols[col].keys(),
+        ...blocks[blockIdx].keys(),
+      ]);
+
+      // các số khả thi
+      const possibleNums = getNumberNotInSet(usedNums);
+
+      // nếu chỉ còn 1 số khả thi thì đặt số đó vào ô này
+      if (possibleNums.size === 1) {
+        return {
+          idx: row * 9 + col,
+          val: possibleNums.values().next().value,
+          name: "Last possible cell",
+        };
+      }
+    }
+  }
+
+  return null;
+};
+
+export const trySolve = () => {
+  const { clickCell, setCellVal } = useSudokuStore.getState();
+
+  const { rows, cols, cells, blocks } = preHandle();
+
+  const res =
+    getLastFreeCell(cells, rows, cols, blocks) ||
+    lastRemainingCell(cells, rows, cols, blocks) ||
+    lastPossibleCell(cells, rows, cols, blocks);
+
+  if (res) {
+    console.log(res.name);
+    clickCell(res.idx);
+    setCellVal(res.idx, res.val, false, true);
+    return true;
+  }
+
+  return false;
+};
