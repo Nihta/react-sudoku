@@ -195,14 +195,15 @@ const supperHighLightRelated = (cells: Cells, pos: number) => {
   });
 };
 
-const SUPPER_HIGH_LIGHT = false;
 export const highLight = (cells: Cells, posSelected: number) => {
+  const supperHighLight = useGameStore.getState().supperHighLight;
+
   // Clear all highlight
   cells.forEach((cell) => {
     cell.status = "normal";
   });
 
-  if (SUPPER_HIGH_LIGHT) {
+  if (supperHighLight) {
     supperHighLightRelated(cells, posSelected);
   } else {
     highLightRelated(cells, posSelected);

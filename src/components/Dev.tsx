@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { trySolve } from "../utils/sudokuRules";
+import { useGameStore } from "../zustand/useGameStore";
 import Pressable from "./base/Pressable";
 
 export default function Dev() {
+  const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);
+  const supperHighLight = useGameStore((st) => st.supperHighLight);
+
   const onClick = async () => {
     let flag = false;
     do {
@@ -14,6 +18,9 @@ export default function Dev() {
   return (
     <div>
       <Item onClick={onClick}>Try to solve</Item>
+      <Item onClick={toggleSuperHighLight}>{`Super high light: ${
+        supperHighLight ? "ON" : "OFF"
+      }`}</Item>
     </div>
   );
 }

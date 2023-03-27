@@ -5,6 +5,8 @@ export interface GameState {
   setGameState: (state: GameState["gameState"]) => void;
   difficulty: "easy" | "medium" | "hard";
   setDifficulty: (difficulty: GameState["difficulty"]) => void;
+  supperHighLight: boolean;
+  toggleSuperHighLight: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -14,6 +16,10 @@ export const useGameStore = create<GameState>()(
     setGameState: (state) => set({ gameState: state }),
     difficulty: "easy",
     setDifficulty: (difficulty) => set({ difficulty }),
+    supperHighLight: false,
+    toggleSuperHighLight: () => {
+      set((state) => ({ supperHighLight: !state.supperHighLight }));
+    },
   })
   //   {
   //     name: "game-storage",
