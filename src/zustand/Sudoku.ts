@@ -205,6 +205,15 @@ export function setNoteVal(pos: number, val: CellState["value"]) {
   setCellVal(pos, null);
 }
 
+export function setNote(pos: number, vals: number[]) {
+  useSudokuStore.setState(
+    produce((state: SudokuState) => {
+      state.notes[pos] = vals;
+    })
+  );
+  setCellVal(pos, null);
+}
+
 /**
  * Điền giá trị vào một cell
  *
@@ -287,3 +296,17 @@ export const moveSelectedCell = (
 
   clickCell(newPos.row * 9 + newPos.col);
 };
+
+/**
+ * Re-highlight all cells
+ * ! Can not use in produce (immer)
+ */
+export function reHighLight() {
+  useSudokuStore.setState(
+    produce((state: SudokuState) => {
+      if (state.selectedCell) {
+        highLight(state.cells, state.selectedCell);
+      }
+    })
+  );
+}

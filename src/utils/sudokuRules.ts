@@ -1,5 +1,11 @@
 import useSudokuStore from "../zustand/useSudokuStore";
-import {clickCell, setCellVal} from "../zustand/Sudoku";
+import {
+  addHistory,
+  clickCell,
+  setCellVal,
+  setNote,
+  setNoteVal,
+} from "../zustand/Sudoku";
 
 /**
  * Lấy dữ liệu cell (origin) only
@@ -164,10 +170,30 @@ export const trySolve = () => {
     lastPossibleCell(cells, rows, cols, blocks);
 
   if (res) {
+    addHistory();
     console.log(res.name);
     clickCell(res.idx);
     setCellVal(res.idx, res.val, false, true);
     return true;
+  }
+
+  // fill note into cell empty
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      const val = cells[row * 9 + col];
+      if (val) continue;
+      const blockIdx = getBlockIdx(row, col);
+      // các số đã được sử dụng trong: row, col, block
+      const usedNums = new Set<number>([
+        ...rows[row].keys(),
+        ...cols[col].keys(),
+        ...blocks[blockIdx].keys(),
+      ]);
+
+      // các số khả thi
+      const possibleNums = getNumberNotInSet(usedNums);
+      setNote(row * 9 + col, possibleNums);
+    }
   }
 
   return false;

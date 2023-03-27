@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { reHighLight as reHighLightBoard } from "./Sudoku";
 
 export interface GameState {
   gameState: "playing" | "won" | "lost" | "paused" | "idle";
@@ -19,6 +20,7 @@ export const useGameStore = create<GameState>()(
     supperHighLight: false,
     toggleSuperHighLight: () => {
       set((state) => ({ supperHighLight: !state.supperHighLight }));
+      reHighLightBoard();
     },
   })
   //   {
