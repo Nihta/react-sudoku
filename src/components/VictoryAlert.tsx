@@ -48,4 +48,8 @@ const ListItem = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
+
+  span {
+    text-transform: capitalize;
+  }
 `;

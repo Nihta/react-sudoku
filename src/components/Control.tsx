@@ -35,7 +35,7 @@ function Control() {
             />
           </svg>
         </ItemIcon>
-        <Label>Hoàn tác</Label>
+        <Label>Undo</Label>
       </ItemWrapper>
       <ItemWrapper>
         <ItemIcon onClick={actionDelete}>
@@ -46,7 +46,7 @@ function Control() {
             />
           </svg>
         </ItemIcon>
-        <Label>Xoá</Label>
+        <Label>Delete</Label>
       </ItemWrapper>
       <ItemWrapper>
         <ItemIcon onClick={actionNote} className={noteMode ? "active" : ""}>
@@ -66,7 +66,7 @@ function Control() {
             <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
           </svg>
         </ItemIcon>
-        <Label>Ghi chú</Label>
+        <Label>Note</Label>
       </ItemWrapper>
       <ItemWrapper>
         <ItemIcon onClick={actionHint}>
@@ -94,7 +94,7 @@ function Control() {
             />
           </svg>
         </ItemIcon>
-        <Label>Gợi ý</Label>
+        <Label>Hint</Label>
       </ItemWrapper>
     </Wrapper>
   );

@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <Wrapper>
       <div />
-      <NewGameButton onClick={actionNewGame}>Trò chơi mới</NewGameButton>
+      <NewGameButton onClick={actionNewGame}>New game</NewGameButton>
     </Wrapper>
   );
 }
