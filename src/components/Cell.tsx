@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { useCell, useCellNote } from "../hooks/sudokuHooks";
 import { useGameStore } from "../zustand/useGameStore";
-import useSudokuStore from "../zustand/useSudokuStore";
 import {clickCell} from "../zustand/Sudoku";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -30,6 +29,7 @@ const NoteWrapper = styled.div`
   &.hide {
     color: transparent !important;
   }
+  padding: 2px;
 `;
 
 const NoteItem = styled.div`
@@ -42,6 +42,7 @@ const NoteItem = styled.div`
 
   @media screen and (max-width: 767px) {
     font-size: 10px;
+    font-weight: 600;
   }
 `;
 
