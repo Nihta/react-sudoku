@@ -163,6 +163,7 @@ const LevelItem = styled.span<{
   border-radius: 4px;
   color: #6e7c8c;
   text-transform: capitalize;
+  cursor: pointer;
 
   &:hover {
     background-color: #f1f4f8;

@@ -23,7 +23,7 @@ function App() {
 
 const Container = styled.div`
   padding: 0 10px;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   width: 100%;
 
   display: flex;

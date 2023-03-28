@@ -171,7 +171,13 @@ export function setPuzzle(puzzle: PuzzleData) {
 }
 
 export function clickCell(pos: number) {
-  if (!canDoAction()) return;
+  // * Khi chien thang tro choi van cho phep di chuyen
+  const gameState = useGameStore.getState().gameState;
+  const setGameState = useGameStore.getState().setGameState;
+  if (gameState !== "won" && gameState === "paused") {
+    setGameState("playing");
+    return;
+  }
 
   useSudokuStore.setState(
     produce((state: SudokuState) => {
@@ -353,4 +359,16 @@ export function reHighLight() {
       }
     })
   );
+}
+
+/**
+ * Action replay current puzzle
+ */
+export function actionRePlay() {
+  const { puzzle } = useSudokuStore.getState();
+  if (puzzle) {
+    setPuzzle(puzzle);
+  } else {
+    console.error("No puzzle to replay!");
+  }
 }

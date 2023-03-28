@@ -4,7 +4,7 @@ import { reHighLight as reHighLightBoard } from "./Sudoku";
 export interface GameState {
   gameState: "playing" | "won" | "lost" | "paused" | "idle";
   setGameState: (state: GameState["gameState"]) => void;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "easy" | "medium" | "hard" | "expert" | "evil";
   setDifficulty: (difficulty: GameState["difficulty"]) => void;
   supperHighLight: boolean;
   toggleSuperHighLight: () => void;
