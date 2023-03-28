@@ -19,3 +19,5 @@ export type Position = {
 
 export type Note = number[];
 export type Notes = Note[];
+
+export type Difficulty = "easy" | "medium" | "hard" | "expert" | "evil";

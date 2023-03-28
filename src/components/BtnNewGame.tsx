@@ -1,24 +1,27 @@
 import Button from "./base/Button";
 import styled from "styled-components";
 import Pressable from "./base/Pressable";
-import { GameState } from "../zustand/useGameStore";
 import React from "react";
 import { KeySvg, RefreshSvg } from "./svgs";
-import { actionRePlay } from "../zustand/Sudoku";
+import { actionNewGame, actionRePlay } from "../zustand/Sudoku";
+import { Difficulty } from "../types/sudokuTypes";
+import { useGameStore } from "../zustand/useGameStore";
 
-const LEVELS: GameState["difficulty"][] = [
-  "easy",
-  "medium",
-  "hard",
-  "expert",
-  "evil",
-];
+const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert", "evil"];
 
 export default function BtnNewGame() {
   const [active, setActive] = React.useState(false);
 
+  const setDifficulty = useGameStore((state) => state.setDifficulty);
+
   const toggle = () => {
     setActive(!active);
+  };
+
+  const getPuzzle = (difficulty: Difficulty) => {
+    setDifficulty(difficulty);
+    actionNewGame();
+    setActive(false);
   };
 
   return (
@@ -27,7 +30,12 @@ export default function BtnNewGame() {
         <ContentWrapper>
           {LEVELS.map((lvl) => {
             return (
-              <ContentItem key={lvl}>
+              <ContentItem
+                key={lvl}
+                onClick={() => {
+                  getPuzzle(lvl);
+                }}
+              >
                 <KeySvg />
                 {lvl}
               </ContentItem>

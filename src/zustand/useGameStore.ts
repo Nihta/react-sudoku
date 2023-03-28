@@ -1,10 +1,11 @@
 import { create } from "zustand";
+import { Difficulty } from "../types/sudokuTypes";
 import { reHighLight as reHighLightBoard } from "./Sudoku";
 
 export interface GameState {
   gameState: "playing" | "won" | "lost" | "paused" | "idle";
   setGameState: (state: GameState["gameState"]) => void;
-  difficulty: "easy" | "medium" | "hard" | "expert" | "evil";
+  difficulty: Difficulty;
   setDifficulty: (difficulty: GameState["difficulty"]) => void;
   supperHighLight: boolean;
   toggleSuperHighLight: () => void;

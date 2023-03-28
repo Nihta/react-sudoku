@@ -1,6 +1,6 @@
-import { easyPuzzles, hardPuzzles, mediumPuzzles } from "../data/sudokuPuzzles";
 import { Cells, CellState, Position, PuzzleData } from "../types/sudokuTypes";
 import { useGameStore } from "../zustand/useGameStore";
+import { dataPuzzles } from "../data/sudokuPuzzles";
 
 /**
  * Convert time to string
@@ -212,20 +212,48 @@ export const highLight = (cells: Cells, posSelected: number) => {
   highLightConflict(cells);
 };
 
-const getRandomElm = (arr: any[]) => {
+export const getRandomElm = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
 export const getPuzzle = (): PuzzleData => {
   const difficulty = useGameStore.getState().difficulty;
-  switch (difficulty) {
-    case "easy":
-      return getRandomElm(easyPuzzles);
-    case "medium":
-      return getRandomElm(mediumPuzzles);
-    case "hard":
-      return getRandomElm(hardPuzzles);
-    default:
-      return getRandomElm(easyPuzzles);
-  }
+  return decodeSudokuPuzzle(getRandomElm(dataPuzzles[difficulty]));
 };
+
+/**
+ * ! Không kiểm tra dữ liệu có hợp lệ hay không
+ *
+ */
+export function decodeSudokuPuzzle(data: string): PuzzleData {
+  const NUMBER_CHAR = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const MAP_CHAR_NUMBER: Record<string, string> = {
+    A: "1",
+    B: "2",
+    C: "3",
+    D: "4",
+    E: "5",
+    F: "6",
+    G: "7",
+    H: "8",
+    I: "9",
+  };
+
+  const puzzle: string[] = [];
+  const solution: string[] = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const char = data[i];
+    if (NUMBER_CHAR.includes(char)) {
+      puzzle.push(char);
+      solution.push(char);
+    } else {
+      puzzle.push("0");
+      solution.push(MAP_CHAR_NUMBER[char]);
+    }
+  }
+
+  console.log([puzzle.join(""), solution.join("")]);
+
+  return [puzzle.join(""), solution.join("")];
+}

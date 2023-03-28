@@ -3,14 +3,14 @@ import styled from "styled-components";
 
 import Cell from "./Cell";
 
-import { easyPuzzles } from "../data/sudokuPuzzles";
 import { useMoveKeyboard } from "../hooks/sudokuHooks";
-import {setPuzzle} from "../zustand/Sudoku";
+import { setPuzzle } from "../zustand/Sudoku";
+import { dataPuzzles } from "../data/sudokuPuzzles";
+import {decodeSudokuPuzzle} from "../utils/sudokuUtils";
 
 function Board() {
-
   useEffect(() => {
-    setPuzzle(easyPuzzles[0]);
+    setPuzzle(decodeSudokuPuzzle(dataPuzzles["easy"][0]));
   }, [setPuzzle]);
 
   useMoveKeyboard();
