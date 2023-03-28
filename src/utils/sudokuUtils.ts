@@ -253,7 +253,5 @@ export function decodeSudokuPuzzle(data: string): PuzzleData {
     }
   }
 
-  console.log([puzzle.join(""), solution.join("")]);
-
   return [puzzle.join(""), solution.join("")];
 }

@@ -19,7 +19,7 @@ function Board() {
     <BoardWrapper>
       <BoardGrid>
         {Array.from({ length: 81 }, (_, i) => (
-          <Cell idx={i} key={`i`} />
+          <Cell idx={i} key={i} />
         ))}
       </BoardGrid>
     </BoardWrapper>

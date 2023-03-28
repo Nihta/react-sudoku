@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { useGameStore } from "../zustand/useGameStore";
 
 export default function GamePause() {
-  const setGamestate = useGameStore((state) => state.setGameState);
+  const setGameState = useGameStore((state) => state.setGameState);
 
   const play = () => {
-    setGamestate("playing");
+    setGameState("playing");
   };
 
   return (

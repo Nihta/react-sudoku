@@ -1,18 +1,54 @@
+import React, { useState } from "react";
 import styled from "styled-components";
-import {actionNewGame} from "../zustand/Sudoku";
+import { useOnClickOutside } from "usehooks-ts";
+
+import { NewGameContent } from "./BtnNewGame";
 
 export default function Header() {
+  const [active, setActive] = useState(false);
+
+  const ref = React.useRef(null);
+
+  const toggle = () => {
+    setActive((a) => !a);
+  };
+
+  useOnClickOutside(ref, () => {
+    if (active) {
+      setActive(false);
+    }
+  });
+
   return (
     <Wrapper>
       <div />
-      <NewGameButton onClick={actionNewGame}>New game</NewGameButton>
+      <Content ref={ref}>
+        <NewGameButton onClick={toggle}>New game</NewGameButton>
+        {active && (
+          <NewGameContent
+            callBack={() => {
+              setActive(false);
+            }}
+          />
+        )}
+      </Content>
     </Wrapper>
   );
 }
 
+const NewGameWrapper = styled.div`
+  position: relative;
+`;
+
+const Content = styled(NewGameWrapper)`
+  @media (min-width: 980px) {
+    display: none;
+  }
+`;
+
 const Wrapper = styled.header`
   height: 60px;
-  margin-bottom: 0 0 5px;
+  margin: 0 0 0 5px;
   padding: 0 10px;
   border-bottom: 1px solid rgba(0, 63, 123, 0.1);
   display: flex;
