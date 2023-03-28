@@ -210,8 +210,6 @@ export const highLight = (cells: Cells, posSelected: number) => {
   }
 
   highLightConflict(cells);
-
-  return cells;
 };
 
 const getRandomElm = (arr: any[]) => {

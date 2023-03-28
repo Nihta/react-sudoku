@@ -1,4 +1,4 @@
-import useSudokuStore, { canDoAction, SudokuState } from "./useSudokuStore";
+import useSudokuStore, { SudokuState } from "./useSudokuStore";
 import {
   convertPuzzle,
   countConflict,
@@ -9,7 +9,30 @@ import {
 } from "../utils/sudokuUtils";
 import produce from "immer";
 import { useGameStore } from "./useGameStore";
-import { CellState, Position, PuzzleData } from "../types/sudokuTypes";
+import {
+  CellState,
+  Note,
+  Notes,
+  Position,
+  PuzzleData,
+} from "../types/sudokuTypes";
+
+/**
+ * Pre handle action
+ *
+ * If game state is `won` or `paused`, return false
+ */
+const canDoAction = () => {
+  const gameState = useGameStore.getState().gameState;
+  const setGameState = useGameStore.getState().setGameState;
+  if (gameState === "won" || gameState === "paused") {
+    if (gameState === "paused") {
+      setGameState("playing");
+    }
+    return false;
+  }
+  return true;
+};
 
 /**
  * Luu trang thai hien tai vao store:
@@ -25,7 +48,7 @@ export const addHistory = () => {
         notes: state.notes,
         selectedCell: state.selectedCell,
       });
-      if (state.history.length > 100) {
+      if (state.history.length > 729) {
         state.history.shift();
       }
     })
@@ -53,19 +76,18 @@ export const actionNewGame = () => {
 export const actionHint = () => {
   if (!canDoAction()) return;
 
-  const { selectedCell, puzzle, cells } = useSudokuStore.getState();
+  const { puzzle } = useSudokuStore.getState();
 
-  if (selectedCell === undefined || !puzzle) return;
+  const currCell = getCurrentCell();
+  if (!currCell || currCell.cell.isOrigin || !puzzle) return;
+  const { pos } = currCell;
 
-  const cell = cells[selectedCell];
-  if (cell.isOrigin) return;
-
-  const correctNumber = getCorrectNumber(puzzle, selectedCell);
-  inputCell(correctNumber);
+  const correctNumber = getCorrectNumber(puzzle, pos);
+  setCellVal(pos, correctNumber);
 
   useSudokuStore.setState(
     produce((state: SudokuState) => {
-      state.cells[selectedCell].isOrigin = true;
+      state.cells[pos].isOrigin = true;
     })
   );
 };
@@ -77,28 +99,34 @@ export const deleteCell = (pos: number) => {
   setCellVal(pos, null);
 };
 
+/**
+ * Get current cell (selected cell)
+ */
+function getCurrentCell() {
+  const { selectedCell, cells } = useSudokuStore.getState();
+  if (selectedCell === undefined) return null;
+  return {
+    cell: cells[selectedCell],
+    pos: selectedCell,
+  };
+}
+
 export const actionDelete = () => {
   if (!canDoAction()) return;
 
-  const { selectedCell, noteMode, cells } = useSudokuStore.getState();
+  const { notes } = useSudokuStore.getState();
 
-  if (selectedCell === undefined) return;
-  const cell = cells[selectedCell];
-  if (cell.isOrigin) return;
+  const currCell = getCurrentCell();
+  if (!currCell || currCell.cell.isOrigin) return;
 
   addHistory();
 
   // If it has note, delete note
-  if (noteMode) {
-    useSudokuStore.setState(
-      produce((state: SudokuState) => {
-        state.notes[selectedCell!] = [];
-      })
-    );
-    return;
+  if (notes[currCell.pos].length > 0) {
+    setNote(currCell.pos, []);
+  } else {
+    deleteCell(currCell.pos);
   }
-
-  deleteCell(selectedCell!);
 };
 
 export const actionUndo = () => {
@@ -113,7 +141,7 @@ export const actionUndo = () => {
 };
 
 /**
- * Bat tat che do ghi chu
+ * Toggle note mode
  */
 export const actionNote = () => {
   if (!canDoAction()) return;
@@ -168,50 +196,68 @@ export function clickCell(pos: number) {
 export function inputCell(newVal: CellState["value"]) {
   if (!canDoAction()) return;
 
-  const { selectedCell: currPos, cells, noteMode } = useSudokuStore.getState();
+  const { noteMode } = useSudokuStore.getState();
 
-  // If not selected cell
-  if (currPos === undefined) return;
-
-  // If selected cell is origin, can't change
-  const cell = cells[currPos];
-  if (cell.isOrigin) return;
+  // If not selected cell, or selected cell is origin, can't change
+  const currCell = getCurrentCell();
+  if (!currCell || currCell.cell.isOrigin) return;
 
   // Truoc khi thay doi trang thai thi can luu lai
   addHistory();
 
   if (noteMode) {
     // ham nay tu dong set cell val = null
-    setNoteVal(currPos, newVal);
+    setNoteVal(currCell.pos, newVal);
   } else {
     // ham nay tu dong xoa note new val != null
-    setCellVal(currPos, newVal);
+    setCellVal(currCell.pos, newVal);
+  }
+}
+
+export function setNote(pos: number, values: Note) {
+  useSudokuStore.setState(
+    produce((state: SudokuState) => {
+      state.notes[pos] = values;
+    })
+  );
+  // Neu cell co gia tri thi xoa no di
+  const currCell = getCurrentCell();
+  if (currCell?.cell.value) {
+    setCellVal(pos, null);
   }
 }
 
 export function setNoteVal(pos: number, val: CellState["value"]) {
-  useSudokuStore.setState(
-    produce((state: SudokuState) => {
-      const note = state.notes[pos];
-      if (state.noteMode && val) {
-        if (note.includes(val)) {
-          state.notes[pos] = note.filter((n) => n !== val);
-        } else {
-          state.notes[pos] = [...note, val];
-        }
-      }
-    })
-  );
-  setCellVal(pos, null);
+  const { notes, noteMode } = useSudokuStore.getState();
+  const note = notes[pos];
+  if (noteMode && val) {
+    if (note.includes(val)) {
+      setNote(
+        pos,
+        note.filter((n) => n !== val)
+      );
+    } else {
+      setNote(pos, [...note, val]);
+    }
+  }
 }
 
-export function setNote(pos: number, vals: number[]) {
+/**
+ * Set notes dong thoi phai xoa cac so xung dot
+ */
+export function setNotes(notes: Notes) {
   useSudokuStore.setState(
-    produce((state: SudokuState) => {
-      state.notes[pos] = vals;
+    produce((st: SudokuState) => {
+      st.notes = notes;
+      notes.forEach((note, idx) => {
+        if (note.length > 0) {
+          st.cells[idx].value = null;
+        }
+      });
+
+      highLight(st.cells, st.selectedCell ?? 36);
     })
   );
-  setCellVal(pos, null);
 }
 
 /**
@@ -222,7 +268,6 @@ export function setNote(pos: number, vals: number[]) {
 export function setCellVal(
   pos: number,
   newVal: CellState["value"],
-  ignoreUndo?: boolean,
   setOrigin?: boolean
 ) {
   const setGameState = useGameStore.getState().setGameState;
@@ -255,7 +300,6 @@ export function setCellVal(
       state.cellEmpty = countEmpty(state.cells);
 
       // If all cells are filled and there are no conflicts, the game is won
-      // todo change to sub
       if (state.cellEmpty === 0 && state.cellConflict === 0) {
         setGameState("won");
       }
@@ -265,7 +309,7 @@ export function setCellVal(
 
 /**
  * Use keyboard to move to other cell
- * @param directionMove Hướng di chuyển (up, down, left, right)
+ * @param directionMove "up" | "down" | "left" | "right"
  */
 export const moveSelectedCell = (
   directionMove: "up" | "down" | "left" | "right"

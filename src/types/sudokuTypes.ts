@@ -17,4 +17,5 @@ export type Position = {
   col: number;
 };
 
-export type Notes = number[][];
+export type Note = number[];
+export type Notes = Note[];

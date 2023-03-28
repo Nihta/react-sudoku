@@ -1,11 +1,6 @@
 import useSudokuStore from "../zustand/useSudokuStore";
-import {
-  addHistory,
-  clickCell,
-  setCellVal,
-  setNote,
-  setNoteVal,
-} from "../zustand/Sudoku";
+import {addHistory, clickCell, setCellVal, setNotes,} from "../zustand/Sudoku";
+import type {Notes} from "../types/sudokuTypes";
 
 /**
  * Lấy dữ liệu cell (origin) only
@@ -173,11 +168,12 @@ export const trySolve = () => {
     addHistory();
     console.log(res.name);
     clickCell(res.idx);
-    setCellVal(res.idx, res.val, false, true);
+    setCellVal(res.idx, res.val, true);
     return true;
   }
 
   // fill note into cell empty
+  const newNotes: Notes = Array.from({ length: 81 }, () => []);
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
       const val = cells[row * 9 + col];
@@ -191,10 +187,11 @@ export const trySolve = () => {
       ]);
 
       // các số khả thi
-      const possibleNums = getNumberNotInSet(usedNums);
-      setNote(row * 9 + col, possibleNums);
+      newNotes[row * 9 + col] = getNumberNotInSet(usedNums);
     }
   }
+  addHistory();
+  setNotes(newNotes);
 
   return false;
 };
