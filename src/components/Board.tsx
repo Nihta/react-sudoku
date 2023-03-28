@@ -3,27 +3,23 @@ import styled from "styled-components";
 
 import Cell from "./Cell";
 
-import { easyPuzzles } from "../data/sudokuPuzzles";
 import { useMoveKeyboard } from "../hooks/sudokuHooks";
-import {setPuzzle} from "../zustand/Sudoku";
+import { setPuzzle } from "../zustand/Sudoku";
+import { dataPuzzles } from "../data/sudokuPuzzles";
+import { decodeSudokuPuzzle } from "../utils/sudokuUtils";
 
 function Board() {
-
   useEffect(() => {
-    setPuzzle(easyPuzzles[0]);
-  }, [setPuzzle]);
+    setPuzzle(decodeSudokuPuzzle(dataPuzzles["easy"][0]));
+  }, []);
 
   useMoveKeyboard();
 
   return (
     <BoardWrapper>
       <BoardGrid>
-        {Array.from({ length: 9 }, (_, i) => (
-          <React.Fragment key={i}>
-            {Array.from({ length: 9 }, (_, j) => (
-              <Cell idx={i * 9 + j} key={`${i}${j}`} />
-            ))}
-          </React.Fragment>
+        {Array.from({ length: 81 }, (_, i) => (
+          <Cell idx={i} key={`i`} />
         ))}
       </BoardGrid>
     </BoardWrapper>
