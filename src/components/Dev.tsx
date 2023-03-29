@@ -9,10 +9,10 @@ export default function Dev() {
 
   const onClick = async () => {
     let flag = false;
-    // do {
-    flag = trySolve();
-    // await new Promise((r) => setTimeout(r, 100));
-    // } while (flag);
+    do {
+      flag = trySolve();
+      await new Promise((r) => setTimeout(r, 100));
+    } while (flag);
   };
 
   return (
