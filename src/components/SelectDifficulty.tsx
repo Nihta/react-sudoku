@@ -83,11 +83,6 @@ const LevelTitle = styled.span`
   font-weight: 600;
   line-height: 1;
   align-items: center;
-  display: none;
-
-  @media (min-width: 768px) {
-    display: flex;
-  }
 
   color: #344861;
   @media (min-width: 980px) {
