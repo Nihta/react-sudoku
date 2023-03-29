@@ -1,6 +1,8 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
 import { Difficulty } from "../types/sudokuTypes";
-import { reHighLight as reHighLightBoard } from "./Sudoku";
+import { reHighLight } from "./Sudoku";
 
 export interface GameState {
   gameState: "playing" | "won" | "lost" | "paused" | "idle";
@@ -12,20 +14,20 @@ export interface GameState {
 }
 
 export const useGameStore = create<GameState>()(
-  // persist(
-  (set, _get) => ({
-    gameState: "playing",
-    setGameState: (state) => set({ gameState: state }),
-    difficulty: "easy",
-    setDifficulty: (difficulty) => set({ difficulty }),
-    supperHighLight: false,
-    toggleSuperHighLight: () => {
-      set((state) => ({ supperHighLight: !state.supperHighLight }));
-      reHighLightBoard();
-    },
-  })
-  //   {
-  //     name: "game-storage",
-  //   }
-  // )
+  persist(
+    (set, _get) => ({
+      gameState: "playing",
+      setGameState: (state) => set({ gameState: state }),
+      difficulty: "easy",
+      setDifficulty: (difficulty) => set({ difficulty }),
+      supperHighLight: false,
+      toggleSuperHighLight: () => {
+        set((state) => ({ supperHighLight: !state.supperHighLight }));
+        reHighLight();
+      },
+    }),
+    {
+      name: "game-storage",
+    }
+  )
 );

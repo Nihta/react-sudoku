@@ -7,11 +7,15 @@ import { useMoveKeyboard } from "../hooks/sudokuHooks";
 import { setPuzzle } from "../zustand/Sudoku";
 import { dataPuzzles } from "../data/sudokuPuzzles";
 import { decodeSudokuPuzzle } from "../utils/sudokuUtils";
+import useSudokuStore from "../zustand/useSudokuStore";
 
 function Board() {
+  const puzzle = useSudokuStore((st) => st.puzzle);
   useEffect(() => {
-    setPuzzle(decodeSudokuPuzzle(dataPuzzles["easy"][0]));
-  }, []);
+    if (!puzzle) {
+      setPuzzle(decodeSudokuPuzzle(dataPuzzles["easy"][0]));
+    }
+  }, [puzzle]);
 
   useMoveKeyboard();
 

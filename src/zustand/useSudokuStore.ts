@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { CellState, Notes, PuzzleData } from "../types/sudokuTypes";
+import { persist } from "zustand/middleware";
 
 export interface SudokuState {
   puzzle?: PuzzleData;
@@ -21,16 +22,23 @@ export interface SudokuState {
   time: number;
 }
 
-const useSudokuStore = create<SudokuState>()(() => ({
-  puzzle: undefined,
-  noteMode: false,
-  selectedCell: undefined,
-  history: [],
-  cells: [],
-  cellEmpty: 81,
-  cellConflict: 0,
-  time: 0,
-  notes: Array.from({ length: 81 }, () => []),
-}));
+const useSudokuStore = create<SudokuState>()(
+  persist(
+    (_set, _get) => ({
+      puzzle: undefined,
+      noteMode: false,
+      selectedCell: undefined,
+      history: [],
+      cells: [],
+      cellEmpty: 81,
+      cellConflict: 0,
+      time: 0,
+      notes: Array.from({ length: 81 }, () => []),
+    }),
+    {
+      name: "sudoku-storage",
+    }
+  )
+);
 
 export default useSudokuStore;
