@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { useInterval } from "usehooks-ts";
-import { Difficulty } from "../types/sudokuTypes";
 
 import { convertTime } from "../utils/sudokuUtils";
 import { actionNewGame, incTime } from "../zustand/Sudoku";
@@ -9,6 +8,7 @@ import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
 import Pressable from "./base/Pressable";
 import { TimerPause, TimerPlay } from "./svgs";
+import SelectDifficulty from "./SelectDifficulty";
 
 const Time = () => {
   const time = useSudokuStore((st) => st.time);
@@ -35,19 +35,9 @@ const TimeLabel = styled.div`
   font-weight: 600;
 `;
 
-const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert", "evil"];
-
 const GameInfo = () => {
   const gameState = useGameStore((state) => state.gameState);
   const setGameState = useGameStore((state) => state.setGameState);
-
-  const setDifficulty = useGameStore((state) => state.setDifficulty);
-  const difficulty = useGameStore((state) => state.difficulty);
-
-  const changeDifficulty = (lvl: Difficulty) => {
-    setDifficulty(lvl);
-    actionNewGame();
-  };
 
   const toggle = () => {
     if (gameState === "paused") {
@@ -59,24 +49,7 @@ const GameInfo = () => {
 
   return (
     <Wrapper>
-      <LevelWrapper>
-        <LevelTitle>Difficulty:</LevelTitle>
-        <LevelItems>
-          {LEVELS.map((lvl) => {
-            return (
-              <LevelItem
-                key={lvl}
-                active={difficulty === lvl}
-                onClick={() => {
-                  changeDifficulty(lvl);
-                }}
-              >
-                {lvl}
-              </LevelItem>
-            );
-          })}
-        </LevelItems>
-      </LevelWrapper>
+      <SelectDifficulty onChange={actionNewGame} />
       <Flex>
         <Time />
         {["playing", "paused", "idle"].includes(gameState) && (
@@ -128,66 +101,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const LevelWrapper = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const LevelTitle = styled.span`
-  margin-right: 7px;
-  color: #94a3b7;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1;
-  align-items: center;
-  display: none;
-
-  @media (min-width: 768px) {
-    display: flex;
-  }
-`;
-
-const LevelItems = styled.div`
-  display: flex;
-  align-items: center;
-  line-height: 1.25;
-`;
-
-const LevelItem = styled.span<{
-  active?: boolean;
-}>`
-  padding: 8px;
-  margin-right: 4px;
-  font-weight: 600;
-  border-radius: 4px;
-  color: #6e7c8c;
-  text-transform: capitalize;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f1f4f8;
-  }
-
-  &:active {
-    background-color: #eaeef4;
-  }
-
-  ${(p) => p.active && ` color: #0072e3;`};
-
-  @media screen and (max-width: 767px) {
-    background: transparent;
-    padding: 5px;
-    &:hover {
-      background: transparent;
-    }
-
-    &:active {
-      background: #d2dae7;
-    }
-  }
 `;
 
 export default GameInfo;
