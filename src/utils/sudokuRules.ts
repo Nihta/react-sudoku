@@ -1,6 +1,13 @@
 import useSudokuStore from "../zustand/useSudokuStore";
-import {addHistory, clickCell, setCellVal, setNotes,} from "../zustand/Sudoku";
-import type {Notes} from "../types/sudokuTypes";
+import {
+  addHistory,
+  clickCell,
+  setCellVal,
+  setNote,
+  setNotes,
+} from "../zustand/Sudoku";
+import type { Notes } from "../types/sudokuTypes";
+import { deleteValuesFromArray } from "./arrayUtils";
 
 /**
  * Lấy dữ liệu cell (origin) only
@@ -194,4 +201,85 @@ export const trySolve = () => {
   setNotes(newNotes);
 
   return false;
+};
+
+// --- note
+// get idxs by row
+const getIdxsByRow = (row: number) => {
+  const idxs: number[] = [];
+  for (let col = 0; col < 9; col++) {
+    idxs.push(row * 9 + col);
+  }
+  return idxs;
+};
+
+const getIdxsByCol = (col: number) => {
+  const idxs: number[] = [];
+  for (let row = 0; row < 9; row++) {
+    idxs.push(row * 9 + col);
+  }
+  return idxs;
+};
+
+const getIdxsByBlock = (block: number) => {
+  const idxs: number[] = [];
+  const row = Math.floor(block / 3) * 3;
+  const col = (block % 3) * 3;
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      idxs.push((row + i) * 9 + col + j);
+    }
+  }
+  return idxs;
+};
+
+/**
+ * obvious-pairs
+ * Cặp số hiển nhiên
+ */
+const obviousPairs = (notes: Notes) => {
+  const helper = (range: number[]) => {
+    const map = new Map<string, number[]>();
+    let obvPairStr = "";
+    loopIdx(notes, range, (note, idx) => {
+      const noteTypeStr = [...note].sort().join("");
+      if (note.length === 2) {
+        if (map.has(noteTypeStr)) {
+          map.get(noteTypeStr)?.push(idx);
+          obvPairStr = noteTypeStr;
+          return true;
+        } else {
+          map.set(noteTypeStr, [idx]);
+        }
+      }
+    });
+    if (obvPairStr.length !== 0) {
+      const [idxObv1, idxObv2] = map.get(obvPairStr)!;
+      loopIdx(notes, range, (note, idx) => {
+        if (note.length === 0 || idx === idxObv1 || idx === idxObv2) return;
+        setNote(idx, deleteValuesFromArray(notes[idx], notes[idxObv1]));
+      });
+    }
+  };
+
+  for (let i = 0; i < 9; i++) {
+    helper(getIdxsByRow(i));
+    helper(getIdxsByCol(i));
+    helper(getIdxsByBlock(i));
+  }
+};
+
+// prettier-ignore
+function loopIdx<T>(data: T[], idxs: number[], fn: (val: T, idx: number) => boolean | void) {
+  for (const idx of idxs) {
+   const isStop = fn(data[idx], idx);
+   if (isStop) {
+    return;
+   }
+  }
+}
+
+export const handleNote = () => {
+  const notes = useSudokuStore.getState().notes;
+  obviousPairs(notes);
 };

@@ -23,6 +23,8 @@ export const getPuzzle = (): PuzzleData => {
  *
  */
 export function decodeSudokuPuzzle(data: string): PuzzleData {
+  console.log(data);
+
   const NUMBER_CHAR = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   const MAP_CHAR_NUMBER: Record<string, string> = {
     A: "1",

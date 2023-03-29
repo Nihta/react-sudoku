@@ -1,11 +1,20 @@
 import styled from "styled-components";
-import { trySolve } from "../utils/sudokuRules";
+import { handleNote, trySolve } from "../utils/sudokuRules";
 import { useGameStore } from "../zustand/useGameStore";
 import Pressable from "./base/Pressable";
+import { setPuzzle } from "../zustand/Sudoku";
+import { decodeSudokuPuzzle } from "../utils/sudokuUtils";
 
 export default function Dev() {
   const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);
   const supperHighLight = useGameStore((st) => st.supperHighLight);
+
+  const setPuzTest = () => {
+    const puzzle = decodeSudokuPuzzle(
+      "8G1F9BC45CDIAHEGBF2E6CD7HIAAC25FHDGI5IHD73AF27FD9B15CHD27HE69A3IAEBCD6HGFH371IB5D"
+    );
+    setPuzzle(puzzle);
+  };
 
   const onClick = async () => {
     let flag = false;
@@ -21,6 +30,8 @@ export default function Dev() {
       <Item onClick={toggleSuperHighLight}>{`Super high light: ${
         supperHighLight ? "ON" : "OFF"
       }`}</Item>
+      <Item onClick={setPuzTest}>Set puz test</Item>
+      <Item onClick={handleNote}>Handle note</Item>
     </div>
   );
 }

@@ -83,13 +83,7 @@ export const actionHint = () => {
   const { pos } = currCell;
 
   const correctNumber = getCorrectNumber(puzzle, pos);
-  setCellVal(pos, correctNumber);
-
-  useSudokuStore.setState(
-    produce((state: SudokuState) => {
-      state.cells[pos].isOrigin = true;
-    })
-  );
+  setCellVal(pos, correctNumber, true);
 };
 
 /**
