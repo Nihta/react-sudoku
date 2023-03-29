@@ -218,6 +218,7 @@ function supperHighLight(cells: Cells, pos: number) {
 
   if (!selectedVal) {
     normalHighLight(cells, pos);
+    return;
   }
 
   cells.forEach((cell, _pos) => {
