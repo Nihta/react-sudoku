@@ -1,4 +1,4 @@
-import { Cells, CellState, Position, PuzzleData } from "../types/sudokuTypes";
+import { Cells, CellState, PuzzleData } from "../types/sudokuTypes";
 import { useGameStore } from "../zustand/useGameStore";
 import { dataPuzzles } from "../data/sudokuPuzzles";
 
@@ -12,6 +12,46 @@ export const convertTime = (time: number) => {
     `${time % 60}`.padStart(2, "0")
   );
 };
+
+export const getPuzzle = (): PuzzleData => {
+  const difficulty = useGameStore.getState().difficulty;
+  return decodeSudokuPuzzle(getRandomElm(dataPuzzles[difficulty]));
+};
+
+/**
+ * ! Không kiểm tra dữ liệu có hợp lệ hay không
+ *
+ */
+export function decodeSudokuPuzzle(data: string): PuzzleData {
+  const NUMBER_CHAR = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const MAP_CHAR_NUMBER: Record<string, string> = {
+    A: "1",
+    B: "2",
+    C: "3",
+    D: "4",
+    E: "5",
+    F: "6",
+    G: "7",
+    H: "8",
+    I: "9",
+  };
+
+  const puzzle: string[] = [];
+  const solution: string[] = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const char = data[i];
+    if (NUMBER_CHAR.includes(char)) {
+      puzzle.push(char);
+      solution.push(char);
+    } else {
+      puzzle.push("0");
+      solution.push(MAP_CHAR_NUMBER[char]);
+    }
+  }
+
+  return [puzzle.join(""), solution.join("")];
+}
 
 /**
  * Sudoku: convert puzzle from string to array
@@ -74,184 +114,144 @@ export const countEmpty = (cells: Cells): number => {
   }, 0);
 };
 
-export const isSameRow = (posA: number, posB: number) => {
-  const rowA = Math.trunc(posA / 9);
-  const rowB = Math.trunc(posB / 9);
-  return rowA === rowB;
-};
-
-export const isSameCol = (posA: number, posB: number) => {
-  const colA = posA % 9;
-  const colB = posB % 9;
-  return colA === colB;
-};
-
-export const isSameRegion = (posA: number, posB: number) => {
-  const rowA = Math.trunc(posA / 9);
-  const rowB = Math.trunc(posB / 9);
-  const colA = posA % 9;
-  const colB = posB % 9;
-  return (
-    Math.trunc(rowA / 3) === Math.trunc(rowB / 3) &&
-    Math.trunc(colA / 3) === Math.trunc(colB / 3)
-  );
-};
-
-// Sudoku: highlight -----------------------------------------------------------
-
-type MapNumberCellIdx = Record<number, number>;
-
-const highLightRelated = (cells: Cells, pos: number) => {
-  const selectedVal = cells[pos].value;
-
-  cells.forEach((cell, _pos) => {
-    // Highlight related cell (same row, same col, same region)
-    const isRelated =
-      cell.status !== "conflict" &&
-      (isSameRow(_pos, pos) || isSameCol(_pos, pos) || isSameRegion(_pos, pos));
-    if (isRelated) {
-      cell.status = "high-light";
-      return;
-    }
-
-    // Highlight same number
-    if (selectedVal && cell.value && cell.value === selectedVal) {
-      cell.status = "high-light-number";
-      return;
-    }
-  });
-};
-
-const highLightConflictUtil = (
-  cells: Cells,
-  pos: Position,
-  hash: MapNumberCellIdx
-) => {
-  const cellIdx = pos.row * 9 + pos.col;
-  const cell = cells[cellIdx];
-  const cellValue = cell.value;
-
-  if (!cellValue) return;
-
-  if (hash[cellValue]) {
-    cell.status = "conflict";
-    cells[hash[cellValue]].status = "conflict";
-  }
-  hash[cellValue] = cellIdx;
-};
-
-const highLightConflict = (cells: Cells) => {
-  // Find conflict in col
-  for (let row = 0; row < 9; row++) {
-    const hash: MapNumberCellIdx = {};
-    for (let col = 0; col < 9; col++) {
-      highLightConflictUtil(cells, { row, col }, hash);
-    }
-  }
-
-  // Find conflict in row
-  for (let col = 0; col < 9; col++) {
-    const hash: MapNumberCellIdx = {};
-    for (let row = 0; row < 9; row++) {
-      highLightConflictUtil(cells, { row, col }, hash);
-    }
-  }
-
-  // Find conflict in region 3x3
-  for (let row = 0; row < 9; row += 3) {
-    for (let col = 0; col < 9; col += 3) {
-      const hash: MapNumberCellIdx = {};
-      for (let i = 0; i < 9; i++) {
-        highLightConflictUtil(
-          cells,
-          {
-            row: row + Math.trunc(i / 3),
-            col: col + (i % 3),
-          },
-          hash
-        );
-      }
-    }
-  }
-};
-
-/**
- * Very helpful function to highlight related cell
- */
-const supperHighLightRelated = (cells: Cells, pos: number) => {
-  const val = cells[pos].value;
-  if (!val) return;
-  // high light all origin cell
-  cells.forEach((cell) => {
-    if (cell.isOrigin) {
-      cell.status = "high-light";
-    }
-  });
-  cells.forEach((cell, _pos) => {
-    if (cell.value === val) {
-      highLightRelated(cells, _pos);
-      cell.status = "high-light-number";
-    }
-  });
-};
-
-export const highLight = (cells: Cells, posSelected: number) => {
-  const supperHighLight = useGameStore.getState().supperHighLight;
-
-  // Clear all highlight
-  cells.forEach((cell) => {
-    cell.status = "normal";
-  });
-
-  if (supperHighLight) {
-    supperHighLightRelated(cells, posSelected);
-  } else {
-    highLightRelated(cells, posSelected);
-  }
-
-  highLightConflict(cells);
-};
-
 export const getRandomElm = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-export const getPuzzle = (): PuzzleData => {
-  const difficulty = useGameStore.getState().difficulty;
-  return decodeSudokuPuzzle(getRandomElm(dataPuzzles[difficulty]));
-};
+// Sudoku: highlight -----------------------------------------------------------
 
-/**
- * ! Không kiểm tra dữ liệu có hợp lệ hay không
- *
- */
-export function decodeSudokuPuzzle(data: string): PuzzleData {
-  const NUMBER_CHAR = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  const MAP_CHAR_NUMBER: Record<string, string> = {
-    A: "1",
-    B: "2",
-    C: "3",
-    D: "4",
-    E: "5",
-    F: "6",
-    G: "7",
-    H: "8",
-    I: "9",
+function getBlockIdx(row: number, col: number) {
+  return Math.floor(row / 3) * 3 + Math.floor(col / 3);
+}
+
+function getCellPos(idx: number) {
+  const row = Math.floor(idx / 9);
+  const col = idx % 9;
+  return {
+    row,
+    col,
+    block: getBlockIdx(row, col),
   };
+}
 
-  const puzzle: string[] = [];
-  const solution: string[] = [];
+function getBoardInfo(cells: Cells) {
+  const cellValues: number[] = cells.map((cell) => cell.value ?? 0);
 
-  for (let i = 0; i < data.length; i++) {
-    const char = data[i];
-    if (NUMBER_CHAR.includes(char)) {
-      puzzle.push(char);
-      solution.push(char);
-    } else {
-      puzzle.push("0");
-      solution.push(MAP_CHAR_NUMBER[char]);
+  const rows = new Array(9).fill(null).map(() => new Map<number, number>());
+  const cols = new Array(9).fill(null).map(() => new Map<number, number>());
+  const blocks = new Array(9).fill(null).map(() => new Map<number, number>());
+
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      const idx = i * 9 + j;
+      const value = cellValues[idx];
+      if (value) {
+        rows[i].set(value, (rows[i].get(value) || 0) + 1);
+        cols[j].set(value, (cols[j].get(value) || 0) + 1);
+        const blockIdx = getBlockIdx(i, j);
+        blocks[blockIdx].set(value, (blocks[blockIdx].get(value) || 0) + 1);
+      }
     }
   }
 
-  return [puzzle.join(""), solution.join("")];
+  return {
+    rows,
+    cols,
+    blocks,
+    cellValues: cellValues,
+  };
 }
+
+/**
+ * Highlight related cell
+ * @param cells
+ * @param pos
+ */
+function normalHighLight(cells: Cells, pos: number) {
+  const { cols, rows, blocks } = getBoardInfo(cells);
+
+  // get current pos info
+  const { row: curRow, col: curCol, block: curBlock } = getCellPos(pos);
+
+  const selectedVal = cells[pos].value ?? 0;
+  cells.forEach((cell, _pos) => {
+    // clear all highlight
+    cell.status = "normal";
+
+    const { col, row, block } = getCellPos(_pos);
+    // highlight related cell (same row, same col, same block)
+    if (col === curCol || row === curRow || block === curBlock) {
+      cell.status = "high-light";
+    }
+
+    // highlight same number
+    if (selectedVal && cell.value === selectedVal) {
+      cell.status = "high-light-number";
+    }
+
+    // highlight conflict
+    if (cell.value) {
+      if (
+        (rows[row].get(cell.value) ?? 0) > 1 ||
+        (cols[col].get(cell.value) ?? 0) > 1 ||
+        (blocks[block].get(cell.value) ?? 0) > 1
+      ) {
+        cell.status = "conflict";
+      }
+    }
+  });
+
+  return cells;
+}
+
+/**
+ * Supper highlight related cell
+ *
+ * @param cells
+ * @param pos
+ */
+function supperHighLight(cells: Cells, pos: number) {
+  const { cols, rows, blocks } = getBoardInfo(cells);
+
+  // get current pos info
+  const selectedVal = cells[pos].value ?? 0;
+
+  if (!selectedVal) {
+    normalHighLight(cells, pos);
+  }
+
+  cells.forEach((cell, _pos) => {
+    const { col, row, block } = getCellPos(_pos);
+
+    // Un-highlight all cell
+    cell.status = "normal";
+
+    // Highlight all related cell
+    // prettier-ignore
+    if (cell.isOrigin || rows[row].has(selectedVal) || cols[col].has(selectedVal) || blocks[block].has(selectedVal)) {
+      cell.status = "high-light";
+    }
+
+    // highlight same number
+    if (selectedVal && cell.value === selectedVal) {
+      cell.status = "high-light-number";
+    }
+
+    // highlight conflict
+    if (cell.value) {
+      // prettier-ignore
+      if ((rows[row].get(cell.value) ?? 0) > 1 || (cols[col].get(cell.value) ?? 0) > 1 || (blocks[block].get(cell.value) ?? 0) > 1) {
+        cell.status = "conflict";
+      }
+    }
+  });
+}
+
+export const highLight = (cells: Cells, posSelected: number) => {
+  const supperMode = useGameStore.getState().supperHighLight;
+  if (supperMode) {
+    supperHighLight(cells, posSelected);
+  } else {
+    normalHighLight(cells, posSelected);
+  }
+};

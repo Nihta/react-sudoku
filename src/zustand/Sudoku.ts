@@ -184,7 +184,8 @@ export function clickCell(pos: number) {
       const currCell = state.selectedCell;
 
       // bo chon cell cu
-      if (currCell) {
+      // * currCell có thể bằng 0 là
+      if (currCell !== undefined) {
         state.cells[currCell].selected = false;
       }
 
