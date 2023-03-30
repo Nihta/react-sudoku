@@ -3,7 +3,7 @@ import { handleNote, trySolve } from "../utils/sudokuRules";
 import { useGameStore } from "../zustand/useGameStore";
 import Pressable from "./base/Pressable";
 import { setPuzzle } from "../zustand/Sudoku";
-import { decodeSudokuPuzzle } from "../utils/sudokuUtils";
+import { decodeSudokuPuzzle } from "../utils/sudoku";
 
 export default function Dev() {
   const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);

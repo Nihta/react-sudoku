@@ -8,6 +8,7 @@ import {
 } from "../zustand/Sudoku";
 import type { Notes } from "../types/sudokuTypes";
 import { deleteValuesFromArray } from "./arrayUtils";
+import { getBlockIdx } from "./sudoku";
 
 /**
  * Lấy dữ liệu cell (origin) only
@@ -17,10 +18,6 @@ const getOriginCells = () => {
   return cells.map((cell) => {
     return cell.isOrigin ? cell.value : 0;
   });
-};
-
-const getBlockIdx = (row: number, col: number) => {
-  return Math.floor(row / 3) * 3 + Math.floor(col / 3);
 };
 
 const preHandle = () => {
@@ -272,10 +269,10 @@ const obviousPairs = (notes: Notes) => {
 // prettier-ignore
 function loopIdx<T>(data: T[], idxs: number[], fn: (val: T, idx: number) => boolean | void) {
   for (const idx of idxs) {
-   const isStop = fn(data[idx], idx);
-   if (isStop) {
-    return;
-   }
+    const isStop = fn(data[idx], idx);
+    if (isStop) {
+      return;
+    }
   }
 }
 
