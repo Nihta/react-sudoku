@@ -8,7 +8,7 @@ export interface GameState {
   gameState: "playing" | "won" | "lost" | "paused" | "idle";
   setGameState: (state: GameState["gameState"]) => void;
   difficulty: Difficulty;
-  setDifficulty: (difficulty: GameState["difficulty"]) => void;
+  setDifficulty: (difficulty: Difficulty) => void;
   supperHighLight: boolean;
   toggleSuperHighLight: () => void;
 }

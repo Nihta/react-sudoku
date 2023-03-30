@@ -1,12 +1,5 @@
 import useSudokuStore, { SudokuState } from "./useSudokuStore";
-import {
-  convertPuzzle,
-  countConflict,
-  countEmpty,
-  getCorrectNumber,
-  getPuzzle,
-  highLight,
-} from "../utils/sudokuUtils";
+
 import produce from "immer";
 import { useGameStore } from "./useGameStore";
 import {
@@ -16,6 +9,17 @@ import {
   Position,
   PuzzleData,
 } from "../types/sudokuTypes";
+import {
+  convertPuzzle,
+  countConflict,
+  countEmpty,
+  decodeSudokuPuzzle,
+  getCorrectNumber,
+  highLight,
+} from "../utils/sudoku";
+import { getRandomElementFromArray } from "../utils/arrayUtils";
+import { dataPuzzles } from "../data/sudokuPuzzles";
+import { shuffleSudoku } from "../utils/sudoku/shuffleSudoku";
 
 /**
  * Pre handle action
@@ -69,12 +73,18 @@ export const incTime = () => {
  * bat dau tro choi moi
  */
 export const actionNewGame = () => {
-  const puzzle = getPuzzle();
+  const difficulty = useGameStore.getState().difficulty;
+
+  const puzzle = decodeSudokuPuzzle(
+    shuffleSudoku(getRandomElementFromArray(dataPuzzles[difficulty]))
+  );
   setPuzzle(puzzle);
 };
 
 export const actionHint = () => {
   if (!canDoAction()) return;
+
+  addHistory();
 
   const { puzzle } = useSudokuStore.getState();
 

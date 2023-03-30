@@ -2,18 +2,15 @@ import { create } from "zustand";
 import { CellState, Notes, PuzzleData } from "../types/sudokuTypes";
 import { persist } from "zustand/middleware";
 
+type HistoryRecord = Pick<SudokuState, "cells" | "notes" | "selectedCell">;
+
 export interface SudokuState {
   puzzle?: PuzzleData;
   selectedCell?: number;
   cells: Array<CellState>;
   cellEmpty: number;
   cellConflict: number;
-  history: {
-    cells: SudokuState["cells"];
-    notes: SudokuState["notes"];
-    // * need same name (selectedCell)
-    selectedCell: SudokuState["selectedCell"];
-  }[];
+  history: HistoryRecord[];
   notes: Notes;
   noteMode: boolean;
   /**
