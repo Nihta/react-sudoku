@@ -1,0 +1,36 @@
+{
+  "name": "react-sudoku",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "classnames": "^2.3.2",
+    "immer": "^9.0.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.9",
+    "usehooks-ts": "^2.9.1",
+    "zustand": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.29",
+    "@types/react-dom": "^18.0.11",
+    "@types/styled-components": "^5.1.26",
+    "@vitejs/plugin-react": "^3.1.0",
+    "babel-plugin-styled-components": "^2.0.7",
+    "eslint": "^8.36.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^2.8.7",
+    "sass": "^1.60.0",
+    "typescript": "^4.9.5",
+    "vite": "^4.2.1",
+    "vite-plugin-eslint": "^1.8.1"
+  }
+}
