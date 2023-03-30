@@ -7,6 +7,7 @@ import { actionNewGame, actionRePlay } from "../zustand/Sudoku";
 import { Difficulty } from "../types/sudokuTypes";
 import { useGameStore } from "../zustand/useGameStore";
 import { useOnClickOutside } from "usehooks-ts";
+import { trySolve } from "../utils/sudokuRules";
 
 const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert", "evil"];
 
@@ -51,6 +52,7 @@ export const NewGameContent = ({ callBack }: NewGameContentProps) => {
 
   return (
     <ContentWrapper>
+      <Actions callBack={callBack} />
       {LEVELS.map((lvl) => {
         return (
           <ContentItem
@@ -108,7 +110,6 @@ const TooltipArrow = styled.div`
   height: 25px;
   transform: translateX(-50%);
   overflow: hidden;
-  //background-color: red;
 
   @media screen and (max-width: 979px) {
     right: 25px;
@@ -163,7 +164,8 @@ const ContentItem = styled(Pressable)`
   border-radius: 0;
   border-top: 1px solid #e0e8f7;
 
-  :first-child {
+  // todo: why :first-child not working
+  &:nth-child(2) {
     border-top: none;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -173,4 +175,74 @@ const ContentItem = styled(Pressable)`
 const LastContentItem = styled(ContentItem)`
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+`;
+
+type ActionProps = {
+  callBack: () => void;
+};
+
+const Actions = (props: ActionProps) => {
+  const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);
+  const supperHighLight = useGameStore((st) => st.supperHighLight);
+
+  const tryToAutoSolve = async () => {
+    props.callBack();
+    let flag = false;
+    do {
+      flag = trySolve();
+      await new Promise((r) => setTimeout(r, 100));
+    } while (flag);
+  };
+
+  return (
+    <ActionWrapper>
+      <Action onClick={tryToAutoSolve}>
+        <span>Try to solve</span>
+      </Action>
+      <Action
+        onClick={toggleSuperHighLight}
+        className={supperHighLight ? "active" : ""}
+      >
+        <span>Super Highlight</span>
+      </Action>
+    </ActionWrapper>
+  );
+};
+
+const ActionWrapper = styled.div`
+  display: flex;
+  margin-bottom: 15px;
+`;
+const Action = styled.div`
+  flex-basis: 100%;
+  padding: 10px 5px;
+  background: #fff;
+  border: 1px solid #e0e8f7;
+  border-radius: 5px;
+  transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+  color: #6e7c8c;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.14;
+  text-align: center;
+  cursor: pointer;
+
+  :first-child {
+    margin-right: 10px;
+  }
+
+  :hover {
+    border-color: #e0e8f7;
+    background-color: #f3f6fa;
+  }
+
+  :active {
+    background-color: #f3f4f8;
+  }
+
+  &.active {
+    background: #0072e3;
+    color: #fff;
+    border: 1px solid #0072e3;
+  }
 `;
