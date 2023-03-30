@@ -3,54 +3,33 @@ import GlobalStyles from "./components/base/GlobalStyles";
 import Dev from "./components/Dev";
 import Header from "./components/Header";
 import Sudoku from "./components/Sudoku";
+import Container from "./components/base/Container";
 
 function App() {
   return (
     <>
       <GlobalStyles />
       <Header />
-      <Container>
+      <SiteContainer>
         <SiteContent>
           <Sudoku />
         </SiteContent>
         <Aside>
           <Dev />
         </Aside>
-      </Container>
+      </SiteContainer>
     </>
   );
 }
 
-const Container = styled.div`
-  padding: 0 10px;
-  margin: 0 auto 20px auto;
-  width: 100%;
+const SiteContainer = styled(Container)`
+  margin-bottom: 20px;
 
   display: flex;
   flex-direction: column;
-
+  justify-content: center;
   @media (min-width: 768px) {
     flex-direction: row;
-  }
-
-  @media (min-width: 801px) {
-    max-width: 801px;
-  }
-
-  @media (min-width: 980px) {
-    max-width: 980px;
-  }
-
-  @media (min-width: 1070px) {
-    max-width: 1070px;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1200px;
-  }
-
-  @media (max-height: 800px) and (min-width: 1070px) {
-    max-width: 1070px;
   }
 `;
 

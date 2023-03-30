@@ -8,7 +8,7 @@ import useSudokuStore from "../zustand/useSudokuStore";
 import Pressable from "./base/Pressable";
 import { TimerPause, TimerPlay } from "./svgs";
 import SelectDifficulty from "./SelectDifficulty";
-import {convertTime} from "../utils/timeUtils";
+import { convertTime } from "../utils/timeUtils";
 
 const Time = () => {
   const time = useSudokuStore((st) => st.time);

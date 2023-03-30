@@ -23,6 +23,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   &:hover {
     background-color: #0065c8;
   }
+
   &:active {
     background-color: #3a90e5;
   }

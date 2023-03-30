@@ -3,7 +3,12 @@ import styled from "styled-components";
 import Pressable from "./base/Pressable";
 import useSudokuStore from "../zustand/useSudokuStore";
 import { BREAKPOINTS } from "../constants";
-import {actionDelete, actionHint, actionNote, actionUndo} from "../zustand/Sudoku";
+import {
+  actionDelete,
+  actionHint,
+  actionNote,
+  actionUndo,
+} from "../zustand/Sudoku";
 
 function Control() {
   const noteMode = useSudokuStore((st) => st.noteMode);

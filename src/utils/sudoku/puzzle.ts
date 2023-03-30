@@ -76,4 +76,3 @@ export const getCorrectNumber = (puzzle: PuzzleData, pos: number): number => {
   const [, solution] = puzzle;
   return parseInt(solution[pos], 10);
 };
-

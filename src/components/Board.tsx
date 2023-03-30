@@ -7,7 +7,7 @@ import { useMoveKeyboard } from "../hooks/sudokuHooks";
 import { setPuzzle } from "../zustand/Sudoku";
 import { dataPuzzles } from "../data/sudokuPuzzles";
 import useSudokuStore from "../zustand/useSudokuStore";
-import {decodeSudokuPuzzle} from "../utils/sudoku";
+import { decodeSudokuPuzzle } from "../utils/sudoku";
 
 function Board() {
   const puzzle = useSudokuStore((st) => st.puzzle);

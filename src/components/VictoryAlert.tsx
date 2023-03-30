@@ -5,7 +5,7 @@ import useSudokuStore from "../zustand/useSudokuStore";
 import { useGameStore } from "../zustand/useGameStore";
 import Pressable from "./base/Pressable";
 import { CloseSvg } from "./svgs";
-import {convertTime} from "../utils/timeUtils";
+import { convertTime } from "../utils/timeUtils";
 
 export default function VictoryAlert() {
   const time = useSudokuStore((state) => state.time);

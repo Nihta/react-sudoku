@@ -1,7 +1,6 @@
 import { Cells } from "../../types/sudokuTypes";
 import { useGameStore } from "../../zustand/useGameStore";
-import {getBlockIdx, getCellPos} from "./position";
-
+import { getBlockIdx, getCellPos } from "./position";
 
 function getBoardInfo(cells: Cells) {
   const cellValues: number[] = cells.map((cell) => cell.value ?? 0);

@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
 import Pressable from "./base/Pressable";
-import {inputCell} from "../zustand/Sudoku";
+import { inputCell } from "../zustand/Sudoku";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function Numpad() {
-
   return (
     <Wrapper>
       {arr.map((n) => (

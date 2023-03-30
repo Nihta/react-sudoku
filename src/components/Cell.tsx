@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 import { useCell, useCellNote } from "../hooks/sudokuHooks";
 import { useGameStore } from "../zustand/useGameStore";
-import {clickCell} from "../zustand/Sudoku";
+import { clickCell } from "../zustand/Sudoku";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 function Note({ values }: { values: number[] }) {
   return (
     <NoteWrapper>
@@ -29,6 +30,7 @@ const NoteWrapper = styled.div`
   &.hide {
     color: transparent !important;
   }
+
   padding: 2px;
 `;
 
@@ -95,41 +97,51 @@ const CellWrapper = styled.div`
   position: relative;
   border-left: 1px solid var(--color-sudoku-border-2);
   border-bottom: 1px solid var(--color-sudoku-border-2);
+
   &:nth-child(9n + 1),
   &:nth-child(9n + 4),
   &:nth-child(9n + 7) {
     border-left: none;
   }
+
   &:nth-last-child(-n + 9),
   &:nth-child(-n + 27):nth-child(n + 19),
   &:nth-child(-n + 54):nth-child(n + 46) {
     border-bottom: none;
   }
+
   &:nth-child(-n + 9) {
     border-top: none;
   }
+
   &:nth-child(9n) {
     border-right: none;
   }
 
   background: white;
+
   &.highlight {
     background: #e2ebf3;
   }
+
   &.highlight-number {
     background: #c3d7ea;
   }
+
   &.selected,
   &:hover {
     background: #bbdefb !important;
   }
+
   &.incorrect {
     color: #e55c6c !important;
     background: #f7cfd6;
   }
+
   &.origin {
     color: #344861 !important;
   }
+
   &.user-type {
     color: #0072e3;
   }

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useOnClickOutside } from "usehooks-ts";
 
 import { NewGameContent } from "./BtnNewGame";
+import Container from "./base/Container";
 
 export default function Header() {
   const [active, setActive] = useState(false);
@@ -21,7 +22,7 @@ export default function Header() {
 
   return (
     <Wrapper>
-      <Container>
+      <ContentWrapper>
         <Logo>Sudoku</Logo>
         <Content ref={ref}>
           <NewGameButton onClick={toggle}>New game</NewGameButton>
@@ -33,7 +34,7 @@ export default function Header() {
             />
           )}
         </Content>
-      </Container>
+      </ContentWrapper>
     </Wrapper>
   );
 }
@@ -60,33 +61,12 @@ const Wrapper = styled.header`
   }
 `;
 
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 0 10px;
-
-  @media (min-width: 801px) {
-    max-width: 801px;
-  }
-
-  @media (min-width: 980px) {
-    max-width: 980px;
-  }
-
-  @media (min-width: 1070px) {
-    max-width: 1070px;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1200px;
-  }
-
-  @media (max-height: 800px) and (min-width: 1070px) {
-    max-width: 1070px;
-  }
+const ContentWrapper = styled(Container)`
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   width: 100%;
+   height: 100%;
 `;
 
 const Logo = styled.div`
