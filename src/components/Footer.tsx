@@ -5,14 +5,14 @@ export default function Footer() {
   return (
     <Wrapper>
       <Container>
-        <div>@Nihta ~ 2023</div>
+        <div>@Nihta ~ 2025</div>
       </Container>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.footer`
-  margin-top: 50px;
+  padding-top: 48px;
   background-color: #222e3e;
   color: #fff;
   font-size: 16px;

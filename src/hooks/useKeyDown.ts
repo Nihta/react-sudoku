@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
 function useKeyDown(handler: (event: KeyboardEvent) => void) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const savedHandler = useRef<any>(null);
 
   useEffect(() => {

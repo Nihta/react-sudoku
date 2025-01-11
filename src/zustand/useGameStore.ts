@@ -15,7 +15,7 @@ export interface GameState {
 
 export const useGameStore = create<GameState>()(
   persist(
-    (set, _get) => ({
+    (set) => ({
       gameState: "playing",
       setGameState: (state) => set({ gameState: state }),
       difficulty: "easy",

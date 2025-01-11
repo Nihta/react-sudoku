@@ -39,12 +39,7 @@ const preHandle = () => {
     }
   }
 
-  return {
-    rows,
-    cols,
-    blocks,
-    cells,
-  };
+  return { rows, cols, blocks, cells };
 };
 
 type FnRule = (
@@ -151,7 +146,7 @@ const lastPossibleCell: FnRule = (cells, rows, cols, blocks) => {
       if (possibleNums.length === 1) {
         return {
           idx: row * 9 + col,
-          val: possibleNums.values().next().value,
+          val: possibleNums[0],
           name: "Last possible cell",
         };
       }

@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 import Cell from "./Cell";
 
-import { useMoveKeyboard } from "../hooks/sudokuHooks";
-import { setPuzzle } from "../zustand/Sudoku";
 import { dataPuzzles } from "../data/sudokuPuzzles";
-import useSudokuStore from "../zustand/useSudokuStore";
+import { useMoveKeyboard } from "../hooks/sudokuHooks";
 import { decodeSudokuPuzzle } from "../utils/sudoku";
+import { setPuzzle } from "../zustand/Sudoku";
+import useSudokuStore from "../zustand/useSudokuStore";
 
 function Board() {
   const puzzle = useSudokuStore((st) => st.puzzle);

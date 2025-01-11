@@ -56,7 +56,7 @@ export default function SelectDifficulty(props: SelectDifficultyProps) {
           return (
             <LevelItem
               key={lvl.value}
-              active={difficulty === lvl.value}
+              $active={difficulty === lvl.value}
               onClick={() => {
                 setDifficulty(lvl.value);
                 props.onChange();
@@ -106,7 +106,7 @@ const LevelItems = styled.div`
 `;
 
 const LevelItem = styled.span<{
-  active?: boolean;
+  $active?: boolean;
 }>`
   padding: 8px;
   margin-right: 4px;
@@ -124,7 +124,7 @@ const LevelItem = styled.span<{
     background-color: #eaeef4;
   }
 
-  ${(p) => p.active && ` color: #0072e3;`};
+  ${(p) => p.$active && ` color: #0072e3;`};
 
   @media screen and (max-width: 767px) {
     background: transparent;

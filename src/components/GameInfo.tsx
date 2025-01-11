@@ -1,14 +1,13 @@
-import React from "react";
 import styled from "styled-components";
-import { useInterval } from "usehooks-ts";
 
+import { useInterval } from "../hooks/useInterval";
+import { convertTime } from "../utils/timeUtils";
 import { actionNewGame, incTime } from "../zustand/Sudoku";
 import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
 import Pressable from "./base/Pressable";
-import { TimerPause, TimerPlay } from "./svgs";
 import SelectDifficulty from "./SelectDifficulty";
-import { convertTime } from "../utils/timeUtils";
+import { TimerPause, TimerPlay } from "./svgs";
 
 const Time = () => {
   const time = useSudokuStore((st) => st.time);

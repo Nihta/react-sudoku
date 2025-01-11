@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useOnClickOutside } from "usehooks-ts";
 
+import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import { NewGameContent } from "./BtnNewGame";
 import Container from "./base/Container";
 

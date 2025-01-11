@@ -21,6 +21,7 @@ export interface SudokuState {
 
 const useSudokuStore = create<SudokuState>()(
   persist(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (_set, _get) => ({
       puzzle: undefined,
       noteMode: false,

@@ -77,9 +77,17 @@ select {
 }
 
 /* My custom */
+:root {
+  font-family: "Source Sans Pro", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  font-family: "Source Sans Pro", sans-serif;
-  font-size: 16px;
   user-select: none;
 
   --color-primary: #0072e3;
@@ -88,6 +96,11 @@ body {
   --color-action-background: #eaeef4;
   --color-action-hover-background: #dce3ed;
   --color-action-active-background: #d2dae7;
-}`;
+}
+
+ #root {
+  min-height: 100vh;
+ }
+`;
 
 export default GlobalStyles;

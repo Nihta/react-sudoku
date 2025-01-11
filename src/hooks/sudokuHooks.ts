@@ -1,8 +1,8 @@
-import { useEventListener } from "usehooks-ts";
 import { useGameStore } from "../zustand/useGameStore";
 import useSudokuStore from "../zustand/useSudokuStore";
 import useKeyDown from "./useKeyDown";
 import { actionDelete, inputCell, moveSelectedCell } from "../zustand/Sudoku";
+import { useEventListener } from "./useEventListener";
 
 export const useCell = (pos: number) => {
   const cells = useSudokuStore((state) => state.cells);

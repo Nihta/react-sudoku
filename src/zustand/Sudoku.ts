@@ -1,6 +1,6 @@
 import useSudokuStore, { SudokuState } from "./useSudokuStore";
 
-import produce from "immer";
+import {produce} from "immer";
 import { useGameStore } from "./useGameStore";
 import {
   CellState,

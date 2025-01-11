@@ -1,13 +1,14 @@
-import Button from "./base/Button";
-import styled from "styled-components";
-import Pressable from "./base/Pressable";
 import React from "react";
-import { KeySvg, RefreshSvg } from "./svgs";
-import { actionNewGame, actionRePlay } from "../zustand/Sudoku";
+import styled from "styled-components";
+
+import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import { Difficulty } from "../types/sudokuTypes";
-import { useGameStore } from "../zustand/useGameStore";
-import { useOnClickOutside } from "usehooks-ts";
 import { trySolve } from "../utils/sudokuRules";
+import { actionNewGame, actionRePlay } from "../zustand/Sudoku";
+import { useGameStore } from "../zustand/useGameStore";
+import Button from "./base/Button";
+import Pressable from "./base/Pressable";
+import { KeySvg, RefreshSvg } from "./svgs";
 
 const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert", "evil"];
 
@@ -227,16 +228,16 @@ const Action = styled.div`
   text-align: center;
   cursor: pointer;
 
-  :first-child {
+  &:first-child {
     margin-right: 10px;
   }
 
-  :hover {
+  &:hover {
     border-color: #e0e8f7;
     background-color: #f3f6fa;
   }
 
-  :active {
+  &:active {
     background-color: #f3f4f8;
   }
 
