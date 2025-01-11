@@ -1,8 +1,15 @@
 import styled from "styled-components";
 
 const Container = styled.div`
-  padding: 0 10px;
+  position: relative;
   margin: 0 auto;
+  max-width: 100%;
+  padding: 0 10px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    max-width: 768px;
+  }
 
   @media (min-width: 801px) {
     max-width: 801px;
