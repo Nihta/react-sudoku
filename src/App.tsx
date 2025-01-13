@@ -28,11 +28,11 @@ function App() {
             </Aside>
           )}
         </SiteContainer>
-      </div>
 
-      <Container>
-        <AboutSudoku />
-      </Container>
+        <Container>
+          <AboutSudoku />
+        </Container>
+      </div>
 
       <Footer />
     </Wrapper>
@@ -59,8 +59,8 @@ const SiteContent = styled.div`
   flex-basis: 100%;
 
   @media screen and (min-width: 768px) {
-    max-width: calc(100% - 180px);
-    margin-right: 20px;
+    /* max-width: calc(100% - 180px); */
+    /* margin-right: 20px; */
   }
 
   @media screen and (min-width: 1070px) {

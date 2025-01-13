@@ -82,7 +82,13 @@ function Cell(prop: CellProps) {
   });
 
   return (
-    <CellWrapper className={className} onClick={cellOnClick}>
+    <CellWrapper
+      className={className}
+      onClick={cellOnClick}
+      title={`Cell ${idx}, row ${Math.floor(idx / 9) + 1}, column ${
+        (idx % 9) + 1
+      }, block ${Math.floor(idx / 27) * 3 + Math.floor((idx % 9) / 3) + 1}`}
+    >
       {isHide ? null : isHasNote ? (
         <Note values={note} />
       ) : (

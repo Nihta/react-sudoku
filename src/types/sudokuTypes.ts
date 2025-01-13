@@ -17,7 +17,9 @@ export type Position = {
   col: number;
 };
 
+// export type NoteValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type Note = number[];
+// export type Note = NoteValue[];
 export type Notes = Note[];
 
 export type Difficulty = "easy" | "medium" | "hard" | "expert" | "evil";

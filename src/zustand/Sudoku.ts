@@ -1,6 +1,6 @@
 import useSudokuStore, { SudokuState } from "./useSudokuStore";
 
-import {produce} from "immer";
+import { produce } from "immer";
 import { useGameStore } from "./useGameStore";
 import {
   CellState,
@@ -39,10 +39,10 @@ const canDoAction = () => {
 };
 
 /**
- * Luu trang thai hien tai vao store:
- * - cells
- * - notes
- * - selectedCell
+ * Save current state to history:
+ *  - cells
+ *  - notes
+ *  - selectedCell
  */
 export const addHistory = () => {
   useSudokuStore.setState(
@@ -52,6 +52,7 @@ export const addHistory = () => {
         notes: state.notes,
         selectedCell: state.selectedCell,
       });
+      // todo: why 729?
       if (state.history.length > 729) {
         state.history.shift();
       }
@@ -64,9 +65,7 @@ export const addHistory = () => {
  */
 export const incTime = () => {
   const { time } = useSudokuStore.getState();
-  useSudokuStore.setState({
-    time: time + 1,
-  });
+  useSudokuStore.setState({ time: time + 1 });
 };
 
 /**

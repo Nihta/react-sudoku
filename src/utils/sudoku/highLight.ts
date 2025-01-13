@@ -1,8 +1,13 @@
+import { produce } from "immer";
 import { Cells } from "../../types/sudokuTypes";
 import { useGameStore } from "../../zustand/useGameStore";
+import useSudokuStore, { SudokuState } from "../../zustand/useSudokuStore";
+import { lastFreeCellTechnique } from "./lastFreeCellTechnique";
 import { getBlockIdx, getCellPos } from "./position";
+import { setNotes } from "../../zustand/Sudoku";
+import { obviousPairs } from "./obviousPairs";
 
-function getBoardInfo(cells: Cells) {
+export function getBoardInfo(cells: Cells) {
   const cellValues: number[] = cells.map((cell) => cell.value ?? 0);
 
   const rows = new Array(9).fill(null).map(() => new Map<number, number>());
@@ -123,4 +128,54 @@ export const highLight = (cells: Cells, posSelected: number) => {
   } else {
     normalHighLight(cells, posSelected);
   }
+};
+
+export const testHighLight = () => {
+
+  obviousPairs();
+
+
+
+
+  return;
+  useSudokuStore.setState(
+    produce((state: SudokuState) => {
+      const { cells } = state;
+
+      const lastFreeCellResult = lastFreeCellTechnique(cells);
+
+      cells.forEach((cell, _pos) => {
+        const { col, row, block } = getCellPos(_pos);
+        cell.status = "normal"; // clear all highlight
+
+        if (lastFreeCellResult && lastFreeCellResult.type === "lastFreeCell") {
+          switch (lastFreeCellResult.detail.type) {
+            case "row":
+              if (row === lastFreeCellResult.detail.value) {
+                cell.status = "high-light";
+              }
+              break;
+            case "col":
+              if (col === lastFreeCellResult.detail.value) {
+                cell.status = "high-light";
+              }
+              break;
+            case "block":
+              if (block === lastFreeCellResult.detail.value) {
+                cell.status = "high-light";
+              }
+              break;
+            default:
+              throw new Error("Invalid type");
+          }
+
+          if (lastFreeCellResult.correct.pos === _pos) {
+            cell.status = "high-light-number";
+            cell.value = lastFreeCellResult.correct.value;
+            cell.isOrigin = true;
+          }
+        }
+      });
+    })
+  );
 };

@@ -20,7 +20,7 @@ const getOriginCells = () => {
   });
 };
 
-const preHandle = () => {
+export const preHandle = () => {
   const cells = getOriginCells();
 
   const rows = new Array(9).fill(null).map(() => new Map());
@@ -112,7 +112,7 @@ const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
 /**
  * Kiểm tra xem trong set còn thiếu số nào không (1-9)
  */
-const getNumberNotInSet = (set: Set<number>): number[] => {
+export const getNumberNotInSet = (set: Set<number>): number[] => {
   const possibleNums: number[] = [];
   for (let n = 1; n <= 9; n++) {
     if (!set.has(n)) {
@@ -165,7 +165,7 @@ export const trySolve = () => {
 
   if (res) {
     addHistory();
-    console.log(res.name);
+    // console.log(res.name);
     clickCell(res.idx);
     setCellVal(res.idx, res.val, true);
     return true;

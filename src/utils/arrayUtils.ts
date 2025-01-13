@@ -33,3 +33,8 @@ export function countElements<T>(arr: readonly T[], fn: (item: T) => boolean): n
     return acc;
   }, 0);
 }
+
+export function arraysEqual(a: number[], b: number[]): boolean {
+  if (a.length !== b.length) return false;
+  return a.every((val, index) => val === b[index]);
+}
