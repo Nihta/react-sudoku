@@ -19,42 +19,11 @@ import { obviousSingles } from "./obviousSingles";
 import { obviousTriples } from "./obviousTriples";
 import { pointingPairs } from "./pointingPairs";
 
-// 1: Ghi chú
-// 2: Bộ đôi ẩn
-// 3: Ô đơn ẩn
-// 4: Ghi chú
-// 5: Ô đơn ẩn
-// 6: Ghi chú
-// 7: Bộ đôi rõ ràng
-// 8: Bộ đôi chỉ hướng
-// 9: Bộ đôi chỉ hướng
-// 10: Bộ đôi chỉ hướng
-// 11: Ô đơn ẩn
-// 12: Ô còn lại
-// 13: Ô còn lại
-// 14: Ô còn lại
-// 15: Ô còn lại
-// 15: Ô còn lại
-// 15: Ô còn lại
-// 15: Ô còn lại
-// 15: Ô còn lại
-
-// 15: Ô còn lại ?
-// ?: Ô trống cuối cùng
-// ?: Ô trống cuối cùng
-// ?: Ô trống cuối cùng
-
-// còn lại
-
-/**
- *
- */
-export const hint = () => {
+export const hint = (): boolean => {
   const { rows, cols, cells, blocks } = preHandle();
 
-
   // console.info("Hint stop here");
-  // return;
+  //  return true;
 
   const lfcTech = lastFreeCell({ cells, rows, cols, blocks });
   if (lfcTech && lfcTech.type === ETechnique.lastFreeCell) {
@@ -63,7 +32,7 @@ export const hint = () => {
     addHistory();
     clickCell(payload.correct.pos);
     setCellVal(payload.correct.pos, payload.correct.value, true);
-    return;
+    return true;
   }
 
   const res = lastRemainingCell({ cells, rows, cols, blocks });
@@ -72,16 +41,16 @@ export const hint = () => {
     addHistory();
     clickCell(res.payload.position);
     setCellVal(res.payload.position, res.payload.value, true);
-    return;
+    return true;
   }
 
   const lpnTech = lastPossibleNumber({ cells, rows, cols, blocks });
   if (lpnTech && lpnTech.type === ETechnique.lastPossibleNumber) {
-    console.info("Số có thể cuối cùng", lpnTech.payload);
+    console.info("Last Possible Number", lpnTech.payload);
     addHistory();
     clickCell(lpnTech.payload.position);
     setCellVal(lpnTech.payload.position, lpnTech.payload.value, true);
-    return;
+    return true;
   }
 
   // Always check notes first
@@ -89,12 +58,9 @@ export const hint = () => {
 
   if (change > 0) {
     addHistory();
-    // Để tiến tới đáp án, phải điền đúng tất cả các số có thể cho mỗi ô dưới dạng ghi chú
-    console.info(
-      `Ghi chú trong các ô này bị thiếu hoặc được điền không đúng. (change=${change})`
-    );
+    console.info(`New notes: ${change}`);
     setNotes(newNotes);
-    return;
+    return true;
   }
 
   const notes = useSudokuStore.getState().notes;
@@ -105,28 +71,24 @@ export const hint = () => {
     addHistory();
     clickCell(oSRes.payload.position);
     setCellVal(oSRes.payload.position, oSRes.payload.value, true);
-    return;
+    return true;
   }
 
   const hsRes = hiddenSingles();
   if (hsRes && hsRes.type === ETechnique.hiddenSingles) {
     const pl = hsRes.payload;
-    console.info(
-      `Số ẩn: ${pl.type} ${pl.typeDetail} | cell ${pl.position} -> ${pl.value}`
-    );
+    console.info("Hidden Single", pl);
     addHistory();
     clickCell(hsRes.payload.position);
     setCellVal(hsRes.payload.position, hsRes.payload.value, true);
-    return;
+    return true;
   }
 
   const opRes = obviousPairs();
   if (opRes && opRes.type === ETechnique.obviousPairs) {
     const pl = opRes.payload;
 
-    console.info(
-      `Obvious Pairs: ${pl.type} ${pl.typeDetail} | ${pl.pair} | ${pl.notePositions}`
-    );
+    console.info(`Obvious Pairs`, pl);
 
     // update notes
     addHistory();
@@ -138,14 +100,14 @@ export const hint = () => {
     // click last note for visual effect
     clickCell(opRes.payload.notePositions.slice(-1)[0]);
 
-    return;
+    return true;
   }
 
   const hpRes = hiddenPairs();
   if (hpRes && hpRes.type === ETechnique.hiddenPairs) {
     const pl = hpRes.payload;
 
-    console.info("Bộ đôi ẩn", pl);
+    console.info("Hidden Pairs", pl);
 
     addHistory();
 
@@ -156,7 +118,7 @@ export const hint = () => {
     // click last note for visual effect
     clickCell(hpRes.payload.notePositions.slice(-1)[0]);
 
-    return;
+    return true;
   }
 
   const otTech = obviousTriples();
@@ -173,13 +135,12 @@ export const hint = () => {
     });
     // click last note for visual effect
     clickCell(payload.notes.slice(-1)[0]);
-    return;
+    return true;
   }
-
 
   const ppRes = pointingPairs();
   if (ppRes && ppRes.type === ETechnique.pointingPairs) {
-    console.info(`Bộ đôi chỉ hướng`, ppRes.payload);
+    console.info(`Pointing Pairs`, ppRes.payload);
 
     addHistory();
 
@@ -194,9 +155,9 @@ export const hint = () => {
     // click last note for visual effect
     clickCell(ppRes.payload.notePositions.slice(-1)[0]);
 
-    return;
+    return true;
   }
 
-  // todo: Free Cell - Select a cell you'd like to solve
-  console.info("Không tìm thấy gợi ý nào :((");
+  console.info("No hint found");
+  return false;
 };

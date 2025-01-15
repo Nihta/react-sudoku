@@ -156,6 +156,10 @@ const lastPossibleCell: FnRule = (cells, rows, cols, blocks) => {
   return null;
 };
 
+/**
+ *
+ * @deprecated
+ */
 export const trySolve = () => {
   const { rows, cols, cells, blocks } = preHandle();
 

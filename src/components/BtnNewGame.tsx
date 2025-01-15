@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import { Difficulty } from "../types/sudokuTypes";
-import { trySolve } from "../utils/sudokuRules";
+import { hint } from "../utils/sudoku/hint";
 import { actionNewGame, actionRePlay } from "../zustand/Sudoku";
 import { useGameStore } from "../zustand/useGameStore";
 import Button from "./base/Button";
@@ -190,7 +190,7 @@ const Actions = (props: ActionProps) => {
     props.callBack();
     let flag = false;
     do {
-      flag = trySolve();
+      flag = hint();
       await new Promise((r) => setTimeout(r, 100));
     } while (flag);
   };

@@ -20,6 +20,7 @@ import {
 import { getRandomElementFromArray } from "../utils/arrayUtils";
 import { dataPuzzles } from "../data/sudokuPuzzles";
 import { shuffleSudoku } from "../utils/sudoku/shuffleSudoku";
+import { hint } from "../utils/sudoku/hint";
 
 /**
  * Pre handle action
@@ -61,7 +62,7 @@ export const addHistory = () => {
 };
 
 /**
- * Gọi để tăng thời gian chơi lên 1 giây
+ * Call this function to increase time by 1
  */
 export const incTime = () => {
   const { time } = useSudokuStore.getState();
@@ -69,7 +70,7 @@ export const incTime = () => {
 };
 
 /**
- * bat dau tro choi moi
+ * Action new game
  */
 export const actionNewGame = () => {
   const difficulty = useGameStore.getState().difficulty;
@@ -82,19 +83,37 @@ export const actionNewGame = () => {
   setPuzzle(puzzle);
 };
 
+/**
+ * There are 2 scenarios when using hint:
+ *   1. If the selected cell already has a value (origin), try to solve the sudoku using common techniques
+ *   2. If the selected cell has no value, try to solve the sudoku using common techniques, if no hint found, fill the correct number
+ */
 export const actionHint = () => {
   if (!canDoAction()) return;
 
-  addHistory();
-
-  const { puzzle } = useSudokuStore.getState();
-
   const currCell = getCurrentCell();
-  if (!currCell || currCell.cell.isOrigin || !puzzle) return;
-  const { pos } = currCell;
+  if (!currCell) {
+    throw new Error("No cell selected!");
+  }
 
-  const correctNumber = getCorrectNumber(puzzle, pos);
-  setCellVal(pos, correctNumber, true);
+  if (currCell.cell.isOrigin) {
+    hint();
+    return;
+  }
+
+  const puzzle = useSudokuStore.getState().puzzle;
+  if (!puzzle) {
+    throw new Error("No puzzle to hint!");
+  }
+
+  // If no hint found, fill correct number
+  const found = hint();
+  if (!found) {
+    const { pos } = currCell;
+    addHistory();
+    const correctNumber = getCorrectNumber(puzzle, pos);
+    setCellVal(pos, correctNumber, true);
+  }
 };
 
 /**
@@ -138,7 +157,7 @@ export const actionUndo = () => {
   if (!canDoAction()) return;
   const { history } = useSudokuStore.getState();
   if (history.length === 0) return;
-  // xoa lich su trang thai sau cung va day vao state
+  // delete last history and set to state
   useSudokuStore.setState({
     ...history[history.length - 1],
     history: history.slice(0, history.length - 1),
@@ -155,7 +174,7 @@ export const actionNote = () => {
 };
 
 /**
- * Ham khoi tao cua tro choi
+ * The initial state of the game
  * @param puzzle
  */
 export function setPuzzle(puzzle: PuzzleData) {
@@ -273,9 +292,10 @@ export function setNotes(notes: Notes) {
 }
 
 /**
- * Điền giá trị vào một cell
+ * Fill a value into a cell
  *
- * Không thêm vào history, tự động xóa note nếu giá trị nhập vào khác null (boi vi khi nhap note thi lai set val = null :v)
+ * Do not add to history, automatically delete note if the entered value
+ * is not null (because when entering note, it sets val = null)
  */
 export function setCellVal(
   pos: number,

@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <Wrapper>
       <Container>
-        <div>@Nihta ~ 2025</div>
+        <div title="Nov 2, 2019">@Nihta ~ 2025</div>
       </Container>
     </Wrapper>
   );

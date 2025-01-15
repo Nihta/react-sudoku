@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useAutoPauseGame } from "../hooks/sudokuHooks";
-import { hint } from "../utils/sudoku/hint";
 import { useGameStore } from "../zustand/useGameStore";
 import Board from "./Board";
 import BtnNewGame from "./BtnNewGame";
@@ -68,9 +67,6 @@ export default function Sudoku() {
           </BtnNewGameWrapper>
         </SudokuControlsWrapper>
       </GameAndControlWrapper>
-      <div className="">
-        <button onClick={hint}>Smart Hint</button>
-      </div>
     </SudokuWrapper>
   );
 }
