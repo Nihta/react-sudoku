@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useAutoPauseGame } from "../hooks/sudokuHooks";
-import { testHighLight } from "../utils/sudoku";
+import { hint } from "../utils/sudoku/hint";
 import { useGameStore } from "../zustand/useGameStore";
 import Board from "./Board";
 import BtnNewGame from "./BtnNewGame";
@@ -9,11 +9,7 @@ import GameInfo from "./GameInfo";
 import GamePause from "./GamePause";
 import Numpad from "./Numpad";
 import VictoryAlert from "./VictoryAlert";
-import { fillNote } from "../utils/sudoku/fillNote";
-import { obviousPairs } from "../utils/sudoku/obviousPairs";
-import { hiddenPairs } from "../utils/sudoku/hidden-pairs";
-import { hiddenSingles } from "../utils/sudoku/hiddenSingles";
-import { hint } from "../utils/sudoku/hint";
+// import { SmartHint } from "./SmartHintCarousel/SmartHint";
 
 const GameInfoWrapper = styled.div`
   height: 25px;
@@ -59,6 +55,8 @@ export default function Sudoku() {
           <Board />
         </BoardWrapper>
         <SudokuControlsWrapper>
+          {/* <SmartHint /> */}
+
           <SudokuControl>
             <Control />
           </SudokuControl>
@@ -117,6 +115,7 @@ const GameAndControlWrapper = styled.div`
 `;
 
 const SudokuControlsWrapper = styled.div`
+  position: relative;
   width: 100%;
   min-width: 100px;
   max-width: none;

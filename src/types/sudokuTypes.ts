@@ -5,7 +5,13 @@ export type PuzzleData = [string, string];
 
 export type CellState = {
   value: number | null;
-  status: "" | "normal" | "conflict" | "high-light" | "high-light-number";
+  status:
+    | ""
+    | "normal"
+    | "conflict"
+    | "high-light"
+    | "high-light-number"
+    | "number-blink";
   selected: boolean;
   isOrigin: boolean;
 };

@@ -1,5 +1,5 @@
 import { Notes } from "../../types/sudokuTypes";
-import { setNote } from "../../zustand/Sudoku";
+import { ETechnique } from "../../types/technique.type";
 import useSudokuStore from "../../zustand/useSudokuStore";
 import { arraysEqual } from "../arrayUtils";
 import { getIdxByBlock, getIdxByCol, getIdxByRow } from "./utils";
@@ -8,55 +8,75 @@ export const obviousPairs = () => {
   // 81 array or number
   const notes = useSudokuStore.getState().notes;
 
-  let includeFlag = false;
-
-  const commonHandel = (arrIdx: number[]) => {
-    if (includeFlag) return;
-
+  const commonHandel = (
+    arrIdx: number[],
+    type: "row" | "col" | "block",
+    typeIdx: number
+  ) => {
     const arrNote = arrIdx.map((idx) => notes[idx]);
-    const found = getObviousPairs(arrNote);
-    if (found) {
+    const founds = getObviousPairs(arrNote);
+    for (const found of founds) {
       const realFoundIdx = found.positions.map((pos) => arrIdx[pos]);
 
-      arrIdx.forEach((realIdx) => {
+      const arrNoteNeedUpdate = arrIdx.filter((idx) => {
         // skip found positions
-        if (realFoundIdx.includes(realIdx)) {
-          return;
+        if (realFoundIdx.includes(idx)) {
+          return false;
         }
 
         // if note include one of the pair, then remove it
-        const note = notes[realIdx];
+        const note = notes[idx];
         if (note.includes(found.pair[0]) || note.includes(found.pair[1])) {
-          includeFlag = true;
-
-          // update notes
-          // notes[idx] = note.filter((n) => found.pair.includes(n));
-          const newNote = note.filter((n) => !found.pair.includes(n));
-          setNote(realIdx, newNote);
+          return true;
         }
+
+        return false;
       });
+
+      if (arrNoteNeedUpdate.length > 0) {
+        return {
+          type: ETechnique.obviousPairs,
+          payload: {
+            type: type,
+            typeDetail: typeIdx,
+            notePositions: arrNoteNeedUpdate,
+            pair: found.pair,
+          },
+        };
+      }
     }
   };
-
-  // row
-  for (let row = 0; row < 9; row++) {
-    const arrIdx = getIdxByRow(row);
-    commonHandel(arrIdx);
-  }
 
   // col
   for (let col = 0; col < 9; col++) {
     const arrIdx = getIdxByCol(col);
-    commonHandel(arrIdx);
+    const res = commonHandel(arrIdx, "col", col);
+    if (res) {
+      return res;
+    }
+  }
+
+  // throw new Error("Function not implemented.");
+
+  // row
+  for (let row = 0; row < 9; row++) {
+    const arrIdx = getIdxByRow(row);
+    const res = commonHandel(arrIdx, "row", row);
+    if (res) {
+      return res;
+    }
   }
 
   // block
   for (let blockIdx = 0; blockIdx < 9; blockIdx++) {
     const arrIdx = getIdxByBlock(blockIdx);
-    commonHandel(arrIdx);
+    const res = commonHandel(arrIdx, "block", blockIdx);
+    if (res) {
+      return res;
+    }
   }
 
-  return includeFlag;
+  return null;
 };
 
 function getObviousPairs(notes: Notes) {
@@ -64,6 +84,13 @@ function getObviousPairs(notes: Notes) {
   if (notes.length !== 9) {
     throw new Error("Invalid notes length, it should be 9");
   }
+
+  type Found = {
+    positions: [number, number];
+    pair: [number, number];
+  };
+
+  const result: Found[] = [];
 
   for (let pos1 = 0; pos1 < 8; pos1++) {
     const currentNotes = notes[pos1];
@@ -78,13 +105,17 @@ function getObviousPairs(notes: Notes) {
       const otherNotes = notes[pos2];
 
       if (otherNotes.length === 2 && arraysEqual(currentNotes, otherNotes)) {
-        return {
-          positions: [pos1, pos2] as [number, number],
+        if (currentNotes.length !== 2) {
+          throw new Error("Invalid notes length, it should be 2");
+        }
+
+        result.push({
+          positions: [pos1, pos2],
           pair: currentNotes as [number, number],
-        };
+        });
       }
     }
   }
 
-  return null;
+  return result;
 }

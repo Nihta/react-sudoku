@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import GlobalStyles from "./components/base/GlobalStyles";
 // import Dev from "./components/Dev";
+import { AboutSudoku } from "./components/AboutSudoku";
+import Container from "./components/base/Container";
+import Dev from "./components/Dev";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Sudoku from "./components/Sudoku";
-import Container from "./components/base/Container";
-import Footer from "./components/Footer";
-import Dev from "./components/Dev";
-import { AboutSudoku } from "./components/AboutSudoku";
 
 const SHOW_DEV_TOOL = false;
 

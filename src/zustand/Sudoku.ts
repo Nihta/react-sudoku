@@ -75,7 +75,9 @@ export const actionNewGame = () => {
   const difficulty = useGameStore.getState().difficulty;
 
   const puzzle = decodeSudokuPuzzle(
+    // todo: on shuffle
     shuffleSudoku(getRandomElementFromArray(dataPuzzles[difficulty]))
+    // getRandomElementFromArray(dataPuzzles[difficulty])
   );
   setPuzzle(puzzle);
 };

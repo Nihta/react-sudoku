@@ -1,6 +1,6 @@
 // hidden-pairs
 
-import { setNote } from "../../zustand/Sudoku";
+import { ETechnique } from "../../types/technique.type";
 import useSudokuStore from "../../zustand/useSudokuStore";
 import { getIdxByBlock } from "./utils";
 
@@ -83,41 +83,61 @@ function findHiddenPairs(notes: number[][]): {
 export const hiddenPairs = () => {
   const notes = useSudokuStore.getState().notes;
 
-  let foundFlag = false;
-
-  const commonHandel = (arrIdx: number[]) => {
-    if (foundFlag) return;
+  const commonHandel = (
+    arrIdx: number[],
+    type: "row" | "col" | "block",
+    typeIdx: number
+  ) => {
     const arrNote = arrIdx.map((idx) => notes[idx]);
     const found = findHiddenPairs(arrNote);
     if (found) {
+      /** Mapping to real index of notes */
       const foundPositions = found.positions.map((pos) => arrIdx[pos]);
-      foundPositions.forEach((pos) => {
-        // if different, set note
-        if (notes[pos].join("") !== found.pair.join("")) {
-          setNote(pos, found.pair);
-          foundFlag = true;
-        }
-      });
+      const [first, second] = foundPositions;
+
+      // * ensure: at least one note has more than 2 notes
+      if (notes[first].length > 2 && notes[second].length > 2) {
+        return {
+          type: ETechnique.hiddenPairs,
+          payload: {
+            type: type,
+            typeDetail: typeIdx,
+            notePositions: foundPositions,
+            pair: found.pair,
+          },
+        };
+      }
     }
+
+    return null;
   };
 
   // row
   for (let row = 0; row < 9; row++) {
     const arrIdx = Array.from({ length: 9 }, (_, i) => row * 9 + i);
-    commonHandel(arrIdx);
+    const res = commonHandel(arrIdx, "row", row);
+    if (res) {
+      return res;
+    }
   }
 
   // col
   for (let col = 0; col < 9; col++) {
     const arrIdx = Array.from({ length: 9 }, (_, i) => i * 9 + col);
-    commonHandel(arrIdx);
+    const res = commonHandel(arrIdx, "col", col);
+    if (res) {
+      return res;
+    }
   }
 
   // block
   for (let blockIdx = 0; blockIdx < 9; blockIdx++) {
     const arrIdx = getIdxByBlock(blockIdx);
-    commonHandel(arrIdx);
+    const res = commonHandel(arrIdx, "block", blockIdx);
+    if (res) {
+      return res;
+    }
   }
 
-  return foundFlag;
+  return null;
 };

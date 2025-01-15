@@ -6,11 +6,14 @@ import Cell from "./Cell";
 import { dataPuzzles } from "../data/sudokuPuzzles";
 import { useMoveKeyboard } from "../hooks/sudokuHooks";
 import { decodeSudokuPuzzle } from "../utils/sudoku";
-import { setPuzzle } from "../zustand/Sudoku";
+import { clickCell, setPuzzle } from "../zustand/Sudoku";
 import useSudokuStore from "../zustand/useSudokuStore";
 
 function Board() {
   const puzzle = useSudokuStore((st) => st.puzzle);
+  const cells = useSudokuStore((st) => st.cells);
+  const notes = useSudokuStore((state) => state.notes);
+
   useEffect(() => {
     if (!puzzle) {
       setPuzzle(decodeSudokuPuzzle(dataPuzzles["easy"][0]));
@@ -22,9 +25,17 @@ function Board() {
   return (
     <BoardWrapper>
       <BoardGrid>
-        {Array.from({ length: 81 }, (_, i) => (
-          <Cell idx={i} key={i} />
-        ))}
+        {Array.from({ length: 81 }, (_, i) => {
+          return (
+            <Cell
+              key={i}
+              idx={i}
+              cell={cells[i]}
+              note={notes[i]}
+              onClick={clickCell}
+            />
+          );
+        })}
       </BoardGrid>
     </BoardWrapper>
   );

@@ -1,9 +1,9 @@
-import classNames from "classnames";
 import styled from "styled-components";
 
-import { useCell, useCellNote } from "../hooks/sudokuHooks";
+import clsx from "clsx";
+import { CellState, Note as NoteType } from "../types/sudokuTypes";
+import { getCellPos } from "../utils/sudoku";
 import { useGameStore } from "../zustand/useGameStore";
-import { clickCell } from "../zustand/Sudoku";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -50,15 +50,15 @@ const NoteItem = styled.div`
 
 type CellProps = {
   idx: number;
+  cell: CellState;
+  onClick: (idx: number) => void;
+  note: NoteType;
 };
 
-function Cell(prop: CellProps) {
-  const { idx } = prop;
+function Cell(props: CellProps) {
+  const { idx, cell, note } = props;
 
   const gameState = useGameStore((state) => state.gameState);
-
-  const cell = useCell(idx);
-  const note = useCellNote(idx);
 
   if (!cell) {
     return null;
@@ -67,11 +67,7 @@ function Cell(prop: CellProps) {
   const isHasNote = note.length > 0;
   const isHide = gameState === "paused";
 
-  const cellOnClick = () => {
-    clickCell(idx);
-  };
-
-  const className = classNames({
+  const className = clsx({
     hide: isHide,
     incorrect: cell.status === "conflict",
     selected: cell.selected,
@@ -81,13 +77,13 @@ function Cell(prop: CellProps) {
     origin: cell.isOrigin,
   });
 
+  const info = getCellPos(idx);
+
   return (
     <CellWrapper
       className={className}
-      onClick={cellOnClick}
-      title={`Cell ${idx}, row ${Math.floor(idx / 9) + 1}, column ${
-        (idx % 9) + 1
-      }, block ${Math.floor(idx / 27) * 3 + Math.floor((idx % 9) / 3) + 1}`}
+      onClick={() => props.onClick(idx)}
+      title={`Cell ${idx}, row ${info.row}, col ${info.col}, block ${info.block}`}
     >
       {isHide ? null : isHasNote ? (
         <Note values={note} />

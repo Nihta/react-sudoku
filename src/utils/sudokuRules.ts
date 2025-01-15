@@ -23,9 +23,9 @@ const getOriginCells = () => {
 export const preHandle = () => {
   const cells = getOriginCells();
 
-  const rows = new Array(9).fill(null).map(() => new Map());
-  const cols = new Array(9).fill(null).map(() => new Map());
-  const blocks = new Array(9).fill(null).map(() => new Map());
+  const rows = new Array(9).fill(null).map(() => new Map<number, number>());
+  const cols = new Array(9).fill(null).map(() => new Map<number, number>());
+  const blocks = new Array(9).fill(null).map(() => new Map<number, number>());
 
   for (let i = 0; i < 9; i++) {
     for (let j = 0; j < 9; j++) {
@@ -57,7 +57,7 @@ type FnRule = (
  * Kỹ thuật "Ô còn lại cuối cùng".
  * Last remaining cell
  */
-const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
+export const lastRemainingCell: FnRule = (cells, rows, cols, blocks) => {
   for (let n = 1; n <= 9; n++) {
     const possibleIdxs: {
       rowIdx: number;

@@ -1,58 +1,75 @@
-import { setCellVal, setNote } from "../../zustand/Sudoku";
+import { ETechnique } from "../../types/technique.type";
 import useSudokuStore from "../../zustand/useSudokuStore";
-import { getIdxByBlock } from "./utils";
+import { getFreqOfNotes, getIdxByBlock, getIdxByCol, getIdxByRow } from "./utils";
 
 // Kỹ thuật "Số lẻ ẩn"
 export const hiddenSingles = () => {
   const notes = useSudokuStore.getState().notes;
-  let foundFlag = false;
-
-  const commonHandel = (arrIdx: number[]) => {
-    if (foundFlag) return;
-
-    const arrNote = arrIdx.map((idx) => notes[idx]);
-
-    // tính tần suất xuất hiện của các số
-    const numberFrequency = new Map<number, number>();
-    arrNote.forEach((note) => {
-      note.forEach((num) => {
-        numberFrequency.set(num, (numberFrequency.get(num) || 0) + 1);
-      });
-    });
-
-    // tìm số lẻ ẩn
-    numberFrequency.forEach((frequency, num) => {
-      if (frequency === 1) {
-        arrNote.forEach((note, idx) => {
-          if (note.includes(num)) {
-            const realCellIdx = arrIdx[idx];
-            setNote(realCellIdx, []);
-            setCellVal(realCellIdx, num, true);
-            foundFlag = true;
-            return;
-          }
-        });
-      }
-    });
-  };
 
   // row
-  for (let row = 0; row < 9; row++) {
-    const arrIdx = Array.from({ length: 9 }, (_, i) => row * 9 + i);
-    commonHandel(arrIdx);
+  for (let rowIdx = 0; rowIdx < 9; rowIdx++) {
+    const arrIdx = getIdxByRow(rowIdx);
+    const arrNote = arrIdx.map((idx) => notes[idx]);
+    const numFreq = getFreqOfNotes(arrNote);
+    for (const [num, { count, positions }] of numFreq) {
+      if (count === 1) {
+        const realCellIdx = arrIdx[positions[0]];
+        return {
+          type: ETechnique.hiddenSingles,
+          payload: {
+            type: "row",
+            typeDetail: rowIdx,
+            position: realCellIdx,
+            value: num,
+          },
+        };
+      }
+    }
   }
 
   // col
-  for (let col = 0; col < 9; col++) {
-    const arrIdx = Array.from({ length: 9 }, (_, i) => i * 9 + col);
-    commonHandel(arrIdx);
+  for (let colIdx = 0; colIdx < 9; colIdx++) {
+    const arrIdx = getIdxByCol(colIdx);
+    const arrNote = arrIdx.map((idx) => notes[idx]);
+    const numFreq = getFreqOfNotes(arrNote);
+    for (const [num, { count, positions }] of numFreq) {
+      if (count === 1) {
+        const realCellIdx = arrIdx[positions[0]];
+        console.log("realCellIdx", realCellIdx);
+        return {
+          type: ETechnique.hiddenSingles,
+          payload: {
+            type: "col",
+            typeDetail: colIdx,
+            position: realCellIdx,
+            value: num,
+          },
+        };
+      }
+    }
   }
 
   // block
   for (let blockIdx = 0; blockIdx < 9; blockIdx++) {
     const arrIdx = getIdxByBlock(blockIdx);
-    commonHandel(arrIdx);
+    const arrNote = arrIdx.map((idx) => notes[idx]);
+    const numFreq = getFreqOfNotes(arrNote);
+    for (const [num, { count, positions }] of numFreq) {
+      if (count === 1) {
+        const realCellIdx = arrIdx[positions[0]];
+        console.log("realCellIdx b", realCellIdx);
+        return {
+          type: ETechnique.hiddenSingles,
+          payload: {
+            type: "block",
+            typeDetail: blockIdx,
+            position: realCellIdx,
+            value: num,
+          },
+        };
+      }
+    }
   }
 
-  return foundFlag;
+  return null;
 };
