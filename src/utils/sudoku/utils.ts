@@ -63,3 +63,7 @@ export const isSameBlock = (idx1: number, idx2: number) => {
     block === Math.floor(idx2 / 27) * 3 + Math.floor((idx2 % 9) / 3);
   return isSame ? block : false;
 };
+
+export const getBlockByRowCol = (row: number, col: number) => {
+  return Math.floor(row / 3) * 3 + Math.floor(col / 3);
+};

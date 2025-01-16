@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { MainLayout } from "../components/layout/MainLayout";
 import Home from "../pages/Home";
+import Lab from "../pages/Lab";
 import NotFound from "../pages/NotFound";
-
 
 export default function Router() {
   return (
@@ -12,6 +12,7 @@ export default function Router() {
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" index element={<Home />} />
+            <Route path="/lab" index element={<Lab />} />
             <Route path="404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Route>
@@ -20,5 +21,3 @@ export default function Router() {
     </BrowserRouter>
   );
 }
-
-
