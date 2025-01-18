@@ -7,7 +7,6 @@ export type CellState = {
   selected: boolean;
   isOrigin: boolean;
   isConflict?: boolean;
-  notes?: number[];
   status: "normal" | "high-light" | "high-light-number";
 };
 
@@ -20,12 +19,14 @@ type CellProps = {
   row: number;
   col: number;
   onClick?: () => void;
+  hidden?: boolean;
+  notes?: number[];
 };
 
 export const Cell = (props: CellProps) => {
-  const { cellState } = props;
+  const { cellState, notes } = props;
 
-  const hasNotes = cellState?.notes && cellState.notes.length > 0;
+  const hasNotes = notes && notes.length > 0;
 
   const cellIdx = props.row * 9 + props.col;
 
@@ -41,11 +42,13 @@ export const Cell = (props: CellProps) => {
       $conflict={cellState.isConflict}
       $selected={cellState.selected}
       title={`Cell ${cellIdx} (${props.row}, ${props.col})`}
+      $hidden={props.hidden}
     >
       {hasNotes ? (
-        <Note values={cellState.notes} />
+        <Note values={notes} />
       ) : (
         <NumberWrapper
+          $origin={cellState.isOrigin}
           $red={!cellState.isOrigin && cellState.isConflict}
           $blink={!!cellState.blinkValue}
         >
@@ -65,6 +68,7 @@ const Wrapper = styled.div<{
   $highLight: boolean;
   $highLightDarker: boolean;
   $conflict?: boolean;
+  $hidden?: boolean;
 }>`
   position: relative;
   width: 100%;
@@ -84,11 +88,13 @@ const Wrapper = styled.div<{
   ${({ $conflict }) => $conflict && `background-color: rgb(247, 207, 214);`}
 
   ${({ $selected }) => $selected && `background-color: rgb(187, 222, 251);`}
+
+  ${({ $hidden }) => $hidden && `visibility: hidden;`}
 `;
 
 const NumberWrapper = styled.div<{
+  $origin?: boolean;
   $red?: boolean;
-  // blin animation
   $blink?: boolean;
 }>`
   font-size: 1.5rem;
@@ -105,7 +111,10 @@ const NumberWrapper = styled.div<{
   bottom: 0;
   width: 100%;
   height: 100%;
-  color: rgb(52, 72, 97);
+
+  color: rgb(50, 90, 175);
+
+  ${({ $origin }) => $origin && `color: rgb(52, 72, 97);`}
 
   ${({ $red }) => $red && `color: rgb(229, 92, 108);`}
 

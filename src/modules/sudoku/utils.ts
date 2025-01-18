@@ -1,4 +1,5 @@
 import { PuzzleData } from "../../types/sudokuTypes";
+import { getBlockIdx } from "../../utils/sudoku";
 import { CellState } from "./components/Cell";
 
 /**
@@ -64,3 +65,32 @@ export const preHandle = (allCells: CellState[]) => {
 
   return { rows, cols, blocks, cells };
 };
+
+export function getBoardInfo(cells: CellState[]) {
+  /** Array of cell values with 0 for empty cells */
+  const cellValues: number[] = cells.map((cell) => cell.value ?? 0);
+
+  const rows = new Array(9).fill(null).map(() => new Map<number, number>());
+  const cols = new Array(9).fill(null).map(() => new Map<number, number>());
+  const blocks = new Array(9).fill(null).map(() => new Map<number, number>());
+
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      const idx = i * 9 + j;
+      const blockIdx = getBlockIdx(i, j);
+      const value = cellValues[idx];
+      if (value) {
+        rows[i].set(value, (rows[i].get(value) || 0) + 1);
+        cols[j].set(value, (cols[j].get(value) || 0) + 1);
+        blocks[blockIdx].set(value, (blocks[blockIdx].get(value) || 0) + 1);
+      }
+    }
+  }
+
+  return {
+    rows,
+    cols,
+    blocks,
+    cellValues,
+  };
+}

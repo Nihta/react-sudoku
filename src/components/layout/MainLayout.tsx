@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { Outlet } from "react-router";
 import styled from "styled-components";
 import GlobalStyles from "../base/GlobalStyles";
@@ -15,6 +16,8 @@ export const MainLayout = () => {
       </div>
 
       <Footer />
+
+      <Toaster />
     </Wrapper>
   );
 };
@@ -24,4 +27,3 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Cell, CellState } from "./Cell";
+import { Note } from "../../../types/sudokuTypes";
 
 type Props = {
   cells: CellState[];
@@ -7,12 +8,18 @@ type Props = {
   highlightBlocks?: number[];
   highlightRows?: number[];
   highlightCols?: number[];
+  hiddenCells?: boolean;
+  notes: Note[];
 };
 
 const ARR_0_8 = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 export const Board = (props: Props) => {
-  const { cells } = props;
+  const { cells, hiddenCells } = props;
+
+  if (cells.length !== 81) {
+    return null;
+  }
 
   return (
     <Wrapper>
@@ -22,6 +29,7 @@ export const Board = (props: Props) => {
             {ARR_0_8.map((col) => {
               return (
                 <Cell
+                  hidden={hiddenCells}
                   key={col}
                   col={col}
                   row={row}
@@ -29,6 +37,7 @@ export const Board = (props: Props) => {
                   borderBottom
                   cellState={cells[row * 9 + col]}
                   onClick={() => props.onCellClick(row, col)}
+                  notes={props.notes[row * 9 + col]}
                 />
               );
             })}
