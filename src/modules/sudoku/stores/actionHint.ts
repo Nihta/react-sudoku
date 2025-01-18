@@ -8,12 +8,8 @@ import {
 import { lastRemainingCell } from "../technique/lastRemainingCell";
 import { preHandle } from "../utils";
 import { reCalculateBoard } from "../utils/reCalculateBoard";
-import {
-  actionInputCell,
-  setCells,
-  SudokuState,
-  useBoardStore,
-} from "./useBoard";
+import { setCells, SudokuState, useBoardStore } from "./useBoard";
+import { actionInputCell } from "./actionInputCell";
 // import toast from "react-hot-toast";
 
 const smartHint = () => {
@@ -160,5 +156,6 @@ export const actionHint = () => {
     throw new Error("No correct value found");
   }
 
+  // todo: case note mode
   actionInputCell(parseInt(correctValue, 10), true);
 };

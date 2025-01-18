@@ -1,6 +1,7 @@
 import useKeyDown from "../../../hooks/useKeyDown";
+import { actionDelete } from "../stores/actionDelete";
+import { actionInputCell } from "../stores/actionInputCell";
 import { actionMove } from "../stores/actionMove";
-import { actionDelete, actionInputCell } from "../stores/useBoard";
 
 export const useKeyboard = () => {
   useKeyDown((e) => {

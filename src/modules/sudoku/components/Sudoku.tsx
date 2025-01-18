@@ -5,25 +5,22 @@ import GamePause from "../../../components/GamePause";
 import Container from "../../../components/base/Container";
 import { useInterval } from "../../../hooks/useInterval";
 import { useKeyboard } from "../hooks/useKeyboard";
+import { actionDelete } from "../stores/actionDelete";
 import { actionHint, doActionHint } from "../stores/actionHint";
+import { actionInputCell } from "../stores/actionInputCell";
 import { actionNewGame } from "../stores/actionNewGame";
+import { actionToggleNote } from "../stores/actionToggleNote";
 import { actionTogglePlaying } from "../stores/actionTogglePlaying";
-import {
-  actionClickCell,
-  actionDelete,
-  actionNote,
-  actionUndo,
-  actNumpadPress,
-  useBoardStore,
-} from "../stores/useBoard";
+import { actionUndo } from "../stores/actionUndo";
+import { actionClickCell, useBoardStore } from "../stores/useBoard";
 import { useGameStore } from "../stores/useGame";
 import { Board } from "./Board";
 import { Control } from "./Control";
 import { GameVictoryAlert } from "./GameVictoryAlert";
 import { Numpad } from "./Numpad";
 import SelectDifficulty from "./SelectDifficulty";
-import { Timer } from "./Timer";
 import { SmartHint } from "./SmartHint";
+import { Timer } from "./Timer";
 // import { HintInfo } from "./HintInfo";
 
 export function Sudoku() {
@@ -84,10 +81,10 @@ export function Sudoku() {
           </GameInfoWrapper>
           <GameAndControlWrapper>
             <BoardWrapper>
-              {!isPlaying && <GamePause />}
+              {gameState === "pause" && <GamePause />}
               {isWin && <GameVictoryAlert difficulty="easy" time={99} />}
               <Board
-                hiddenCells={!isPlaying}
+                hiddenCells={gameState === "pause"}
                 cells={cells}
                 notes={notes}
                 onCellClick={(row, col) => {
@@ -114,14 +111,14 @@ export function Sudoku() {
                 <Control
                   actionDelete={actionDelete}
                   actionHint={actionHint}
-                  actionNote={actionNote}
+                  actionNote={actionToggleNote}
                   actionUndo={actionUndo}
                   noteMode={mode === "note"}
                   hintMode={mode === "hint"}
                 />
               </SudokuControl>
               <NumpadContainer>
-                <Numpad onClick={actNumpadPress} />
+                <Numpad onClick={actionInputCell} />
               </NumpadContainer>
               <BtnNewGameWrapper>
                 <BtnNewGame />

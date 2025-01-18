@@ -6,6 +6,7 @@ import { shuffleSudoku } from "../../../utils/sudoku/shuffleSudoku";
 import { convertPuzzle } from "../utils";
 import { useBoardStore } from "./useBoard";
 import { useGameStore } from "./useGame";
+import { useUndoStore } from "./useUndo";
 
 export const actionNewGame = (level: Difficulty = "easy") => {
   const puzzle = decodeSudokuPuzzle(
@@ -17,8 +18,7 @@ export const actionNewGame = (level: Difficulty = "easy") => {
     puzzle,
     cells,
     cellEmpty,
-    cellConflict: 0, // todo: calculate conflict
-    history: [],
+    cellConflict: 0, // todo: re calculate conflict
     notes: Array.from({ length: 81 }, () => []),
     highlightBlocks: [],
     highlightRows: [],
@@ -30,4 +30,5 @@ export const actionNewGame = (level: Difficulty = "easy") => {
   });
 
   useGameStore.setState({ state: "playing", time: 0 });
+  useUndoStore.getState().resetHistory();
 };
