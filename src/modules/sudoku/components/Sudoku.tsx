@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import BtnNewGame from "../../../components/BtnNewGame";
 import GamePause from "../../../components/GamePause";
 import Container from "../../../components/base/Container";
 import { useInterval } from "../../../hooks/useInterval";
@@ -21,6 +20,8 @@ import { Numpad } from "./Numpad";
 import SelectDifficulty from "./SelectDifficulty";
 import { SmartHint } from "./SmartHint";
 import { Timer } from "./Timer";
+import BtnNewGame from "./BtnNewGame";
+import toast from "react-hot-toast";
 // import { HintInfo } from "./HintInfo";
 
 export function Sudoku() {
@@ -121,7 +122,15 @@ export function Sudoku() {
                 <Numpad onClick={actionInputCell} />
               </NumpadContainer>
               <BtnNewGameWrapper>
-                <BtnNewGame />
+                <BtnNewGame
+                  onNewGame={(level) => {
+                    actionNewGame(level);
+                  }}
+                  onRestart={() => {
+                    // actionNewGame(difficulty);
+                    toast.error("This feature is not available yet.");
+                  }}
+                />
               </BtnNewGameWrapper>
             </SudokuControlsWrapper>
           </GameAndControlWrapper>
