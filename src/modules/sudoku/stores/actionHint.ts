@@ -10,6 +10,14 @@ import { preHandle } from "../utils";
 import { reCalculateBoard } from "../utils/reCalculateBoard";
 import { setCells, SudokuState, useBoardStore } from "./useBoard";
 import { actionInputCell } from "./actionInputCell";
+import { lastPossibleNumber } from "../technique/lastPossibleNumber";
+import { getNewNotes } from "./actionNote";
+import toast from "react-hot-toast";
+import { obviousTriples } from "../technique/obviousTriples";
+import { hiddenPairs } from "../technique/hiddenPairs";
+import { hiddenSingles } from "../technique/hiddenSingles";
+import { obviousPairs } from "../technique/obviousPairs";
+import { pointingPairs } from "../technique/pointingPairs";
 // import toast from "react-hot-toast";
 
 const smartHint = () => {
@@ -21,14 +29,6 @@ const smartHint = () => {
     const { payload } = res;
 
     useBoardStore.setState({ mode: "hint" });
-    // console.info("Last remaining cell", payload);
-
-    // hintActions.current = {
-    //   setValues: [{ position: payload.position, value: payload.value }],
-    // };
-
-    // toast.success("Hint: Last remaining cell");
-
     useBoardStore.setState(
       produce((draft: SudokuState) => {
         draft.hintActions = {
@@ -90,11 +90,331 @@ const smartHint = () => {
     return true;
   }
 
+  const lpnRes = lastPossibleNumber({ cells: orgCells, rows, cols, blocks });
+  if (lpnRes && lpnRes.type === ETechnique.lastPossibleNumber) {
+    const { payload } = lpnRes;
+
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: "Last possible number",
+          setValues: [{ position: payload.position, value: payload.value }],
+        };
+      })
+    );
+
+    // highlight related cells
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.selected = false;
+          cell.blinkValue = undefined;
+        });
+
+        // blink value for found cell
+        draft[payload.position].selected = true;
+        draft[payload.position].blinkValue = payload.value;
+
+        // high light related cells: row, col
+        payload.rowRelated.forEach((rowIdx) => {
+          getIdxByRow(rowIdx).forEach((idx) => {
+            draft[idx].status = "high-light";
+            if (draft[idx].value === payload.value) {
+              draft[idx].status = "high-light-number";
+            }
+          });
+        });
+
+        payload.colRelated.forEach((colIdx) => {
+          getIdxByCol(colIdx).forEach((idx) => {
+            draft[idx].status = "high-light";
+            if (draft[idx].value === payload.value) {
+              draft[idx].status = "high-light-number";
+            }
+          });
+        });
+
+        payload.blockRelated.forEach((blockIdx) => {
+          getIdxByBlock(blockIdx).forEach((idx) => {
+            draft[idx].status = "high-light";
+            if (draft[idx].value === payload.value) {
+              draft[idx].status = "high-light-number";
+            }
+          });
+        });
+      })
+    );
+    return true;
+  }
+
+  // Always check notes first
+  const { change, newNotes, arrIdx } = getNewNotes();
+  if (change > 0) {
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: "Notes",
+          // setValues: [],
+          setNotes: arrIdx.map((idx) => ({
+            position: idx,
+            notes: newNotes[idx],
+          })),
+        };
+      })
+    );
+
+    // highlight related cells
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.selected = false;
+          cell.blinkValue = undefined;
+        });
+
+        arrIdx.forEach((idx) => {
+          draft[idx].status = "high-light";
+        });
+      })
+    );
+
+    return true;
+  }
+
+  const hsRes = hiddenSingles();
+  if (hsRes && hsRes.type === ETechnique.hiddenSingles) {
+    const payload = hsRes.payload;
+
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: "Hidden Single",
+          setValues: [{ position: payload.position, value: payload.value }],
+        };
+      })
+    );
+
+    if (payload.type === "block") {
+      useBoardStore.setState({ highlightBlocks: [payload.typeDetail] });
+    } else if (payload.type === "row") {
+      useBoardStore.setState({ highlightRows: [payload.typeDetail] });
+    } else if (payload.type === "col") {
+      useBoardStore.setState({ highlightCols: [payload.typeDetail] });
+    }
+
+    // highlight related cells
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.blinkValue = undefined;
+        });
+
+        // set blink value for found cell
+        draft[payload.position].selected = true;
+        draft[payload.position].blinkValue = payload.value;
+      })
+    );
+
+    return true;
+  }
+
+  const opRes = obviousPairs();
+  if (opRes && opRes.type === ETechnique.obviousPairs) {
+    const payload = opRes.payload;
+
+    console.info(`Obvious Pairs`, payload);
+
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: `Obvious Pairs: ${payload.pair.join(", ")}`,
+          setNotes: payload.setNotes,
+        };
+      })
+    );
+
+    if (payload.type === "block") {
+      useBoardStore.setState({ highlightBlocks: [payload.typeDetail] });
+    } else if (payload.type === "row") {
+      useBoardStore.setState({ highlightRows: [payload.typeDetail] });
+    } else if (payload.type === "col") {
+      useBoardStore.setState({ highlightCols: [payload.typeDetail] });
+    }
+
+    // highlight related cells
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.blinkValue = undefined;
+        });
+
+        payload.highlightCellIdx.forEach((idx) => {
+          draft[idx].status = "high-light";
+        });
+      })
+    );
+
+    return true;
+  }
+
+  const hpRes = hiddenPairs();
+  if (hpRes && hpRes.type === ETechnique.hiddenPairs) {
+    const payload = hpRes.payload;
+
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: `Hidden Pairs: ${payload.pair.join(", ")}`,
+          setNotes: payload.setNotes,
+        };
+      })
+    );
+
+    if (payload.type === "block") {
+      useBoardStore.setState({ highlightBlocks: [payload.typeDetail] });
+    } else if (payload.type === "row") {
+      useBoardStore.setState({ highlightRows: [payload.typeDetail] });
+    } else if (payload.type === "col") {
+      useBoardStore.setState({ highlightCols: [payload.typeDetail] });
+    }
+
+    // highlight related cells
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.blinkValue = undefined;
+        });
+
+        payload.highlightCellIdx.forEach((idx) => {
+          draft[idx].status = "high-light";
+        });
+      })
+    );
+
+    return true;
+  }
+
+  const otTech = obviousTriples();
+  if (otTech && otTech.type === ETechnique.obviousTriples) {
+    const { payload } = otTech;
+
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: `Obvious Triples: ${payload.triple.join(", ")}`,
+          setNotes: payload.notes.map((pos) => {
+            const currentNote = draft.notes[pos];
+            const newNote = currentNote.filter(
+              (note) => !payload.triple.includes(note)
+            );
+            return {
+              position: pos,
+              notes: newNote,
+            };
+          }),
+        };
+      })
+    );
+
+    if (payload.detail.type === "block") {
+      useBoardStore.setState({ highlightBlocks: [payload.detail.value] });
+    } else if (payload.detail.type === "row") {
+      useBoardStore.setState({ highlightRows: [payload.detail.value] });
+    } else if (payload.detail.type === "col") {
+      useBoardStore.setState({ highlightCols: [payload.detail.value] });
+    }
+
+    // highlight related cells
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.selected = false;
+        });
+
+        payload.rowRelated.forEach((rowIdx) => {
+          getIdxByRow(rowIdx).forEach((idx) => {
+            draft[idx].status = "high-light";
+          });
+        });
+
+        payload.colRelated.forEach((colIdx) => {
+          getIdxByCol(colIdx).forEach((idx) => {
+            draft[idx].status = "high-light";
+          });
+        });
+
+        payload.blockRelated.forEach((blockIdx) => {
+          getIdxByBlock(blockIdx).forEach((idx) => {
+            draft[idx].status = "high-light";
+          });
+        });
+      })
+    );
+
+    return true;
+  }
+
+  const ppRes = pointingPairs();
+  if (ppRes && ppRes.type === ETechnique.pointingPairs) {
+    const payload = ppRes.payload;
+    useBoardStore.setState({ mode: "hint" });
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.hintActions = {
+          title: `Pointing Pairs: ${payload.number}`,
+          setNotes: payload.setNotes,
+        };
+      })
+    );
+
+    if (payload.type.startsWith("block")) {
+      useBoardStore.setState({ highlightBlocks: [payload.typeDetail] });
+    } else if (payload.type.startsWith("row")) {
+      useBoardStore.setState({ highlightRows: [payload.typeDetail] });
+    } else if (payload.type.startsWith("col")) {
+      useBoardStore.setState({ highlightCols: [payload.typeDetail] });
+    }
+
+    setCells(
+      produce(cells, (draft) => {
+        // clear all status
+        draft.forEach((cell) => {
+          cell.status = "normal";
+          cell.blinkValue = undefined;
+        });
+
+        payload.highlightCellIdx.forEach((idx) => {
+          draft[idx].status = "high-light";
+        });
+      })
+    );
+
+    return true;
+  }
+
   return false;
 };
 
 export const doActionHint = () => {
   // toast.error("You are already in hint mode");
+
   const hintActions = useBoardStore.getState().hintActions;
 
   hintActions?.setValues?.forEach((action) => {
@@ -108,13 +428,21 @@ export const doActionHint = () => {
     );
   });
 
+  hintActions?.setNotes?.forEach((action) => {
+    useBoardStore.setState(
+      produce((draft: SudokuState) => {
+        draft.notes[action.position] = action.notes;
+      })
+    );
+  });
+
   useBoardStore.setState(
     produce((draft: SudokuState) => {
       draft.highlightBlocks = [];
       draft.highlightRows = [];
       draft.highlightCols = [];
       draft.hintActions = undefined;
-      // todo: làm thế nào để biết đang note mode hay normal mode
+      // todo: how to know if it is in note mode or normal mode
       draft.mode = "normal";
     })
   );
@@ -133,7 +461,10 @@ export const actionHint = () => {
   // if no cell selected, do nothing
   const selectedCell = useBoardStore.getState().selectedCell;
   if (selectedCell === undefined) {
-    smartHint();
+    const res = smartHint();
+    if (!res) {
+      toast.error("No hint found, try Free Cell hint");
+    }
     return;
   }
 
@@ -141,7 +472,10 @@ export const actionHint = () => {
   const cells = useBoardStore.getState().cells;
   const cell = cells[selectedCell];
   if (cell.isOrigin) {
-    smartHint();
+    const res = smartHint();
+    if (!res) {
+      toast.error("No hint found, try Free Cell hint");
+    }
     return;
   }
 

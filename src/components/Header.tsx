@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
-import { NewGameContent } from "./BtnNewGame";
 import Container from "./base/Container";
+import { NewGameContent } from "../modules/sudoku/components/BtnNewGame";
+import { Link } from "react-router";
 
 export default function Header() {
   const [active, setActive] = useState(false);
@@ -23,14 +24,16 @@ export default function Header() {
   return (
     <Wrapper>
       <ContentWrapper>
-        <Logo>Sudoku</Logo>
+        <Link to={"/"} style={{ textDecoration: "none" }}>
+          <Logo>Sudoku</Logo>
+        </Link>
         <Content ref={ref}>
           <NewGameButton onClick={toggle}>New game</NewGameButton>
           {active && (
             <NewGameContent
-              callBack={() => {
-                setActive(false);
-              }}
+              // todo
+              onNewGame={() => {}}
+              onRestart={() => {}}
             />
           )}
         </Content>
@@ -62,11 +65,11 @@ const Wrapper = styled.header`
 `;
 
 const ContentWrapper = styled(Container)`
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   width: 100%;
-   height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const Logo = styled.div`

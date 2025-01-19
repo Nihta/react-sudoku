@@ -4,10 +4,12 @@ import { persist } from "zustand/middleware";
 import { Difficulty, Notes, PuzzleData } from "../../../types/sudokuTypes";
 import { CellState } from "../components/Cell";
 import { reCalculateBoard } from "../utils/reCalculateBoard";
+import { ActionSetNotes } from "../types";
 
 type HintActions = {
   title: string;
   setValues?: [{ position: number; value: number }];
+  setNotes?: ActionSetNotes;
 };
 
 export interface SudokuState {

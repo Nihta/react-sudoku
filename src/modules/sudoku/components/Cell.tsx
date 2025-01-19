@@ -27,6 +27,7 @@ export const Cell = (props: CellProps) => {
   const { cellState, notes } = props;
 
   const hasNotes = notes && notes.length > 0;
+  const hasBlinkValue = !!cellState.blinkValue;
 
   const cellIdx = props.row * 9 + props.col;
 
@@ -44,7 +45,7 @@ export const Cell = (props: CellProps) => {
       title={`Cell ${cellIdx} (${props.row}, ${props.col})`}
       $hidden={props.hidden}
     >
-      {hasNotes ? (
+      {hasNotes && !hasBlinkValue ? (
         <Note values={notes} />
       ) : (
         <NumberWrapper

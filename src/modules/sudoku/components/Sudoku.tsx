@@ -191,7 +191,7 @@ const BoardWrapper = styled.div`
   flex-basis: 60%;
   min-width: 250px;
   max-width: 500px;
-  background-color: #f3f6fa;
+  /* background-color: #f3f6fa; */
 `;
 
 const GameInfoWrapper = styled.div`

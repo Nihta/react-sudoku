@@ -56,6 +56,34 @@ export const lastRemainingCell = (options: Options) => {
     });
 
     // find position of the cell that has only one possible number to fill
+    const blockIdx = blockFreq.findIndex((val) => val.count === 1);
+    if (blockIdx !== -1) {
+      const position = blockFreq[blockIdx].positions[0];
+      const rowRelated = new Set<number>();
+      const colRelated = new Set<number>();
+      getIdxByBlock(blockIdx)
+        // remove cell that already has value or is the last remaining cell
+        .filter((idx) => !cells[idx] || idx === position)
+        // find row, col that can contain n
+        .forEach((idx) => {
+          const { row, col } = getCellPos(idx);
+          if (rows[row].has(n)) rowRelated.add(row);
+          if (cols[col].has(n)) colRelated.add(col);
+        });
+      return {
+        type: ETechnique.lastRemainingCell,
+        payload: {
+          type: "block",
+          typeDetail: blockIdx,
+          position,
+          rowRelated: Array.from(rowRelated),
+          colRelated: Array.from(colRelated),
+          blockRelated: [],
+          value: n,
+        },
+      };
+    }
+
     const rowIdx = rowFreq.findIndex((val) => val.count === 1);
     if (rowIdx !== -1) {
       const position = rowFreq[rowIdx].positions[0];
@@ -109,34 +137,6 @@ export const lastRemainingCell = (options: Options) => {
           rowRelated: Array.from(rowRelated),
           colRelated: [],
           blockRelated: Array.from(blockRelated),
-          value: n,
-        },
-      };
-    }
-
-    const blockIdx = blockFreq.findIndex((val) => val.count === 1);
-    if (blockIdx !== -1) {
-      const position = blockFreq[blockIdx].positions[0];
-      const rowRelated = new Set<number>();
-      const colRelated = new Set<number>();
-      getIdxByBlock(blockIdx)
-        // remove cell that already has value or is the last remaining cell
-        .filter((idx) => !cells[idx] || idx === position)
-        // find row, col that can contain n
-        .forEach((idx) => {
-          const { row, col } = getCellPos(idx);
-          if (rows[row].has(n)) rowRelated.add(row);
-          if (cols[col].has(n)) colRelated.add(col);
-        });
-      return {
-        type: ETechnique.lastRemainingCell,
-        payload: {
-          type: "block",
-          typeDetail: blockIdx,
-          position,
-          rowRelated: Array.from(rowRelated),
-          colRelated: Array.from(colRelated),
-          blockRelated: [],
           value: n,
         },
       };

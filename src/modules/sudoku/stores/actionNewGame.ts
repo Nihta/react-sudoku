@@ -10,7 +10,9 @@ import { useUndoStore } from "./useUndo";
 
 export const actionNewGame = (level: Difficulty = "easy") => {
   const puzzle = decodeSudokuPuzzle(
-    shuffleSudoku(getRandomElementFromArray(dataPuzzles[level]))
+    import.meta.env.DEV
+      ? getRandomElementFromArray(dataPuzzles[level])
+      : shuffleSudoku(getRandomElementFromArray(dataPuzzles[level]))
   );
   const { cells, cellEmpty } = convertPuzzle(puzzle);
 
