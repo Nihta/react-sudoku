@@ -5,6 +5,7 @@ import { Difficulty, Notes, PuzzleData } from "../../../types/sudokuTypes";
 import { CellState } from "../components/Cell";
 import { reCalculateBoard } from "../utils/reCalculateBoard";
 import { ActionSetNotes } from "../types";
+import { produce } from "immer";
 
 type HintActions = {
   title: string;
@@ -59,6 +60,12 @@ export const setCells = (cells: CellState[]) => {
 // -----------------------------------------------------------------------------
 
 export const actionClickCell = (row: number, col: number) => {
-  useBoardStore.setState({ selectedCell: row * 9 + col });
+  const cellIdx = row * 9 + col;
+  useBoardStore.setState(
+    produce((draft: SudokuState) => {
+      draft.selectedCell = cellIdx;
+      draft.cells[cellIdx].selected = true;
+    })
+  );
   reCalculateBoard();
 };

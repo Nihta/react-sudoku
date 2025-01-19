@@ -32,6 +32,7 @@ export default function Header() {
           {active && (
             <NewGameContent
               // todo
+              onToggle={toggle}
               onNewGame={() => {}}
               onRestart={() => {}}
             />

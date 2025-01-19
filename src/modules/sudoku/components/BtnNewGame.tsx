@@ -63,7 +63,7 @@ type NewGameContentProps = {
 export const NewGameContent = (props: NewGameContentProps) => {
   return (
     <ContentWrapper>
-      {/* <Actions callBack={props.onToggle} /> */}
+      <Actions callBack={props.onToggle} />
       {LEVELS.map((lvl) => {
         return (
           <ContentItem key={lvl} onClick={() => props.onNewGame(lvl)}>
@@ -182,7 +182,6 @@ type ActionProps = {
   callBack: () => void;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Actions = (props: ActionProps) => {
   // const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);
   // const supperHighLight = useGameStore((st) => st.supperHighLight);

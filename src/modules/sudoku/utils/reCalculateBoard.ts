@@ -17,7 +17,6 @@ export const reCalculateBoard = () => {
     useGameStore.setState({ state: "win" });
   }
 
-  console.log("reCalculateBoard", cellConflict, cellEmpty);
   useBoardStore.setState({ cellConflict, cellEmpty });
 
   // Highlight conflict
@@ -50,8 +49,6 @@ export const reCalculateBoard = () => {
       }
     })
   );
-
-  // Highlight
 
   const selectedCell = useBoardStore.getState().selectedCell;
 
