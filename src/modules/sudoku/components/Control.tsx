@@ -9,83 +9,78 @@ type ControlProps = {
   actionNote: () => void;
   actionHint: () => void;
   noteMode: boolean;
-  hintMode: boolean;
+  disabled: boolean;
 };
 
 export function Control(props: ControlProps) {
-  const { actionUndo, actionDelete, actionNote, actionHint, noteMode } = props;
-
-  const disabledUndo = props.hintMode;
-  const disabledErase = props.hintMode;
-  const disabledNote = props.hintMode;
+  const { actionUndo, actionDelete, actionNote, actionHint } = props;
 
   return (
     <Wrapper>
       <ItemWrapper>
         <ItemIcon
           onClick={() => {
-            if (!disabledUndo) {
+            if (!props.disabled) {
               actionUndo();
             }
           }}
-          $disabled={disabledUndo}
+          $disabled={props.disabled}
         >
           <RotateCcw />
         </ItemIcon>
-        <Label $disabled={disabledUndo}>Undo</Label>
+        <Label $disabled={props.disabled}>Undo</Label>
       </ItemWrapper>
 
       <ItemWrapper>
         <ItemIcon
           onClick={() => {
-            if (!disabledErase) {
+            if (!props.disabled) {
               actionDelete();
             }
           }}
-          $disabled={disabledErase}
+          $disabled={props.disabled}
         >
           <Eraser />
         </ItemIcon>
-        <Label $disabled={disabledErase}>Erase</Label>{" "}
+        <Label $disabled={props.disabled}>Erase</Label>{" "}
       </ItemWrapper>
 
       <ItemWrapper>
         <ItemIcon
           onClick={() => {
-            if (!disabledNote) {
+            if (!props.disabled) {
               actionNote();
             }
           }}
-          className={noteMode ? "active" : ""}
-          $disabled={disabledNote}
+          $disabled={props.disabled}
+          className={props.noteMode ? "active" : ""}
         >
           <PenLine />
         </ItemIcon>
-        <Label $disabled={disabledNote}>Note</Label>
+        <Label $disabled={props.disabled}>Note</Label>
       </ItemWrapper>
 
       <ItemWrapper>
         <ItemIcon
-          onClick={actionHint}
-          className={props.hintMode ? "active" : ""}
+          onClick={() => {
+            if (!props.disabled) {
+              actionHint();
+            }
+          }}
+          $disabled={props.disabled}
         >
           <Lightbulb />
         </ItemIcon>
-        <Label>{props.hintMode ? "Apply" : "Hint"}</Label>
+        <Label $disabled={props.disabled}>Hint</Label>
       </ItemWrapper>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  /* @media (min-width: 801px) { */
-  /* width: 100%; */
-  /* padding: 0 6%; */
   color: var(--color-primary);
-
   display: flex;
   justify-content: space-between;
-  /* } */
 `;
 
 const ItemWrapper = styled.div`
@@ -118,6 +113,7 @@ const ItemIcon = styled(Pressable)<{
 
   &.active {
     border: 2px solid var(--color-primary);
+    ${({ $disabled }) => $disabled && `border-color: #94a3b7;`}
   }
 
   svg {

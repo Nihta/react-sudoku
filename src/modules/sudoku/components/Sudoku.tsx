@@ -8,20 +8,20 @@ import { actionDelete } from "../stores/actionDelete";
 import { actionHint, doActionHint } from "../stores/actionHint";
 import { actionInputCell } from "../stores/actionInputCell";
 import { actionNewGame } from "../stores/actionNewGame";
+import { actionRestart } from "../stores/actionRestart";
 import { actionToggleNote } from "../stores/actionToggleNote";
 import { actionTogglePlaying } from "../stores/actionTogglePlaying";
 import { actionUndo } from "../stores/actionUndo";
 import { actionClickCell, useBoardStore } from "../stores/useBoard";
 import { useGameStore } from "../stores/useGame";
 import { Board } from "./Board";
+import BtnNewGame from "./BtnNewGame";
 import { Control } from "./Control";
 import { GameVictoryAlert } from "./GameVictoryAlert";
 import { Numpad } from "./Numpad";
 import SelectDifficulty from "./SelectDifficulty";
 import { SmartHint } from "./SmartHint";
 import { Timer } from "./Timer";
-import BtnNewGame from "./BtnNewGame";
-import toast from "react-hot-toast";
 // import { HintInfo } from "./HintInfo";
 
 export function Sudoku() {
@@ -83,13 +83,17 @@ export function Sudoku() {
           <GameAndControlWrapper>
             <BoardWrapper>
               {gameState === "pause" && <GamePause />}
-              {isWin && <GameVictoryAlert difficulty="easy" time={99} />}
+              {isWin && (
+                <GameVictoryAlert
+                  difficulty={difficulty ?? "easy"}
+                  time={time}
+                />
+              )}
               <Board
                 hiddenCells={gameState === "pause"}
                 cells={cells}
                 notes={notes}
                 onCellClick={(row, col) => {
-                  // todo: disable other actions when in hint mode
                   if (mode === "hint") {
                     return;
                   }
@@ -115,7 +119,7 @@ export function Sudoku() {
                   actionNote={actionToggleNote}
                   actionUndo={actionUndo}
                   noteMode={mode === "note"}
-                  hintMode={mode === "hint"}
+                  disabled={gameState === "pause" || isWin}
                 />
               </SudokuControl>
               <NumpadContainer>
@@ -126,10 +130,7 @@ export function Sudoku() {
                   onNewGame={(level) => {
                     actionNewGame(level);
                   }}
-                  onRestart={() => {
-                    // actionNewGame(difficulty);
-                    toast.error("This feature is not available yet.");
-                  }}
+                  onRestart={actionRestart}
                 />
               </BtnNewGameWrapper>
             </SudokuControlsWrapper>

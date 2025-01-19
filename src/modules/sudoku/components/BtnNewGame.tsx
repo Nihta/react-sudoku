@@ -7,13 +7,7 @@ import Button from "../../../components/base/Button";
 import Pressable from "../../../components/base/Pressable";
 import { KeySvg, RefreshSvg } from "../../../components/svgs";
 import { Difficulty } from "../../../types/sudokuTypes";
-// import { Difficulty } from "../types/sudokuTypes";
-// import { hint } from "../utils/sudoku/hint";
-// import { actionNewGame, actionRePlay } from "../zustand/Sudoku";
-// import { useGameStore } from "../zustand/useGameStore";
-// import Button from "./base/Button";
-// import Pressable from "./base/Pressable";
-// import { KeySvg, RefreshSvg } from "./svgs";
+import { actionAutoSolve } from "../stores/actionAutoSolve";
 
 const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert", "evil"];
 
@@ -48,6 +42,7 @@ export default function BtnNewGame(props: BtnNewGameProps) {
             toggle();
             props.onNewGame(level);
           }}
+          onToggle={toggle}
         />
       )}
       <Button type="button" label="New game" onClick={toggle} />
@@ -62,16 +57,13 @@ const Wrapper = styled.div`
 type NewGameContentProps = {
   onRestart: () => void;
   onNewGame: (level: Difficulty) => void;
+  onToggle: () => void;
 };
 
 export const NewGameContent = (props: NewGameContentProps) => {
   return (
     <ContentWrapper>
-      <Actions
-        callBack={() => {
-          toast.error("This feature is not available yet.");
-        }}
-      />
+      {/* <Actions callBack={props.onToggle} /> */}
       {LEVELS.map((lvl) => {
         return (
           <ContentItem key={lvl} onClick={() => props.onNewGame(lvl)}>
@@ -190,18 +182,14 @@ type ActionProps = {
   callBack: () => void;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Actions = (props: ActionProps) => {
   // const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);
   // const supperHighLight = useGameStore((st) => st.supperHighLight);
 
   const tryToAutoSolve = async () => {
     props.callBack();
-    // let flag = false;
-    // do {
-    //   flag = hint();
-    //   await new Promise((r) => setTimeout(r, 100));
-    // } while (flag);
-    toast.error("This feature is not available yet.");
+    actionAutoSolve();
   };
 
   const toggleSuperHighLight = () => {

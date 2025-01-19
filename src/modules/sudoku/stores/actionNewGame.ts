@@ -1,26 +1,21 @@
 import { dataPuzzles } from "../../../data/sudokuPuzzles";
-import { Difficulty } from "../../../types/sudokuTypes";
+import { Difficulty, PuzzleData } from "../../../types/sudokuTypes";
 import { getRandomElementFromArray } from "../../../utils/arrayUtils";
-import { decodeSudokuPuzzle } from "../../../utils/sudoku";
+import { countConflict, decodeSudokuPuzzle } from "../../../utils/sudoku";
 import { shuffleSudoku } from "../../../utils/sudoku/shuffleSudoku";
 import { convertPuzzle } from "../utils";
 import { useBoardStore } from "./useBoard";
 import { useGameStore } from "./useGame";
 import { useUndoStore } from "./useUndo";
 
-export const actionNewGame = (level: Difficulty = "easy") => {
-  const puzzle = decodeSudokuPuzzle(
-    import.meta.env.DEV
-      ? getRandomElementFromArray(dataPuzzles[level])
-      : shuffleSudoku(getRandomElementFromArray(dataPuzzles[level]))
-  );
+export const initGame = (puzzle: PuzzleData, level: Difficulty) => {
   const { cells, cellEmpty } = convertPuzzle(puzzle);
 
   useBoardStore.setState({
     puzzle,
     cells,
     cellEmpty,
-    cellConflict: 0, // todo: re calculate conflict
+    cellConflict: countConflict(cells),
     notes: Array.from({ length: 81 }, () => []),
     highlightBlocks: [],
     highlightRows: [],
@@ -33,4 +28,14 @@ export const actionNewGame = (level: Difficulty = "easy") => {
 
   useGameStore.setState({ state: "playing", time: 0 });
   useUndoStore.getState().resetHistory();
+};
+
+export const actionNewGame = (level: Difficulty = "easy") => {
+  const puzzle = decodeSudokuPuzzle(
+    import.meta.env.DEV
+      ? getRandomElementFromArray(dataPuzzles[level])
+      : shuffleSudoku(getRandomElementFromArray(dataPuzzles[level]))
+  );
+
+  initGame(puzzle, level);
 };

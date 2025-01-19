@@ -9,7 +9,17 @@ export const saveBoardState = () => {
 
   const record: HistoryRecord = {
     cells: boardState.cells
-      .map((cell) => (cell.value ? cell.value.toString() : "0"))
+      .map((cell) => {
+        if (cell.value === null) {
+          return "0";
+        }
+        // if is original cell -> number, else -> letter a = 0, b = 1, ...
+        if (cell.isOrigin) {
+          return cell.value.toString();
+        } else {
+          return String.fromCharCode(97 + cell.value);
+        }
+      })
       .join(""),
     selectedCell: boardState.selectedCell,
     notes: boardState.notes.reduce((acc, note, index) => {
@@ -54,8 +64,16 @@ export const actionUndo = () => {
           const cell = draft.cells[index];
           if (value === "0") {
             cell.value = null;
+            cell.isOrigin = false;
           } else {
-            cell.value = parseInt(value, 10);
+            if (value >= "1" && value <= "9") {
+              cell.value = parseInt(value, 10);
+              cell.isOrigin = true;
+            } else {
+              // a - > 0, b - > 1, ...
+              cell.value = value.charCodeAt(0) - 97;
+              cell.isOrigin = false;
+            }
           }
           return cell;
         });

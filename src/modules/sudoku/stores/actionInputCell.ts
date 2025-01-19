@@ -32,9 +32,9 @@ export const actionInputCell = (value: number, isOrigin = false) => {
       notes: produce(useBoardStore.getState().notes, (draft) => {
         draft[selectedCell] = newCellNote;
       }),
-      cells: produce(cells, (draft) => {
+      cells: produce(useBoardStore.getState().cells, (draft) => {
         draft[selectedCell].value = null;
-        draft[selectedCell].blinkValue = value;
+        draft[selectedCell].blinkValue = undefined;
       }),
     });
 
@@ -61,6 +61,7 @@ type SetCellValueOptions = {
   origin?: boolean;
   idx: number;
   value: number | null;
+  selected?: boolean;
 };
 
 /**
@@ -77,6 +78,9 @@ export const setCellValue = (options: SetCellValueOptions) => {
       draft.cells[idx].blinkValue = undefined;
       if (isOrigin) {
         draft.cells[idx].isOrigin = true;
+      }
+      if (options.selected !== undefined) {
+        draft.cells[idx].selected = true;
       }
     })
   );
