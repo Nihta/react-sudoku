@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-
-import toast from "react-hot-toast";
 import { useOnClickOutside } from "usehooks-ts";
+
 import Button from "../../../components/base/Button";
 import Pressable from "../../../components/base/Pressable";
-import { KeySvg, RefreshSvg } from "../../../components/svgs";
 import { Difficulty } from "../../../types/sudokuTypes";
 import { actionAutoSolve } from "../stores/actionAutoSolve";
+import { actionToggleHighlightMode } from "../stores/actionToggleHighlightMode";
+import { Key, RotateCcw } from "lucide-react";
+import { useBoardStore } from "../stores/useBoard";
 
 const LEVELS: Difficulty[] = ["easy", "medium", "hard", "expert", "evil"];
 
@@ -67,13 +68,13 @@ export const NewGameContent = (props: NewGameContentProps) => {
       {LEVELS.map((lvl) => {
         return (
           <ContentItem key={lvl} onClick={() => props.onNewGame(lvl)}>
-            <KeySvg />
+            <Key />
             {lvl}
           </ContentItem>
         );
       })}
       <LastContentItem onClick={() => props.onRestart()}>
-        <RefreshSvg />
+        <RotateCcw />
         Restart
       </LastContentItem>
       <TooltipArrow />
@@ -183,19 +184,14 @@ type ActionProps = {
 };
 
 const Actions = (props: ActionProps) => {
-  // const toggleSuperHighLight = useGameStore((st) => st.toggleSuperHighLight);
-  // const supperHighLight = useGameStore((st) => st.supperHighLight);
-
   const tryToAutoSolve = async () => {
     props.callBack();
     actionAutoSolve();
   };
 
-  const toggleSuperHighLight = () => {
-    toast.error("This feature is not available yet.");
-  };
-
-  const supperHighLight = false;
+  const isSupperHighLight = useBoardStore(
+    (st) => st.highlightMode === "supper"
+  );
 
   return (
     <ActionWrapper>
@@ -203,8 +199,8 @@ const Actions = (props: ActionProps) => {
         <span>Try to solve</span>
       </Action>
       <Action
-        onClick={toggleSuperHighLight}
-        className={supperHighLight ? "active" : ""}
+        onClick={actionToggleHighlightMode}
+        className={isSupperHighLight ? "active" : ""}
       >
         <span>Super Highlight</span>
       </Action>

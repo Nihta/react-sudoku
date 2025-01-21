@@ -176,6 +176,7 @@ const SiteContent = styled.div`
 
 const SudokuWrapper = styled.div`
   position: relative;
+  user-select: none;
   @media screen and (max-width: 800px) {
     max-width: 500px;
     margin: 0 auto 20px;

@@ -5,6 +5,7 @@ import { useOnClickOutside } from "../hooks/useOnClickOutside";
 import Container from "./base/Container";
 import { NewGameContent } from "../modules/sudoku/components/BtnNewGame";
 import { Link } from "react-router";
+import { actionNewGame } from "../modules/sudoku/stores/actionNewGame";
 
 export default function Header() {
   const [active, setActive] = useState(false);
@@ -31,10 +32,9 @@ export default function Header() {
           <NewGameButton onClick={toggle}>New game</NewGameButton>
           {active && (
             <NewGameContent
-              // todo
               onToggle={toggle}
-              onNewGame={() => {}}
-              onRestart={() => {}}
+              onNewGame={(difficulty) => actionNewGame(difficulty)}
+              onRestart={() => actionNewGame()}
             />
           )}
         </Content>
@@ -81,11 +81,12 @@ const Logo = styled.div`
 `;
 
 const NewGameButton = styled.div`
-  margin-right: 18px;
   color: var(--color-primary);
   font-size: 16px;
   font-weight: 600;
   line-height: 23px;
+  cursor: pointer;
+  padding: 10px 0;
 
   &:active {
     color: #3a90e5;

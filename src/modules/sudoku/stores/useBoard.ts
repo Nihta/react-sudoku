@@ -29,6 +29,7 @@ export interface SudokuState {
 
   mode: "normal" | "note" | "hint";
   difficulty?: Difficulty;
+  highlightMode: "normal" | "supper";
 }
 
 export const useBoardStore = create<SudokuState>()(
@@ -46,6 +47,7 @@ export const useBoardStore = create<SudokuState>()(
       highlightCols: [],
       state: "none",
       mode: "normal",
+      highlightMode: "normal",
     }),
     {
       name: "nihta-sudoku::board-storage",

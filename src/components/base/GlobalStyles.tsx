@@ -88,8 +88,6 @@ select {
 }
 
 body {
-  user-select: none;
-
   --color-primary: #0072e3;
   --color-sudoku-border: #58697d;
   --color-sudoku-border-2: #c0c7d5;

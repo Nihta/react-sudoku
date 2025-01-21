@@ -52,7 +52,7 @@ export const reCalculateBoard = () => {
 
   const selectedCell = useBoardStore.getState().selectedCell;
 
-  // if no cell selected, clear all highlight
+  // if no cell selected, clear all highlight and return
   if (selectedCell === undefined) {
     setCells(
       produce(useBoardStore.getState().cells, (draft) => {
@@ -65,7 +65,6 @@ export const reCalculateBoard = () => {
     return;
   }
 
-  const { row, col, block } = getCellPos(selectedCell);
   const cells = useBoardStore.getState().cells;
 
   setCells(
@@ -73,16 +72,44 @@ export const reCalculateBoard = () => {
       draft.forEach((cell) => {
         cell.status = "normal";
         cell.selected = false;
+        cell.blinkValue = undefined;
       });
 
-      const relatedIdx = new Set([
-        ...getIdxByRow(row),
-        ...getIdxByCol(col),
-        ...getIdxByBlock(block),
-      ]);
-      relatedIdx.forEach((idx) => {
-        draft[idx].status = "high-light";
-      });
+      const SUPER_HIGHLIGHT =
+        useBoardStore.getState().highlightMode === "supper";
+
+      let relatedIdx = new Set<number>();
+      if (SUPER_HIGHLIGHT && cells[selectedCell].value !== null) {
+        // super highlight
+        const allSameNumberPos = cells.reduce<number[]>((acc, cell, idx) => {
+          if (cell.value === draft[selectedCell].value) {
+            acc.push(idx);
+          }
+          return acc;
+        }, []);
+        allSameNumberPos.forEach((idx) => {
+          const { row, col, block } = getCellPos(idx);
+          relatedIdx = new Set([
+            ...getIdxByRow(row),
+            ...getIdxByCol(col),
+            ...getIdxByBlock(block),
+          ]);
+          relatedIdx.forEach((idx) => {
+            draft[idx].status = "high-light";
+          });
+        });
+      } else {
+        // normal highlight
+        const { row, col, block } = getCellPos(selectedCell);
+        relatedIdx = new Set([
+          ...getIdxByRow(row),
+          ...getIdxByCol(col),
+          ...getIdxByBlock(block),
+        ]);
+        relatedIdx.forEach((idx) => {
+          draft[idx].status = "high-light";
+        });
+      }
 
       if (draft[selectedCell].value) {
         for (let i = 0; i < 81; i++) {
