@@ -2,11 +2,12 @@ import styled from "styled-components";
 
 type GamePauseProps = {
   onClick?: () => void;
+  title?: string;
 };
 
-export function GamePause({ onClick }: GamePauseProps) {
+export function GamePause({ onClick, title }: GamePauseProps) {
   return (
-    <Container onClick={onClick}>
+    <Container onClick={onClick} title={title}>
       <Content>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,6 +37,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 99;
+  cursor: pointer;
 `;
 
 const Content = styled.div`

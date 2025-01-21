@@ -34,7 +34,11 @@ const Container = styled.div`
   border: 2px solid rgb(52, 72, 97);
 
   position: absolute;
-  top: 0;
+  top: 20px;
+  @media (min-width: 801px) {
+    top: 0;
+  }
+
   left: 0;
   transition: opacity 0.3s;
   width: 100%;

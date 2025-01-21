@@ -5,13 +5,22 @@ const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 type NumpadProps = {
   onClick: (n: number) => void;
+  disabled?: boolean;
 };
 
-export function Numpad({ onClick }: NumpadProps) {
+export function Numpad({ onClick, disabled }: NumpadProps) {
   return (
     <Container>
       {arr.map((n) => (
-        <NumpadItem key={n} onClick={() => onClick(n)}>
+        <NumpadItem
+          key={n}
+          onClick={() => {
+            if (!disabled) {
+              onClick(n);
+            }
+          }}
+          $disabled={disabled}
+        >
           {n}
         </NumpadItem>
       ))}
@@ -33,7 +42,9 @@ const Container = styled.div`
   }
 `;
 
-const NumpadItem = styled(Pressable)`
+const NumpadItem = styled(Pressable)<{
+  $disabled?: boolean;
+}>`
   font-size: 36px;
   color: var(--color-primary);
   display: flex;
@@ -49,4 +60,6 @@ const NumpadItem = styled(Pressable)`
       background: #d2dae7;
     }
   }
+
+  ${({ $disabled }) => $disabled && `color: #94a3b7;`}
 `;

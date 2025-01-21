@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import GamePause from "../../../components/GamePause";
 import Container from "../../../components/base/Container";
 import { useInterval } from "../../../hooks/useInterval";
 import { useKeyboard } from "../hooks/useKeyboard";
@@ -22,6 +21,7 @@ import { Numpad } from "./Numpad";
 import SelectDifficulty from "./SelectDifficulty";
 import { SmartHint } from "./SmartHint";
 import { Timer } from "./Timer";
+import { GamePause } from "./GamePause";
 // import { HintInfo } from "./HintInfo";
 
 export function Sudoku() {
@@ -82,7 +82,14 @@ export function Sudoku() {
           </GameInfoWrapper>
           <GameAndControlWrapper>
             <BoardWrapper>
-              {gameState === "pause" && <GamePause />}
+              {gameState === "pause" && (
+                <GamePause
+                  onClick={() => {
+                    actionTogglePlaying();
+                  }}
+                  title="Click to continue"
+                />
+              )}
               {isWin && (
                 <GameVictoryAlert
                   difficulty={difficulty ?? "easy"}
@@ -119,11 +126,14 @@ export function Sudoku() {
                   actionNote={actionToggleNote}
                   actionUndo={actionUndo}
                   noteMode={mode === "note"}
-                  disabled={gameState === "pause" || isWin}
+                  disabled={gameState === "pause" || isWin || mode === "hint"}
                 />
               </SudokuControl>
               <NumpadContainer>
-                <Numpad onClick={actionInputCell} />
+                <Numpad
+                  onClick={actionInputCell}
+                  disabled={gameState === "pause" || isWin || mode === "hint"}
+                />
               </NumpadContainer>
               <BtnNewGameWrapper>
                 <BtnNewGame
