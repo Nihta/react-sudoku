@@ -12,7 +12,7 @@ export const Note = (props: NoteProps) => {
       {ARR.map((value) => {
         return (
           <NumberWrapper key={value}>
-            {props.values?.includes(value) ? value : ""}
+            <Number>{props.values?.includes(value) ? value : ""}</Number>
           </NumberWrapper>
         );
       })}
@@ -22,18 +22,24 @@ export const Note = (props: NoteProps) => {
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1/1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 12px;
 `;
 
 const NumberWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+`;
+
+const Number = styled.div`
+  position: absolute;
+  inset: 0;
+  color: rgb(100, 124, 140);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgb(100, 124, 140);
 `;

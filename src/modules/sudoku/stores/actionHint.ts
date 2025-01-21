@@ -1,23 +1,23 @@
 import { produce } from "immer";
+import toast from "react-hot-toast";
 import { ETechnique } from "../../../types/technique.type";
 import {
   getIdxByBlock,
   getIdxByCol,
   getIdxByRow,
 } from "../../../utils/sudoku/utils";
-import { lastRemainingCell } from "../technique/lastRemainingCell";
-import { preHandle } from "../utils";
-import { reCalculateBoard } from "../utils/reCalculateBoard";
-import { setCells, SudokuState, useBoardStore } from "./useBoard";
-import { actionInputCell } from "./actionInputCell";
-import { lastPossibleNumber } from "../technique/lastPossibleNumber";
-import { getNewNotes } from "./actionNote";
-import toast from "react-hot-toast";
-import { obviousTriples } from "../technique/obviousTriples";
 import { hiddenPairs } from "../technique/hiddenPairs";
 import { hiddenSingles } from "../technique/hiddenSingles";
+import { lastPossibleNumber } from "../technique/lastPossibleNumber";
+import { lastRemainingCell } from "../technique/lastRemainingCell";
 import { obviousPairs } from "../technique/obviousPairs";
+import { obviousTriples } from "../technique/obviousTriples";
 import { pointingPairs } from "../technique/pointingPairs";
+import { preHandle } from "../utils";
+import { reCalculateBoard } from "../utils/reCalculateBoard";
+import { setCellValue } from "./actionInputCell";
+import { getNewNotes } from "./actionNote";
+import { setCells, SudokuState, useBoardStore } from "./useBoard";
 // import toast from "react-hot-toast";
 
 const smartHint = () => {
@@ -482,14 +482,20 @@ export const actionHint = () => {
   // fill cell with correct value
   const puzzle = useBoardStore.getState().puzzle;
   if (puzzle === undefined) {
+    toast.error("No puzzle found");
     throw new Error("No puzzle found");
   }
 
   const correctValue = puzzle[1][selectedCell];
   if (!correctValue || correctValue === "0") {
+    toast.error("No correct value found");
     throw new Error("No correct value found");
   }
 
-  // todo: case note mode
-  actionInputCell(parseInt(correctValue, 10), true);
+  setCellValue({
+    idx: selectedCell,
+    value: parseInt(correctValue, 10),
+    origin: true,
+  });
+  reCalculateBoard();
 };
