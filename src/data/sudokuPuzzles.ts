@@ -1,4 +1,4 @@
-import type { Difficulty } from "../types/sudokuTypes";
+import type { Difficulty } from "../modules/sudoku/sudokuTypes.ts";
 
 export const dataPuzzles: Record<Difficulty, string[]> = {
   easy: [

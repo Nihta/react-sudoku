@@ -1,5 +1,5 @@
-import { Notes } from "../../../types/sudokuTypes";
-import { ETechnique } from "../../../types/technique.type";
+import { Notes } from "../sudokuTypes.ts";
+import { ETechnique } from "../technique.type.ts";
 import { arraysEqual } from "../../../utils/arrayUtils";
 import {
   getIdxByBlock,

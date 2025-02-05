@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { Difficulty } from "../types/sudokuTypes";
+import { Difficulty } from "../modules/sudoku/sudokuTypes.ts";
 import { reHighLight } from "./Sudoku";
 
 export interface GameState {

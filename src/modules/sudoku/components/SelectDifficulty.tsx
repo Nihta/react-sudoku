@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Select from "../../../components/base/Select";
-import { Difficulty } from "../../../types/sudokuTypes";
+import { Difficulty } from "../sudokuTypes.ts";
 
 const LEVELS: {
   label: Difficulty;

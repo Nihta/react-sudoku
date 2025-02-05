@@ -1,4 +1,4 @@
-import { Cells } from "../../types/sudokuTypes";
+import { Cells } from "../../modules/sudoku/sudokuTypes.ts";
 import { useGameStore } from "../../zustand/useGameStore";
 import { getBlockIdx, getCellPos } from "./position";
 

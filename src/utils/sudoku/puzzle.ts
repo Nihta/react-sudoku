@@ -1,4 +1,4 @@
-import { CellState, PuzzleData } from "../../types/sudokuTypes";
+import { CellState, PuzzleData } from "../../modules/sudoku/sudokuTypes.ts";
 
 /**
  * It takes a string of 81 characters, and returns a tuple of two strings,

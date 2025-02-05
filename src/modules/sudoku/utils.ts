@@ -1,4 +1,4 @@
-import { PuzzleData } from "../../types/sudokuTypes";
+import { PuzzleData } from "./sudokuTypes.ts";
 import { getBlockIdx } from "../../utils/sudoku";
 import { CellState } from "./components/Cell";
 

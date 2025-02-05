@@ -1,4 +1,4 @@
-import { Notes } from "../../types/sudokuTypes";
+import { Notes } from "../../modules/sudoku/sudokuTypes.ts";
 import { addHistory, setNotes } from "../../zustand/Sudoku";
 import useSudokuStore from "../../zustand/useSudokuStore";
 import { getNumberNotInSet, preHandle } from "../sudokuRules";

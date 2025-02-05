@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Cell, CellState } from "./Cell";
-import { Note } from "../../../types/sudokuTypes";
+import { Note } from "../sudokuTypes.ts";
 
 type Props = {
   cells: CellState[];

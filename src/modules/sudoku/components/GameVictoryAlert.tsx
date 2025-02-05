@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import {X} from "lucide-react";
+
 import { convertTime } from "../../../utils/timeUtils";
-import { CloseSvg } from "../../../components/svgs";
 import Pressable from "../../../components/base/Pressable";
 
 type GameVictoryAlertProps = {
@@ -35,7 +36,7 @@ export function GameVictoryAlert(props: GameVictoryAlertProps) {
       </ListItem>
       <Actions>
         <Item onClick={review}>
-          <CloseSvg />
+          <X />
         </Item>
       </Actions>
     </Wrapper>

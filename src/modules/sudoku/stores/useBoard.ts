@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Difficulty, Notes, PuzzleData } from "../../../types/sudokuTypes";
+import { Difficulty, Notes, PuzzleData } from "../sudokuTypes.ts";
 import { CellState } from "../components/Cell";
 import { reCalculateBoard } from "../utils/reCalculateBoard";
 import { ActionSetNotes } from "../types";

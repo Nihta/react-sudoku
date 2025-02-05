@@ -8,7 +8,7 @@ import {
   Notes,
   Position,
   PuzzleData,
-} from "../types/sudokuTypes";
+} from "../modules/sudoku/sudokuTypes.ts";
 import {
   convertPuzzle,
   countConflict,
@@ -19,7 +19,7 @@ import {
 } from "../utils/sudoku";
 import { getRandomElementFromArray } from "../utils/arrayUtils";
 import { dataPuzzles } from "../data/sudokuPuzzles";
-import { shuffleSudoku } from "../utils/sudoku/shuffleSudoku";
+import { shuffleSudoku } from "../modules/sudoku/utils/shuffleSudoku.ts";
 import { hint } from "../utils/sudoku/hint";
 
 /**

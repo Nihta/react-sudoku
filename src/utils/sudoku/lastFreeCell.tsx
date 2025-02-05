@@ -1,6 +1,6 @@
 // lastFreeCell
 
-import { ETechnique } from "../../types/technique.type";
+import { ETechnique } from "../../modules/sudoku/technique.type.ts";
 import { getIdxByBlock, getIdxByCol, getIdxByRow } from "./utils";
 
 type Options = {

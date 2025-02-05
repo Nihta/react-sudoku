@@ -1,4 +1,4 @@
-import { ETechnique } from "../../types/technique.type";
+import { ETechnique } from "../../modules/sudoku/technique.type.ts";
 import { getCellPos } from "./position";
 import { getIdxByBlock, getIdxByRow } from "./utils";
 

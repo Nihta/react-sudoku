@@ -1,4 +1,4 @@
-import { Note } from "../../types/sudokuTypes";
+import { Note } from "../../modules/sudoku/sudokuTypes.ts";
 
 export const getIdxByBlock = (block: number) => {
   const startRow = Math.floor(block / 3) * 3;

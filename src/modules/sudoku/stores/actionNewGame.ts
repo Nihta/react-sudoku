@@ -1,8 +1,8 @@
 import { dataPuzzles } from "../../../data/sudokuPuzzles";
-import { Difficulty, PuzzleData } from "../../../types/sudokuTypes";
+import { Difficulty, PuzzleData } from "../sudokuTypes.ts";
 import { getRandomElementFromArray } from "../../../utils/arrayUtils";
 import { countConflict, decodeSudokuPuzzle } from "../../../utils/sudoku";
-import { shuffleSudoku } from "../../../utils/sudoku/shuffleSudoku";
+import { shuffleSudoku } from "../utils/shuffleSudoku.ts";
 import { convertPuzzle } from "../utils";
 import { useBoardStore } from "./useBoard";
 import { useGameStore } from "./useGame";

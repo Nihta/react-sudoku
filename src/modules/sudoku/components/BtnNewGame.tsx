@@ -4,7 +4,7 @@ import { useOnClickOutside } from "usehooks-ts";
 
 import Button from "../../../components/base/Button";
 import Pressable from "../../../components/base/Pressable";
-import { Difficulty } from "../../../types/sudokuTypes";
+import { Difficulty } from "../sudokuTypes.ts";
 import { actionAutoSolve } from "../stores/actionAutoSolve";
 import { actionToggleHighlightMode } from "../stores/actionToggleHighlightMode";
 import { Key, RotateCcw } from "lucide-react";

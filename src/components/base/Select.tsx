@@ -1,6 +1,5 @@
 import styled from "styled-components";
-
-import { ChevronDownSvg } from "../svgs";
+import {ChevronDown} from "lucide-react";
 
 type SelectProps = {
   options: { label: string; value: string }[];
@@ -22,7 +21,7 @@ export default function Select(props: SelectProps) {
         {options.find((option) => option.value === selected)?.label}
       </Label>
       <DropdownIcon>
-        <ChevronDownSvg />
+        <ChevronDown />
       </DropdownIcon>
       <SelectStyled value={selected} onChange={handleSelect}>
         {options.map((option) => (

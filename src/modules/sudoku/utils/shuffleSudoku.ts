@@ -117,6 +117,7 @@ const shuffleSymbols = (sudokuStr: string): string => {
 };
 
 export const shuffleSudoku = (encodedSudoku: string): string => {
+  // todo: check this
   let res = shuffleSymbols(encodedSudoku);
   res = shuffleRow(encodedSudoku);
   res = shuffleCol(res);

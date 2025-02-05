@@ -1,4 +1,4 @@
-import { Cells } from "../../types/sudokuTypes";
+import { Cells } from "../../modules/sudoku/sudokuTypes.ts";
 import { countElements } from "../arrayUtils";
 
 export const countConflict = (cells: Cells): number => {

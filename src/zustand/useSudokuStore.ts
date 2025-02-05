@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { CellState, Notes, PuzzleData } from "../types/sudokuTypes";
+import { CellState, Notes, PuzzleData } from "../modules/sudoku/sudokuTypes.ts";
 import { persist } from "zustand/middleware";
 
 type HistoryRecord = Pick<SudokuState, "cells" | "notes" | "selectedCell">;

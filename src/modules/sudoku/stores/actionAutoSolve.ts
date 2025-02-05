@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { ETechnique } from "../../../types/technique.type";
+import { ETechnique } from "../technique.type.ts";
 import { getCellPos } from "../../../utils/sudoku";
 import { lastRemainingCell } from "../technique/lastRemainingCell";
 import { preHandle } from "../utils";

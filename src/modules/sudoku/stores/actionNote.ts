@@ -1,4 +1,4 @@
-import { Notes } from "../../../types/sudokuTypes";
+import { Notes } from "../sudokuTypes.ts";
 import { getBlockIdx } from "../../../utils/sudoku";
 import { getNumberNotInSet } from "../../../utils/sudokuRules";
 import { preHandle } from "../utils";

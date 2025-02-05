@@ -1,4 +1,4 @@
-import { ETechnique } from "../../types/technique.type";
+import { ETechnique } from "../../modules/sudoku/technique.type.ts";
 import useSudokuStore from "../../zustand/useSudokuStore";
 import { getIdxByBlock, getIdxByCol, getIdxByRow } from "./utils";
 

@@ -6,7 +6,7 @@ import {
   setNote,
   setNotes,
 } from "../zustand/Sudoku";
-import type { Notes } from "../types/sudokuTypes";
+import type { Notes } from "../modules/sudoku/sudokuTypes.ts";
 import { deleteValuesFromArray } from "./arrayUtils";
 import { getBlockIdx } from "./sudoku";
 
